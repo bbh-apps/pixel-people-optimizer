@@ -5,11 +5,11 @@ import sys
 
 from rich import print
 
-from .db import Session, init_db
+from .db import SessionLocal, init_db
 from .models import MyProfession, Profession
 
 
-def main(argv: list[str] | None = None) -> None:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Log newly constructed profession(s)")
     parser.add_argument(
         "profession_ids", type=int, nargs="+", help="ID(s) from the catalogue"
@@ -17,7 +17,7 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     init_db()
-    with Session() as s:
+    with SessionLocal() as s:
         for pid in args.profession_ids:
             if not s.get(Profession, pid):
                 print(f"[red]Profession id {pid} not found. Run the scraper first.[/]")
@@ -28,6 +28,7 @@ def main(argv: list[str] | None = None) -> None:
             s.add(MyProfession(profession_id=pid))
             print(f"[green]Profession {pid} saved!")
         s.commit()
+    return 0
 
 
 if __name__ == "__main__":

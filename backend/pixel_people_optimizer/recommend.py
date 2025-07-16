@@ -12,8 +12,9 @@ from typing import NamedTuple
 from rich import box
 from rich.console import Console
 from rich.table import Table
+from sqlalchemy.orm import Session
 
-from .db import Session, init_db
+from .db import SessionLocal, init_db
 from .models import Building, MyBuilding, MyProfession, Profession, SpliceFormula
 
 console = Console()
@@ -50,8 +51,16 @@ def choose_candidates(remaining_land: int, session: Session) -> list[Candidate]:
             continue  # already discovered
 
         f = formulas.get(p.id)
-        parent1 = professions_by_id.get(f.parent1_id) if f else None
-        parent2 = professions_by_id.get(f.parent2_id) if f else None
+        parent1 = (
+            professions_by_id.get(f.parent1_id)
+            if f and f.parent1_id is not None
+            else None
+        )
+        parent2 = (
+            professions_by_id.get(f.parent2_id)
+            if f and f.parent2_id is not None
+            else None
+        )
 
         # Only recommend if both parents are discovered (or it's a base profession)
         if f and (
@@ -77,10 +86,14 @@ def choose_candidates(remaining_land: int, session: Session) -> list[Candidate]:
     return candidates
 
 
+def recommend_professions(db: Session, user_id: str, remaining_land: int, limit: int):
+    return choose_candidates(remaining_land, db)[:limit]
+
+
 # ------------------------------------------------------------
 
 
-def main(argv: list[str] | None = None) -> None:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Recommend new professions to splice")
     parser.add_argument("remaining_land", type=int, help="Tiles of land still free")
     parser.add_argument(
@@ -89,12 +102,12 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     init_db()
-    with Session() as s:
+    with SessionLocal() as s:
         cands = choose_candidates(args.remaining_land, s)[: args.limit]
 
     if not cands:
         console.print("[bold red]No profession fits your land constraint![/]")
-        return
+        return 1
 
     table = Table(box=box.SIMPLE_HEAVY)
     table.add_column("ID", justify="right")
@@ -119,6 +132,7 @@ def main(argv: list[str] | None = None) -> None:
         )
 
     console.print(table)
+    return 0
 
 
 if __name__ == "__main__":

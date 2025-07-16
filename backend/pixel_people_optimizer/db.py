@@ -1,16 +1,24 @@
-from pathlib import Path
+import os
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-DB_PATH = Path.home() / ".pixel_people.db"
-engine = create_engine(f"sqlite:///{DB_PATH}", echo=False, future=True)
-Session = sessionmaker(bind=engine, future=True)
-Base = declarative_base()
+load_dotenv()
+
+SUPABASE_DB_URL = os.getenv("SUPABASE_DB_URL")
+if not SUPABASE_DB_URL:
+    raise RuntimeError("Missing SUPABASE_DB_URL in .env")
+
+engine = create_engine(SUPABASE_DB_URL, echo=False, future=True)
+SessionLocal = sessionmaker(bind=engine, future=True)
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 def init_db() -> None:
-    """Create all tables if they don't exist."""
-    from . import models  # noqa: F401 – imports models so Base has subclasses
+    from . import models  # Ensures all models are loaded
 
     Base.metadata.create_all(engine)

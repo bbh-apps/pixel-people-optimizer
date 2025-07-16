@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, UniqueConstraint
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
 
@@ -12,10 +12,27 @@ profession_building = Table(
 )
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[str] = mapped_column(
+        String, primary_key=True
+    )  # Use string for auth user id
+    email: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
+
+    # Relationships to user's saved buildings and professions
+    my_buildings: Mapped[list["MyBuilding"]] = relationship(
+        "MyBuilding", back_populates="user", cascade="all, delete-orphan"
+    )
+    my_professions: Mapped[list["MyProfession"]] = relationship(
+        "MyProfession", back_populates="user", cascade="all, delete-orphan"
+    )
+
+
 class Building(Base):
     __tablename__ = "buildings"
-    id: Mapped[int] = Column(Integer, primary_key=True)
-    name: Mapped[str] = Column(String, unique=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
     land_size: Mapped[int]  # number of land tiles required to build
     coin_output: Mapped[int]
     multiplier: Mapped[float]
@@ -27,41 +44,50 @@ class Building(Base):
 
 class Profession(Base):
     __tablename__ = "professions"
-    id: Mapped[int] = Column(Integer, primary_key=True)
-    name: Mapped[str] = Column(String, unique=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
     category: Mapped[str]
 
     buildings: Mapped[list[Building]] = relationship(
         secondary=profession_building, back_populates="professions"
     )
 
-    unlock_bldg: Mapped[int] = Column(
+    unlock_bldg_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("buildings.id"), nullable=True
+    )
+    unlock_bldg: Mapped[Building | None] = relationship(
+        "Building", foreign_keys=[unlock_bldg_id]
     )
 
 
 class SpliceFormula(Base):
     __tablename__ = "splice_formulas"
-    id: Mapped[int] = Column(Integer, ForeignKey("professions.id"), primary_key=True)
-    parent1_id: Mapped[int | None] = Column(
+    id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("professions.id"), primary_key=True
+    )
+    parent1_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("professions.id"), nullable=True
     )
-    parent2_id: Mapped[int | None] = Column(
+    parent2_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("professions.id"), nullable=True
     )
 
 
 class MyBuilding(Base):
     __tablename__ = "my_buildings"
-    id: Mapped[int] = Column(Integer, primary_key=True)
-    building_id: Mapped[int] = Column(Integer, ForeignKey("buildings.id"), unique=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    building_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("buildings.id"), unique=True
+    )
+    user: Mapped["User"] = relationship(back_populates="my_buildings")
 
 
 class MyProfession(Base):
     __tablename__ = "my_professions"
-    id: Mapped[int] = Column(Integer, primary_key=True)
-    profession_id: Mapped[int] = Column(
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    profession_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("professions.id"), unique=True
     )
-
-    __table_args__ = (UniqueConstraint("profession_id", name="uix_profession_id"),)
+    user: Mapped["User"] = relationship(back_populates="my_professions")
