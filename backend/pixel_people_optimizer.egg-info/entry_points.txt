@@ -1,0 +1,5 @@
+[console_scripts]
+pixel-add-building = pixel_people_optimizer.add_building:main
+pixel-add-profession = pixel_people_optimizer.add_profession:main
+pixel-recommend = pixel_people_optimizer.recommend:main
+pixel-scrape = pixel_people_optimizer.scrape:main

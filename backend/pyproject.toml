@@ -1,0 +1,21 @@
+# pyproject.toml
+[project]
+name = "pixel-people-optimizer"
+version = "0.1.0"
+description = "Optimize your Pixel People gameplay using profession and building data"
+dependencies = [
+    "requests",
+    "beautifulsoup4",
+    "sqlalchemy>=2.0",
+    "pandas",
+    "rich",
+]
+
+[tool.setuptools.packages.find]
+where = ["pixel_people_optimizer"]
+
+[project.scripts]
+pixel-scrape = "pixel_people_optimizer.scrape:main"
+pixel-add-profession = "pixel_people_optimizer.add_profession:main"
+pixel-add-building = "pixel_people_optimizer.add_building:main"
+pixel-recommend = "pixel_people_optimizer.recommend:main"

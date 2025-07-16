@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+pixel_people_optimizer/__init__.py
+pixel_people_optimizer/add_building.py
+pixel_people_optimizer/add_profession.py
+pixel_people_optimizer/db.py
+pixel_people_optimizer/models.py
+pixel_people_optimizer/recommend.py
+pixel_people_optimizer/scrape.py
+pixel_people_optimizer.egg-info/PKG-INFO
+pixel_people_optimizer.egg-info/SOURCES.txt
+pixel_people_optimizer.egg-info/dependency_links.txt
+pixel_people_optimizer.egg-info/entry_points.txt
+pixel_people_optimizer.egg-info/requires.txt
+pixel_people_optimizer.egg-info/top_level.txt

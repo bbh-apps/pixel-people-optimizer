@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: pixel-people-optimizer
+Version: 0.1.0
+Summary: Optimize your Pixel People gameplay using profession and building data
+Requires-Dist: requests
+Requires-Dist: beautifulsoup4
+Requires-Dist: sqlalchemy>=2.0
+Requires-Dist: pandas
+Requires-Dist: rich
