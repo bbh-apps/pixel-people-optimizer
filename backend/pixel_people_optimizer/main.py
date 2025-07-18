@@ -28,8 +28,3 @@ app.include_router(api_router)
 @app.get("/")
 def root():
     return {"message": "Welcome to Pixel People Optimizer API"}
-
-
-@app.get("/protected")
-def protected_route(user_id: str = Depends(get_current_user_id)):
-    return {"message": f"Hello user {user_id}, this is protected!"}
