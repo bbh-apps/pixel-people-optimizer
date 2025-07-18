@@ -1,21 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
+import { fetchClient } from "../lib/fetchClient";
 import type { AuthenticatedReq } from "./useAuth";
 
 const useVerifyUser = () => {
-	// const queryClient = useQueryClient();
 	return useMutation({
 		mutationKey: ["auth", "me"],
 		mutationFn: async (data: AuthenticatedReq) =>
-			fetchClient("/auth/me", {
+			await fetchClient("/auth/me", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: data.token ? `Bearer ${data.token}` : "",
 				},
 				body: JSON.stringify(data),
-			}).then((res) => {
-				if (!res.ok) throw new Error("Failed to save");
-				return res.json();
 			}),
 	});
 };
