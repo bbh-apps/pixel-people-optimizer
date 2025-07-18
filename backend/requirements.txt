@@ -26,7 +26,6 @@ numpy==2.3.1
 packaging==25.0
 pandas==2.3.1
 pandas-stubs==2.3.0.250703
--e git+https://github.com/bbh-apps/pixel-people-optimizer.git@7a232d0022f18318e27585224ad741832fcfbeb2#egg=pixel_people_optimizer
 postgrest==1.1.1
 psycopg2==2.9.10
 pyasn1==0.6.1

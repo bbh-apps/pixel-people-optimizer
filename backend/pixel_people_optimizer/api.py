@@ -5,18 +5,12 @@ from fastapi.security import HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from backend.pixel_people_optimizer.schema import (
-    BuildingListRes,
-    IDList,
-    ProfessionListRes,
-    RecommendationRes,
-)
-from backend.pixel_people_optimizer.service import sync_user_items
-
 from .auth import get_current_user_id
 from .db import get_db
 from .models import Building, MyBuilding, MyProfession, Profession
 from .recommend import recommend_professions
+from .schema import BuildingListRes, IDList, ProfessionListRes, RecommendationRes
+from .service import sync_user_items
 
 api_router = APIRouter(prefix="/api", tags=["api"])
 

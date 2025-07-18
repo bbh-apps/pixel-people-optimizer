@@ -3,7 +3,7 @@ from typing import Type
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from backend.pixel_people_optimizer.schema import IDList
+from .schema import IDList
 
 
 def sync_user_items(

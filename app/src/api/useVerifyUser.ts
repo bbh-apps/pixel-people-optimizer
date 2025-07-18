@@ -6,7 +6,7 @@ const useVerifyUser = () => {
 	return useMutation({
 		mutationKey: ["auth", "me"],
 		mutationFn: async (data: AuthenticatedReq) =>
-			fetch("/auth/me", {
+			fetchClient("/auth/me", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

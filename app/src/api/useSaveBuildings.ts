@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { SaveBuildingsInput } from "../components/shared/schema";
+import { fetchClient } from "../lib/fetchClient";
 import { useAuth } from "./useAuth";
 
 const useSaveBuildings = () => {
@@ -7,19 +8,15 @@ const useSaveBuildings = () => {
 	const { token } = useAuth();
 	return useMutation({
 		mutationKey: ["buildings", "save"],
-		mutationFn: async (data: SaveBuildingsInput) => {
-			fetch("/api/buildings", {
+		mutationFn: async (data: SaveBuildingsInput) =>
+			await fetchClient("/api/buildings", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: token ? `Bearer ${token}` : "",
 				},
 				body: JSON.stringify(data),
-			}).then((res) => {
-				if (!res.ok) throw new Error("Failed to save");
-				return res.json();
-			});
-		},
+			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["buildings", "saved"] });
 		},

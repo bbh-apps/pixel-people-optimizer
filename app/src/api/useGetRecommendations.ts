@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { fetchClient } from "../lib/fetchClient";
 import type { RecommendationRes } from "../types/models";
 import { useAuth } from "./useAuth";
 
@@ -8,7 +9,7 @@ const useGetRecommendations = (remainingLand: number | null) => {
 	return useQuery({
 		queryKey: ["recommendations", remainingLand],
 		queryFn: async (): Promise<RecommendationRes[]> =>
-			await fetch(
+			await fetchClient(
 				`/api/recommendations?remaining_land=${remainingLand ?? 0}`,
 				token
 					? {
@@ -17,9 +18,7 @@ const useGetRecommendations = (remainingLand: number | null) => {
 							},
 					  }
 					: {}
-			)
-				.then((res) => res.json())
-				.then((res) => res),
+			),
 		enabled: !!remainingLand,
 	});
 };

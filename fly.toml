@@ -7,6 +7,11 @@ app = 'backend-divine-voice-6800'
 primary_region = 'ewr'
 
 [build]
+  dockerfile = "backend/Dockerfile"
+  build-target = ""
+
+[env]
+  PORT = "8080"
 
 [http_service]
   internal_port = 8080

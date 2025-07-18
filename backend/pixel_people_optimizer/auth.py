@@ -7,8 +7,6 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from gotrue import User
 from supabase import create_client
 
-from backend.pixel_people_optimizer.schema import OTPReq
-
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")

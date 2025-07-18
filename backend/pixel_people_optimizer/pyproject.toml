@@ -1,9 +1,13 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "pixel_people_optimizer"
 version = "0.1.0"
-description = "Your project description"
+description = "Backend for Pixel People Optimizer"
+authors = [{name = "Nicole Nguyen"}]
 dependencies = []
+
+[tool.setuptools]
+packages = ["pixel_people_optimizer"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
