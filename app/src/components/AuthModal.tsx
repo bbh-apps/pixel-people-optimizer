@@ -42,7 +42,11 @@ const AuthModal = ({
 	};
 
 	return (
-		<Modal opened={opened} onClose={onClose} title="Sign in to save">
+		<Modal
+			opened={opened}
+			onClose={onClose}
+			title="Sign in/up to save your game data"
+		>
 			{step === "email" ? (
 				<>
 					<TextInput
@@ -51,7 +55,7 @@ const AuthModal = ({
 						label="Email"
 					/>
 					<Button mt="md" onClick={handleSendOtp}>
-						Send OTP
+						Send code to email
 					</Button>
 				</>
 			) : (
