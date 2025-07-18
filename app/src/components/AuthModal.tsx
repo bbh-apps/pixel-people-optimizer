@@ -1,5 +1,6 @@
 import { Button, Modal, TextInput } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "../api/useAuth";
 import useVerifyUser from "../api/useVerifyUser";
 import { supabase } from "../lib/supabaseClient";
 
@@ -10,6 +11,7 @@ const AuthModal = ({
 	opened: boolean;
 	onClose: () => void;
 }) => {
+	const { clickedSignOut } = useAuth();
 	const [email, setEmail] = useState("");
 	const [code, setCode] = useState("");
 	const [step, setStep] = useState<"email" | "token">("email");
@@ -40,6 +42,14 @@ const AuthModal = ({
 			);
 		}
 	};
+
+	useEffect(() => {
+		if (clickedSignOut) {
+			setEmail("");
+			setCode("");
+			setStep("email");
+		}
+	}, [clickedSignOut]);
 
 	return (
 		<Modal

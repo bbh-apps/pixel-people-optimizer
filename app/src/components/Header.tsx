@@ -17,7 +17,7 @@ import AuthModal from "./AuthModal";
 import SignOutModal from "./SignOutModal";
 
 const Header = () => {
-	const { token, clickedSignOut } = useAuth();
+	const { token, clickedSignOut, setClickedSignOut } = useAuth();
 	const queryClient = useQueryClient();
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -26,6 +26,7 @@ const Header = () => {
 	const [isSignOutModalOpen, signOutModal] = useDisclosure();
 
 	const handleSignOut = async () => {
+		setClickedSignOut(true);
 		await supabase.auth.signOut().then(() => {
 			signOutModal.open();
 		});

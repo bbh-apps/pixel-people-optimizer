@@ -30,10 +30,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 	const colorScheme = useComputedColorScheme();
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-	const [remainingLand, setRemainingLand] = useState<number | null>(null);
+	const [remainingLand, setRemainingLand] = useState<number | null>(0);
 	const [queryRemainingLand, setQueryRemainingLand] = useState<number | null>(
 		null
 	);
+	const [hasClickedOptimize, setHasClickedOptimize] = useState<boolean>(false);
+
 	const { data: recommendations, isLoading } =
 		useGetRecommendations(queryRemainingLand);
 	const showLoading = useDelayedLoading(isLoading, 1000);
@@ -42,10 +44,22 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 		if (clickedSignOut) {
 			setRemainingLand(null);
 			setQueryRemainingLand(null);
+			setHasClickedOptimize(false);
 			setClickedSignOut(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clickedSignOut]);
+
+	let content = null;
+	if (showLoading) {
+		content = <LoadingRecommendations />;
+	} else if (hasClickedOptimize) {
+		if (recommendations && recommendations?.length > 0) {
+			content = <RecommendationsOutput recommendations={recommendations} />;
+		} else {
+			content = <NoRecommendations />;
+		}
+	}
 
 	return (
 		<Paper
@@ -77,6 +91,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 					<Button
 						rightSection={<MagicWandIcon size={20} />}
 						onClick={() => {
+							setHasClickedOptimize(true);
 							setQueryRemainingLand(remainingLand);
 							scrollIntoView({
 								alignment: "start",
@@ -86,20 +101,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 						Optimize
 					</Button>
 				</Flex>
-
-				{showLoading ? (
-					<LoadingRecommendations />
-				) : (
-					recommendations && (
-						<>
-							{recommendations.length > 0 ? (
-								<RecommendationsOutput recommendations={recommendations} />
-							) : (
-								<NoRecommendations />
-							)}
-						</>
-					)
-				)}
+				{content}
 			</Flex>
 		</Paper>
 	);

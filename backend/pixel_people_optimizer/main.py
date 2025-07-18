@@ -1,11 +1,11 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .api import api_router
-from .auth import auth_router, get_current_user_id
+from .auth import auth_router
 
 load_dotenv()
 
