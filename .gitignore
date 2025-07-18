@@ -17,3 +17,6 @@ dist/
 
 # Python
 .venv
+/scrape.py
+/add_building.py
+/add_profession.py

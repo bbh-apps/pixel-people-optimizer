@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/optimizer.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Pixel People Optimizer</title>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      const theme = localStorage.getItem('mantine-color-scheme') || 'auto';
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const resolved = theme === 'dark' || (theme === 'auto' && prefersDark) ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-mantine-color-scheme', resolved);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

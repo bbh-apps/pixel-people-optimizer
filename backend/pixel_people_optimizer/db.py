@@ -22,3 +22,11 @@ def init_db() -> None:
     from . import models  # Ensures all models are loaded
 
     Base.metadata.create_all(engine)
+
+
+def get_db():
+    db = Session = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
