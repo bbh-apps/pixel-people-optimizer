@@ -5,19 +5,11 @@ Usage: python -m pixel_people_optimizer.recommend <remaining_land_tiles>
 
 from __future__ import annotations
 
-import argparse
-import sys
 from typing import NamedTuple, Optional
 
-from rich import box
-from rich.console import Console
-from rich.table import Table
 from sqlalchemy.orm import Session
 
-from .db import SessionLocal, init_db
 from .models import Building, MyBuilding, MyProfession, Profession, SpliceFormula
-
-console = Console()
 
 
 class Candidate(NamedTuple):
@@ -123,52 +115,3 @@ def recommend_professions(
     # Sort and return top N
     candidates.sort(key=lambda c: (c.extra_land_needed, -c.score))
     return candidates[:limit] if limit else candidates
-
-
-# ------------------------------------------------------------
-
-
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Recommend new professions to splice")
-    parser.add_argument("remaining_land", type=int, help="Tiles of land still free")
-    parser.add_argument(
-        "--limit", type=int, default=10, help="How many suggestions to show"
-    )
-    args = parser.parse_args(argv)
-
-    init_db()
-    with SessionLocal() as s:
-        cands = recommend_professions(s, None, args.remaining_land, args.limit)
-
-    if not cands:
-        console.print("[bold red]No profession fits your land constraint![/]")
-        return 1
-
-    table = Table(box=box.SIMPLE_HEAVY)
-    table.add_column("ID", justify="right")
-    table.add_column("Profession")
-    table.add_column("Parents")
-    table.add_column("Unlocks Building → Land")
-    table.add_column("ΔLand", justify="right")
-    table.add_column("Score", justify="right")
-
-    for c in cands:
-        p, p1, p2, b, extra_land, score = c
-        parents = " + ".join(f"{x.name} ({x.category})" for x in (p1, p2) if x) or "—"
-        b_info = f"{b.name} → {b.land_size}" if b else "—"
-
-        table.add_row(
-            str(p.id),
-            p.name,
-            parents,
-            b_info,
-            str(extra_land),
-            f"{score:,.0f}",
-        )
-
-    console.print(table)
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
