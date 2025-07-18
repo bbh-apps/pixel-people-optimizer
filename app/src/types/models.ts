@@ -1,30 +1,29 @@
 /* tslint:disable */
-/* eslint-disable */
 /**
 /* This file was automatically generated from pydantic models by running pydantic2ts.
 /* Do not modify it by hand - just update the pydantic models and then re-run the script
 */
 
 export interface BuildingListRes {
-  id: number;
-  name: string;
+	id: number;
+	name: string;
 }
 export interface IDList {
-  ids: number[];
+	ids: number[];
 }
 export interface OTPReq {
-  email: string;
+	email: string;
 }
 export interface ProfessionListRes {
-  id: number;
-  name: string;
-  category: string;
+	id: number;
+	name: string;
+	category: string;
 }
 export interface RecommendationRes {
-  profession: ProfessionListRes;
-  parent1: ProfessionListRes | null;
-  parent2: ProfessionListRes | null;
-  unlock_bldg: BuildingListRes | null;
-  extra_land_needed: number;
-  score: number;
+	profession: ProfessionListRes;
+	parent1: ProfessionListRes | null;
+	parent2: ProfessionListRes | null;
+	unlock_bldg: BuildingListRes | null;
+	extra_land_needed: number;
+	score: number;
 }

@@ -45,6 +45,7 @@ const Header = () => {
 			queryClient.invalidateQueries({ queryKey: ["professions", "saved"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [token]);
 
 	return (

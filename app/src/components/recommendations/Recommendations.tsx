@@ -44,6 +44,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 			setQueryRemainingLand(null);
 			setClickedSignOut(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clickedSignOut]);
 
 	return (
