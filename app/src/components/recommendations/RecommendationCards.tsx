@@ -19,6 +19,7 @@ import {
 	type SortDirection,
 } from "../../hooks";
 import type { RecommendationRes } from "../../types/models";
+import SaveRecommendationButton from "./SaveRecommendationButton";
 import ViewBuildingProfessions from "./ViewBuildingProfessions";
 import ViewUnlockedProfessions from "./ViewUnlockedProfessions";
 
@@ -27,6 +28,7 @@ type RecommendationsCardProps = {
 	sortBy: SortableKey;
 	sortDirection: SortDirection;
 	onClickSorting: (key: SortableKey) => void;
+	refetch: () => void;
 };
 
 const RecommendationCards: React.FC<RecommendationsCardProps> = ({
@@ -34,6 +36,7 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 	sortBy,
 	sortDirection,
 	onClickSorting,
+	refetch,
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -61,7 +64,13 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 					<Stack>
 						<Group justify="space-between">
 							<Stack flex={1} gap={4}>
-								<Text fw={700}>{rec.profession.name}</Text>
+								<Group gap="xs">
+									<Text fw={700}>{rec.profession.name}</Text>
+									<SaveRecommendationButton
+										recommendation={rec}
+										refetch={refetch}
+									/>
+								</Group>
 								<Text size="xs">
 									Unlocks: <ViewBuildingProfessions recommendation={rec} />
 								</Text>

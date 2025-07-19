@@ -11,6 +11,7 @@ import {
 	type SortDirection,
 } from "../../hooks";
 import type { RecommendationRes } from "../../types/models";
+import SaveRecommendationButton from "./SaveRecommendationButton";
 import ViewBuildingProfessions from "./ViewBuildingProfessions";
 import ViewUnlockedProfessions from "./ViewUnlockedProfessions";
 
@@ -19,6 +20,7 @@ type RecommendationsTableProps = {
 	sortBy: SortableKey;
 	sortDirection: SortDirection;
 	onClickSorting: (key: SortableKey) => void;
+	refetch: () => void;
 };
 
 const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
@@ -26,6 +28,7 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 	sortBy,
 	sortDirection,
 	onClickSorting,
+	refetch,
 }) => {
 	const getIcon = (header: SortableKey) => {
 		const sorted = sortBy === header;
@@ -42,9 +45,9 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 			<Group gap="xs" wrap="nowrap">
 				<Text
 					size="sm"
-					fw={sortBy === value ? 700 : 500}
+					fw={700}
 					flex={1}
-					c={sortBy === value ? "blue" : "white"}
+					c={sortBy === value ? "blue" : "var(--mantine-color-text)"}
 				>
 					{label}
 				</Text>
@@ -58,12 +61,20 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 	return (
 		<Table visibleFrom="sm">
 			<Table.Thead>
-				<Table.Tr>{headers}</Table.Tr>
+				<Table.Tr>
+					{headers}
+					<Table.Th>Actions</Table.Th>
+				</Table.Tr>
 			</Table.Thead>
 			<Table.Tbody>
 				{recommendations.map((rec) => (
 					<Table.Tr key={rec.profession.name}>
-						<Table.Td>{rec.profession.name}</Table.Td>
+						<Table.Td>
+							<Text size="sm" fw={500}>
+								{rec.profession.name}
+							</Text>
+							<Text size="xs">{rec.profession.category}</Text>
+						</Table.Td>
 						<Table.Td>
 							<Text size="sm" fw={500}>
 								{rec.parent1?.name}
@@ -84,6 +95,12 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 							<ViewUnlockedProfessions recommendation={rec} />
 						</Table.Td>
 						<Table.Td>{rec.score}</Table.Td>
+						<Table.Td>
+							<SaveRecommendationButton
+								recommendation={rec}
+								refetch={refetch}
+							/>
+						</Table.Td>
 					</Table.Tr>
 				))}
 			</Table.Tbody>

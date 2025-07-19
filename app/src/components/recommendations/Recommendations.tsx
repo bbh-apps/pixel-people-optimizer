@@ -36,8 +36,11 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 	);
 	const [hasClickedOptimize, setHasClickedOptimize] = useState<boolean>(false);
 
-	const { data: recommendations, isLoading } =
-		useGetRecommendations(queryRemainingLand);
+	const {
+		data: recommendations,
+		isLoading,
+		refetch,
+	} = useGetRecommendations(queryRemainingLand);
 	const showLoading = useDelayedLoading(isLoading, 1000);
 
 	useEffect(() => {
@@ -55,7 +58,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 		content = <LoadingRecommendations />;
 	} else if (hasClickedOptimize) {
 		if (recommendations && recommendations?.length > 0) {
-			content = <RecommendationsOutput recommendations={recommendations} />;
+			content = (
+				<RecommendationsOutput
+					recommendations={recommendations}
+					refetch={() => refetch()}
+				/>
+			);
 		} else {
 			content = <NoRecommendations />;
 		}
