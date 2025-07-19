@@ -3,7 +3,7 @@
 This is a free open-source web app for making it easier to discover new professions to splice in Pixel People.
 Feel free to contribute by putting up a pull request or by making a feature request by adding an issue!
 
-A small, self-contained Python toolkit to:
+What does this do?
 - Store the profession/building/splice formula catalogue in Supabase
 - Track your discoveries (buildings, professions)
 - Recommend the next best profession(s) to splice based on available land and saved buildings/professions
