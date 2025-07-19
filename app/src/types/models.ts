@@ -23,7 +23,13 @@ export interface RecommendationRes {
 	profession: ProfessionListRes;
 	parent1: ProfessionListRes | null;
 	parent2: ProfessionListRes | null;
-	unlock_bldg: BuildingListRes | null;
+	unlock_bldg: UnlockBuildingRes | null;
+	unlock_professions: ProfessionListRes[];
 	extra_land_needed: number;
 	score: number;
+}
+export interface UnlockBuildingRes {
+	id: number;
+	name: string;
+	professions: ProfessionListRes[];
 }

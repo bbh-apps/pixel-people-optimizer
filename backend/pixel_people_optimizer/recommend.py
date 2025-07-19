@@ -5,7 +5,7 @@ Usage: python -m pixel_people_optimizer.recommend <remaining_land_tiles>
 
 from __future__ import annotations
 
-from typing import NamedTuple, Optional
+from typing import List, NamedTuple, Optional
 
 from sqlalchemy.orm import Session
 
@@ -17,17 +17,27 @@ class Candidate(NamedTuple):
     parent1: Profession | None
     parent2: Profession | None
     unlock_bldg: Building | None
+    unlock_professions: List[Profession]
     extra_land_needed: int
     score: float  # higher → better (coin_output × multiplier)
-
-
-# ------------------------------------------------------------
 
 
 def build_lookup(session: Session) -> tuple[set[int], dict[int, Building]]:
     my_bldg_ids = {mb.building_id for mb in session.query(MyBuilding)}
     bldg_map = {b.id: b for b in session.query(Building)}
     return my_bldg_ids, bldg_map
+
+
+def get_unlocked_professions(db: Session, parent_id: int) -> list[Profession]:
+    return (
+        db.query(Profession)
+        .join(SpliceFormula, SpliceFormula.id == Profession.id)
+        .filter(
+            (SpliceFormula.parent1_id == parent_id)
+            | (SpliceFormula.parent2_id == parent_id)
+        )
+        .all()
+    )
 
 
 def recommend_professions(
@@ -107,9 +117,18 @@ def recommend_professions(
         if extra_land > remaining_land:
             continue
 
+        unlock_prof = get_unlocked_professions(session, prof.id)
         score = unlock_b.coin_output * unlock_b.multiplier
         candidates.append(
-            Candidate(prof, parent1, parent2, unlock_b, extra_land, score)
+            Candidate(
+                profession=prof,
+                parent1=parent1,
+                parent2=parent2,
+                unlock_bldg=unlock_b,
+                unlock_professions=unlock_prof,
+                extra_land_needed=extra_land,
+                score=score,
+            )
         )
 
     # Sort and return top N
