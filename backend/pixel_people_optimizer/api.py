@@ -1,15 +1,20 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from .auth import get_current_user_id
 from .db import get_db
 from .models import Building, MyBuilding, MyProfession, Profession
 from .recommend import recommend_professions
-from .schema import BuildingListRes, IDList, ProfessionListRes, RecommendationRes
+from .schema import (
+    BuildingListRes,
+    IDList,
+    ProfessionListRes,
+    RecommendationRes,
+    UnlockBuildingRes,
+)
 from .service import sync_user_items
 
 api_router = APIRouter(prefix="/api", tags=["api"])
@@ -150,7 +155,22 @@ def get_recommendations(
             unlock_bldg=(
                 None
                 if rec.unlock_bldg is None
-                else BuildingListRes(id=rec.unlock_bldg.id, name=rec.unlock_bldg.name)
+                else UnlockBuildingRes(
+                    id=rec.unlock_bldg.id,
+                    name=rec.unlock_bldg.name,
+                    professions=list(
+                        [
+                            ProfessionListRes(id=p.id, name=p.name, category=p.category)
+                            for p in rec.unlock_bldg.professions
+                        ]
+                    ),
+                )
+            ),
+            unlock_professions=list(
+                [
+                    ProfessionListRes(id=p.id, name=p.name, category=p.category)
+                    for p in rec.unlock_professions
+                ]
             ),
             extra_land_needed=rec.extra_land_needed,
             score=rec.score,

@@ -11,6 +11,8 @@ import {
 	type SortDirection,
 } from "../../hooks";
 import type { RecommendationRes } from "../../types/models";
+import ViewBuildingProfessions from "./ViewBuildingProfessions";
+import ViewUnlockedProfessions from "./ViewUnlockedProfessions";
 
 type RecommendationsTableProps = {
 	recommendations: RecommendationRes[];
@@ -75,7 +77,12 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 							<Text size="xs">{rec.parent2?.category}</Text>
 						</Table.Td>
 						<Table.Td>{rec.extra_land_needed}</Table.Td>
-						<Table.Td>{rec.unlock_bldg?.name}</Table.Td>
+						<Table.Td>
+							<ViewBuildingProfessions recommendation={rec} />
+						</Table.Td>
+						<Table.Td>
+							<ViewUnlockedProfessions recommendation={rec} />
+						</Table.Td>
 						<Table.Td>{rec.score}</Table.Td>
 					</Table.Tr>
 				))}

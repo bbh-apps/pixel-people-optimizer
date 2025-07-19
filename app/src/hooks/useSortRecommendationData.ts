@@ -24,8 +24,12 @@ export const recommendationKeyToLabel: { label: string; value: SortableKey }[] =
 			value: "extra_land_needed",
 		},
 		{
-			label: "Unlocked Building",
+			label: "Unlocks Building",
 			value: "unlock_bldg",
+		},
+		{
+			label: "Unlocks Professions",
+			value: "unlock_professions",
 		},
 		{
 			label: "Max CPS",
@@ -46,8 +50,28 @@ const sortData = (
 			return sortDirection === "desc" ? bVal - aVal : aVal - bVal;
 		}
 
-		const aName = typeof aVal === "object" && aVal !== null ? aVal.name : "";
-		const bName = typeof bVal === "object" && bVal !== null ? bVal.name : "";
+		if (Array.isArray(aVal) && Array.isArray(bVal)) {
+			const aValStr = aVal.join();
+			const bValStr = bVal.join();
+			return sortDirection === "desc"
+				? bValStr.localeCompare(aValStr)
+				: aValStr.localeCompare(bValStr);
+		}
+
+		const aName =
+			typeof aVal === "object" &&
+			aVal !== null &&
+			!Array.isArray(aVal) &&
+			"name" in aVal
+				? (aVal as { name: string }).name
+				: "";
+		const bName =
+			typeof bVal === "object" &&
+			bVal !== null &&
+			!Array.isArray(bVal) &&
+			"name" in bVal
+				? (bVal as { name: string }).name
+				: "";
 
 		return sortDirection === "desc"
 			? bName.localeCompare(aName)

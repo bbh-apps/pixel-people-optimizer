@@ -19,6 +19,8 @@ import {
 	type SortDirection,
 } from "../../hooks";
 import type { RecommendationRes } from "../../types/models";
+import ViewBuildingProfessions from "./ViewBuildingProfessions";
+import ViewUnlockedProfessions from "./ViewUnlockedProfessions";
 
 type RecommendationsCardProps = {
 	recommendations: RecommendationRes[];
@@ -60,7 +62,12 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 						<Group justify="space-between">
 							<Stack flex={1} gap={4}>
 								<Text fw={700}>{rec.profession.name}</Text>
-								<Text size="xs">Unlocks: {rec.unlock_bldg?.name}</Text>
+								<Text size="xs">
+									Unlocks: <ViewBuildingProfessions recommendation={rec} />
+								</Text>
+								<Text size="xs">
+									Unlocks: <ViewUnlockedProfessions recommendation={rec} />
+								</Text>
 							</Stack>
 
 							<Group gap={2}>
