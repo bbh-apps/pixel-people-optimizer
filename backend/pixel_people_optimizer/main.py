@@ -1,5 +1,3 @@
-import os
-
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,11 +9,9 @@ load_dotenv()
 
 app = FastAPI(title="Pixel People Optimizer API")
 
-origins = [os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origin_regex=r"^(https:\/\/pixel-people-optimizer[-\w]*\.vercel\.app|http:\/\/localhost:\d+)$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
