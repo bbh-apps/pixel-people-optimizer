@@ -7,10 +7,12 @@ import RecommendationsTable from "./RecommendationsTable";
 
 type RecommendationsOutputProps = {
 	recommendations: RecommendationRes[];
+	refetch: () => void;
 };
 
 const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 	recommendations,
+	refetch,
 }) => {
 	const {
 		activePage,
@@ -29,12 +31,14 @@ const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 				sortBy={sortBy}
 				sortDirection={sortDirection}
 				onClickSorting={onClickSorting}
+				refetch={refetch}
 			/>
 			<RecommendationsTable
 				recommendations={currentPageData}
 				sortBy={sortBy}
 				sortDirection={sortDirection}
 				onClickSorting={onClickSorting}
+				refetch={refetch}
 			/>
 			<Pagination
 				total={pages.length}

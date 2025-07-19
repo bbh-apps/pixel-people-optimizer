@@ -80,10 +80,13 @@ const ViewBuildingProfessions: React.FC<ViewBuildingProfessionsProps> = ({
 				}
 			>
 				<>
-					<Text span c="blue">
+					<Text span c="blue" size="sm">
 						Blue
 					</Text>
-					<Text span> represents professions you already unlocked.</Text>
+					<Text span size="sm">
+						{" "}
+						represents professions you already unlocked.
+					</Text>
 				</>
 				<Group mt="sm">{getProfessionsList()}</Group>
 			</Modal>

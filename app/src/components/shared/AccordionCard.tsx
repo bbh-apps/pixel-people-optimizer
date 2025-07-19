@@ -1,4 +1,4 @@
-import { Accordion, Badge, Group, Text } from "@mantine/core";
+import { Accordion, Badge, Group, Stack, Text } from "@mantine/core";
 import type React from "react";
 
 export type AccordionCardProps = {
@@ -26,16 +26,18 @@ const AccordionCard: React.FC<AccordionCardProps> = ({
 		>
 			<Accordion.Item value={title} key={title}>
 				<Accordion.Control>
-					<Group>
-						<Text>{title}</Text>
-						<Badge
-							color="blue"
-							variant="light"
-							styles={{ root: { borderRadius: "2px", padding: "4px" } }}
-						>
-							{savedItemCount}
-						</Badge>
-					</Group>
+					<Stack gap={1}>
+						<Group>
+							<Text>{title}</Text>
+							<Badge
+								color="blue"
+								variant="light"
+								styles={{ root: { borderRadius: "2px", padding: "4px" } }}
+							>
+								{savedItemCount}
+							</Badge>
+						</Group>
+					</Stack>
 				</Accordion.Control>
 				<Accordion.Panel>{children}</Accordion.Panel>
 			</Accordion.Item>

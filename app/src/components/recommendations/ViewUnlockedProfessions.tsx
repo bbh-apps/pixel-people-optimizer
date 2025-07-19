@@ -53,10 +53,13 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 				centered
 				title={
 					<>
-						<Text fw={700} span>
+						<Text fw={700} span size="sm">
 							{profession.name}
 						</Text>
-						<Text span> unlocks these professions</Text>
+						<Text span size="sm">
+							{" "}
+							unlocks these professions
+						</Text>
 					</>
 				}
 			>

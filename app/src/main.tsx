@@ -1,5 +1,6 @@
 import { createTheme, MantineProvider } from "@mantine/core";
 import { MantineEmotionProvider } from "@mantine/emotion";
+import { Notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import React from "react";
@@ -8,6 +9,7 @@ import App from "./App";
 import { AuthProvider } from "./context/AuthProvider";
 
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 const queryClient = new QueryClient();
 const theme = createTheme({
@@ -26,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 			<MantineEmotionProvider>
 				<AuthProvider>
 					<QueryClientProvider client={queryClient}>
+						<Notifications />
 						<App />
 						<Analytics />
 					</QueryClientProvider>
