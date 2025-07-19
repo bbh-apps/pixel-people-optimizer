@@ -11,11 +11,11 @@ load_dotenv()
 
 app = FastAPI(title="Pixel People Optimizer API")
 
-origins = [os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")]
+CORS_REGEX = os.getenv("CORS_REGEX")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origin_regex=CORS_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

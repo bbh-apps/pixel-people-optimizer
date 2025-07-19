@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for pixel-people-optimizer-prod on 2025-07-18T17:16:13-04:00
+# fly.toml app configuration file generated for pixel-people-optimizer-staging on 2025-07-18T17:16:13-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'pixel-people-optimizer-prod'
+app = 'pixel-people-optimizer-staging'
 primary_region = 'ewr'
 
 [build]
