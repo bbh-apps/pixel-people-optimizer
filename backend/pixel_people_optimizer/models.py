@@ -1,4 +1,13 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, UniqueConstraint
+from sqlalchemy import (
+    TIMESTAMP,
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -26,6 +35,11 @@ class User(Base):
     )
     my_professions: Mapped[list["MyProfession"]] = relationship(
         "MyProfession", back_populates="user", cascade="all, delete-orphan"
+    )
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False,
     )
 
 
@@ -77,17 +91,23 @@ class MyBuilding(Base):
     __tablename__ = "my_buildings"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
-    building_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("buildings.id"), unique=True
-    )
+    building_id: Mapped[int] = mapped_column(Integer, ForeignKey("buildings.id"))
     user: Mapped["User"] = relationship(back_populates="my_buildings")
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
 
 
 class MyProfession(Base):
     __tablename__ = "my_professions"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
-    profession_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("professions.id"), unique=True
-    )
+    profession_id: Mapped[int] = mapped_column(Integer, ForeignKey("professions.id"))
     user: Mapped["User"] = relationship(back_populates="my_professions")
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )

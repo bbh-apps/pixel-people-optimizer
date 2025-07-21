@@ -3,6 +3,11 @@ from typing import List
 from pydantic import BaseModel
 
 
+class VerifiedUserRes(BaseModel):
+    email: str
+    is_new_account: bool
+
+
 class BuildingListRes(BaseModel):
     id: int
     name: str
@@ -35,4 +40,4 @@ class RecommendationRes(BaseModel):
     unlock_bldg: UnlockBuildingRes | None
     unlock_professions: List[ProfessionListRes]
     extra_land_needed: int
-    score: float
+    max_cps: int

@@ -11,15 +11,13 @@ const useGetRecommendations = (remainingLand: number | null) => {
 		queryFn: async (): Promise<RecommendationRes[]> =>
 			await fetchClient(
 				`/api/recommendations?remaining_land=${remainingLand ?? 0}`,
-				token
-					? {
-							headers: {
-								Authorization: `Bearer ${token}`,
-							},
-					  }
-					: {}
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
 			),
-		enabled: !!remainingLand,
+		enabled: !!remainingLand && !!token,
 	});
 };
 

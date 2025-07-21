@@ -1,17 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Group, Menu, Text, useMatches } from "@mantine/core";
 import { CheckIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "../api/useAuth";
 import useGetProfessions from "../api/useGetAllProfessions";
 import useGetSavedProfessions from "../api/useGetSavedProfessions";
 import useSaveProfessions from "../api/useSaveProfessions";
+import { usePendingSaveGameData } from "../hooks/usePendingSaveGameData";
+import { useSaveGameDataForms } from "../hooks/useSaveGameDataForms";
 import AuthModal from "./AuthModal";
 import { AccordionCard, CheckboxList } from "./shared";
 import { saveEntitySchema, type SaveProfessionsInput } from "./shared/schema";
 
 type SortType = "abc" | "gallery";
+
+const DEFAULT_START_PROF_IDS = [1, 2];
 
 const ProfessionsList = () => {
 	const { token } = useAuth();
@@ -28,7 +32,9 @@ const ProfessionsList = () => {
 			ids: [],
 		},
 		values: {
-			ids: token == null ? [] : userProfessions?.map((b) => b.id) ?? [],
+			ids: !token
+				? DEFAULT_START_PROF_IDS
+				: userProfessions?.map((b) => b.id) ?? [],
 		},
 	});
 	const {
@@ -38,19 +44,27 @@ const ProfessionsList = () => {
 		watch,
 	} = formMethods;
 
-	const { mutate: saveProfessions, isPending } = useSaveProfessions();
+	const { registerSaveCallback, unregisterSaveCallback, triggerSaveAll } =
+		useSaveGameDataForms();
+	const { addPendingSave } = usePendingSaveGameData();
+	const {
+		mutate: saveProfessions,
+		mutateAsync: saveProfessionsAsync,
+		isPending,
+	} = useSaveProfessions();
 	const [authOpen, setAuthOpen] = useState(false);
 	const [sortedProfessions, setSortedProfessions] = useState(professions);
 	const [sortType, setSortType] = useState<SortType>("abc");
 
 	const onSubmit = async (data: SaveProfessionsInput) => {
-		if (!token) {
-			setAuthOpen(true);
-			return;
+		if (token) {
+			saveProfessions(data);
+			reset(data);
+		} else {
+			addPendingSave("professions", data, async (input) => {
+				await saveProfessionsAsync(input);
+			});
 		}
-
-		await saveProfessions(data);
-		reset(data);
 	};
 
 	const onClickSort = (newSortType: SortType) => {
@@ -65,6 +79,13 @@ const ProfessionsList = () => {
 			setSortType(newSortType);
 		}
 	};
+
+	useEffect(() => {
+		registerSaveCallback("professions", () => handleSubmit(onSubmit)());
+
+		return () => unregisterSaveCallback("professions");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [handleSubmit, onSubmit]);
 
 	return (
 		<Flex w={width}>
@@ -109,9 +130,14 @@ const ProfessionsList = () => {
 									</Menu>
 									<Button
 										variant="filled"
-										disabled={!isDirty}
+										disabled={!!token && !isDirty}
 										loading={isPending}
-										type="submit"
+										onClick={async () => {
+											await triggerSaveAll();
+											if (!token) {
+												setAuthOpen(true);
+											}
+										}}
 									>
 										Save
 									</Button>

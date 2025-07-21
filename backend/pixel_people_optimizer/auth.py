@@ -7,6 +7,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from gotrue import User
 from supabase import create_client
 
+from .schema import VerifiedUserRes
+
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -29,7 +31,7 @@ def get_current_user_id(
     credentials: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ) -> str:
     token = credentials.credentials
-    user = supabase.auth.get_user(token)
+    user = supabase_admin.auth.get_user(token)
     if not user or not user.user:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     return user.user.id
@@ -48,7 +50,7 @@ def get_current_user(
     return user.user
 
 
-@auth_router.post("/me")
+@auth_router.post("/me", response_model=VerifiedUserRes)
 def me(auth_user: User = Depends(get_current_user)):
     user_id = auth_user.id
     email = auth_user.email
@@ -58,8 +60,9 @@ def me(auth_user: User = Depends(get_current_user)):
         supabase_admin.table("users").select("*").eq("id", user_id).execute()
     )
 
-    if not existing_user.data:
+    is_new_account = not existing_user.data
+    if is_new_account:
         # Create new user record in your custom `users` table
         supabase_admin.table("users").insert({"id": user_id, "email": email}).execute()
 
-    return {"user": {"email": email}}
+    return {"email": email, "is_new_account": is_new_account}

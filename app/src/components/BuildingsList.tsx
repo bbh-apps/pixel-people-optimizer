@@ -1,14 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, useMatches } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "../api/useAuth";
 import useGetBuildings from "../api/useGetAllBuildings";
 import useGetSavedBuildings from "../api/useGetSavedBuildings";
 import useSaveBuildings from "../api/useSaveBuildings";
+import { usePendingSaveGameData } from "../hooks/usePendingSaveGameData";
+import { useSaveGameDataForms } from "../hooks/useSaveGameDataForms";
 import AuthModal from "./AuthModal";
 import { AccordionCard, CheckboxList } from "./shared";
 import { saveEntitySchema, type SaveBuildingsInput } from "./shared/schema";
+
+const DEFAULT_START_BLDG_IDS = [9, 140];
 
 const BuildingsList = () => {
 	const { token } = useAuth();
@@ -25,7 +29,9 @@ const BuildingsList = () => {
 			ids: [],
 		},
 		values: {
-			ids: token == null ? [] : userBuildings?.map((b) => b.id) ?? [],
+			ids: !token
+				? DEFAULT_START_BLDG_IDS
+				: userBuildings?.map((b) => b.id) ?? [],
 		},
 	});
 	const {
@@ -35,18 +41,33 @@ const BuildingsList = () => {
 		watch,
 	} = formMethods;
 
-	const { mutate: saveBuildings, isPending } = useSaveBuildings();
+	const { registerSaveCallback, unregisterSaveCallback, triggerSaveAll } =
+		useSaveGameDataForms();
+	const { addPendingSave } = usePendingSaveGameData();
+	const {
+		mutate: saveBuildings,
+		mutateAsync: saveBuildingsAsync,
+		isPending,
+	} = useSaveBuildings();
 	const [authOpen, setAuthOpen] = useState(false);
 
 	const onSubmit = async (data: SaveBuildingsInput) => {
-		if (!token) {
-			setAuthOpen(true);
-			return;
+		if (token) {
+			saveBuildings(data);
+			reset(data);
+		} else {
+			addPendingSave("buildings", data, async (input) => {
+				await saveBuildingsAsync(input);
+			});
 		}
-
-		await saveBuildings(data);
-		reset(data);
 	};
+
+	useEffect(() => {
+		registerSaveCallback("buildings", () => handleSubmit(onSubmit)());
+
+		return () => unregisterSaveCallback("buildings");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [handleSubmit, onSubmit]);
 
 	return (
 		<Flex w={width}>
@@ -62,9 +83,14 @@ const BuildingsList = () => {
 							<Flex justify="end" px="md" pb="md">
 								<Button
 									variant="filled"
-									disabled={!isDirty}
+									disabled={!!token && !isDirty}
 									loading={isPending}
-									type="submit"
+									onClick={async () => {
+										await triggerSaveAll();
+										if (!token) {
+											setAuthOpen(true);
+										}
+									}}
 								>
 									Save
 								</Button>

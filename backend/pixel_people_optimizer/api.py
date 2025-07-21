@@ -112,18 +112,9 @@ def sync_user_professions(
 @api_router.get("/recommendations", response_model=List[RecommendationRes])
 def get_recommendations(
     remaining_land: int,
-    request: Request,
+    user_id: str = Depends(get_current_user_id),
     db: Session = Depends(get_db),
 ):
-    auth_header = request.headers.get("authorization")
-    if not auth_header:
-        user_id = None
-    else:
-
-        token = auth_header.removeprefix("Bearer ").strip()
-        user_id = get_current_user_id(
-            credentials=HTTPAuthorizationCredentials(scheme="Bearer", credentials=token)
-        )
     recommendations = recommend_professions(
         db, user_id=user_id, remaining_land=remaining_land, limit=None
     )
@@ -173,7 +164,7 @@ def get_recommendations(
                 ]
             ),
             extra_land_needed=rec.extra_land_needed,
-            score=rec.score,
+            max_cps=rec.max_cps,
         )
         for rec in recommendations
     ]

@@ -29,6 +29,7 @@ type RecommendationsCardProps = {
 	sortDirection: SortDirection;
 	onClickSorting: (key: SortableKey) => void;
 	refetch: () => void;
+	onConsumeLandRemaining: (landCost: number) => void;
 };
 
 const RecommendationCards: React.FC<RecommendationsCardProps> = ({
@@ -37,6 +38,7 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 	sortDirection,
 	onClickSorting,
 	refetch,
+	onConsumeLandRemaining,
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -69,6 +71,7 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 									<SaveRecommendationButton
 										recommendation={rec}
 										refetch={refetch}
+										onConsumeLandRemaining={onConsumeLandRemaining}
 									/>
 								</Group>
 								<Text size="xs">
@@ -90,7 +93,7 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 									<Text size="xs" ta="center" fw={500}>
 										Max CPS
 									</Text>
-									<Badge>{rec.score}</Badge>
+									<Badge>{rec.max_cps}</Badge>
 								</Stack>
 							</Group>
 						</Group>

@@ -2,6 +2,7 @@ import { Button, Modal, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useAuth } from "../api/useAuth";
 import useVerifyUser from "../api/useVerifyUser";
+import { usePendingSaveGameData } from "../hooks/usePendingSaveGameData";
 import { supabase } from "../lib/supabaseClient";
 
 const AuthModal = ({
@@ -15,6 +16,7 @@ const AuthModal = ({
 	const [email, setEmail] = useState("");
 	const [code, setCode] = useState("");
 	const [step, setStep] = useState<"email" | "token">("email");
+	const { submitAllPendingSaves } = usePendingSaveGameData();
 	const { mutate: verifyUser, isPending } = useVerifyUser();
 
 	const handleSendOtp = async () => {
@@ -28,11 +30,17 @@ const AuthModal = ({
 			token: code,
 			type: "email",
 		});
-		if (result.data?.session?.access_token) {
+
+		const { session } = result.data;
+
+		if (session?.access_token) {
 			verifyUser(
-				{ token: result.data?.session?.access_token },
+				{ token: session?.access_token },
 				{
-					onSuccess: () => {
+					onSuccess: (res) => {
+						if (res.is_new_account) {
+							submitAllPendingSaves();
+						}
 						onClose();
 					},
 					onError: (err) => {

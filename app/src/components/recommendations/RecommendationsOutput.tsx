@@ -8,11 +8,13 @@ import RecommendationsTable from "./RecommendationsTable";
 type RecommendationsOutputProps = {
 	recommendations: RecommendationRes[];
 	refetch: () => void;
+	onConsumeLandRemaining: (landCost: number) => void;
 };
 
 const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 	recommendations,
 	refetch,
+	onConsumeLandRemaining,
 }) => {
 	const {
 		activePage,
@@ -32,6 +34,7 @@ const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 				sortDirection={sortDirection}
 				onClickSorting={onClickSorting}
 				refetch={refetch}
+				onConsumeLandRemaining={onConsumeLandRemaining}
 			/>
 			<RecommendationsTable
 				recommendations={currentPageData}
@@ -39,6 +42,7 @@ const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 				sortDirection={sortDirection}
 				onClickSorting={onClickSorting}
 				refetch={refetch}
+				onConsumeLandRemaining={onConsumeLandRemaining}
 			/>
 			<Pagination
 				total={pages.length}
