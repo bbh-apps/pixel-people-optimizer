@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, useMatches } from "@mantine/core";
+import { Button, Flex, TextInput, useMatches } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "../api/useAuth";
@@ -8,6 +9,7 @@ import useGetSavedBuildings from "../api/useGetSavedBuildings";
 import useSaveBuildings from "../api/useSaveBuildings";
 import { usePendingSaveGameData } from "../hooks/usePendingSaveGameData";
 import { useSaveGameDataForms } from "../hooks/useSaveGameDataForms";
+import type { BuildingListRes } from "../types/models";
 import AuthModal from "./AuthModal";
 import { AccordionCard, CheckboxList } from "./shared";
 import { saveEntitySchema, type SaveBuildingsInput } from "./shared/schema";
@@ -41,6 +43,11 @@ const BuildingsList = () => {
 		watch,
 	} = formMethods;
 
+	const [buildingSearch, setBuildingSearch] = useState<string>("");
+	const [debounced] = useDebouncedValue(buildingSearch, 200);
+	const [filteredBuildings, setFilteredBuildings] =
+		useState<BuildingListRes[]>(buildings);
+
 	const { registerSaveCallback, unregisterSaveCallback, triggerSaveAll } =
 		useSaveGameDataForms();
 	const { addPendingSave } = usePendingSaveGameData();
@@ -71,6 +78,13 @@ const BuildingsList = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [token, handleSubmit, onSubmit]);
 
+	useEffect(() => {
+		const filtered = buildings.filter((b) =>
+			b.name.toLowerCase().includes(debounced)
+		);
+		setFilteredBuildings(filtered);
+	}, [buildings, debounced]);
+
 	return (
 		<Flex w={width}>
 			<AuthModal opened={authOpen} onClose={() => setAuthOpen(false)} />
@@ -80,8 +94,14 @@ const BuildingsList = () => {
 						title="My Buildings"
 						savedItemCount={(watch("ids") ?? userBuildings ?? []).length}
 					>
+						<TextInput
+							placeholder="Search for a building"
+							value={buildingSearch}
+							onChange={(e) => setBuildingSearch(e.target.value)}
+							px="md"
+						/>
 						<Flex direction="column" gap="md" pt="xs">
-							<CheckboxList items={buildings} />
+							<CheckboxList items={filteredBuildings} />
 							<Flex justify="end" px="md" pb="md">
 								<Button
 									variant="filled"

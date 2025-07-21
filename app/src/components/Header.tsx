@@ -1,5 +1,6 @@
 import {
 	ActionIcon,
+	Anchor,
 	Button,
 	Group,
 	lighten,
@@ -11,6 +12,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { GithubLogoIcon } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useAuth } from "../api/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import AuthModal from "./AuthModal";
@@ -21,6 +23,7 @@ const Header = () => {
 	const queryClient = useQueryClient();
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
+	const navigate = useNavigate();
 
 	const [isSignInModalOpen, signInModal] = useDisclosure();
 	const [isSignOutModalOpen, signOutModal] = useDisclosure();
@@ -52,8 +55,21 @@ const Header = () => {
 	return (
 		<>
 			<Group h="100%" px="md" align="center" justify="space-between">
-				<Title order={4}>Pixel People Optimizer</Title>
-				<Group align="center" justify="center">
+				<Anchor
+					onClick={() => navigate({ pathname: "/" })}
+					c="var(--mantine-color-text)"
+					underline="never"
+				>
+					<Title order={4}>Pixel People Optimizer</Title>
+				</Anchor>
+				<Group align="center" justify="center" gap="lg">
+					<Anchor
+						c="var(--mantine-color-text)"
+						underline="never"
+						onClick={() => navigate({ pathname: "/faq" })}
+					>
+						FAQ
+					</Anchor>
 					<ActionIcon
 						radius="xl"
 						autoContrast
