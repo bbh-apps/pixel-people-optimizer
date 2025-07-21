@@ -63,11 +63,13 @@ const BuildingsList = () => {
 	};
 
 	useEffect(() => {
-		registerSaveCallback("buildings", () => handleSubmit(onSubmit)());
+		if (!token) {
+			registerSaveCallback("buildings", () => handleSubmit(onSubmit)());
 
-		return () => unregisterSaveCallback("buildings");
+			return () => unregisterSaveCallback("buildings");
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [handleSubmit, onSubmit]);
+	}, [token, handleSubmit, onSubmit]);
 
 	return (
 		<Flex w={width}>
@@ -86,9 +88,11 @@ const BuildingsList = () => {
 									disabled={!!token && !isDirty}
 									loading={isPending}
 									onClick={async () => {
-										await triggerSaveAll();
 										if (!token) {
+											await triggerSaveAll();
 											setAuthOpen(true);
+										} else {
+											await handleSubmit(onSubmit)();
 										}
 									}}
 								>

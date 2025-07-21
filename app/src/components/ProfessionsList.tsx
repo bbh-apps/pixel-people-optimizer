@@ -81,9 +81,11 @@ const ProfessionsList = () => {
 	};
 
 	useEffect(() => {
-		registerSaveCallback("professions", () => handleSubmit(onSubmit)());
+		if (!token) {
+			registerSaveCallback("professions", () => handleSubmit(onSubmit)());
 
-		return () => unregisterSaveCallback("professions");
+			return () => unregisterSaveCallback("professions");
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [handleSubmit, onSubmit]);
 
@@ -133,9 +135,11 @@ const ProfessionsList = () => {
 										disabled={!!token && !isDirty}
 										loading={isPending}
 										onClick={async () => {
-											await triggerSaveAll();
 											if (!token) {
+												await triggerSaveAll();
 												setAuthOpen(true);
+											} else {
+												await handleSubmit(onSubmit)();
 											}
 										}}
 									>
