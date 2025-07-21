@@ -5,11 +5,22 @@ import {
 import { fetchClient } from "../lib/fetchClient";
 import type { ProfessionListRes } from "../types/models";
 
-const useGetProfessions = (): UseSuspenseQueryResult<ProfessionListRes[]> => {
+export type SortType = "abc" | "gallery";
+
+const SortTypeToColumn = {
+	abc: "name",
+	gallery: "id",
+};
+
+const useGetProfessions = (
+	sortBy: SortType
+): UseSuspenseQueryResult<ProfessionListRes[]> => {
 	return useSuspenseQuery({
-		queryKey: ["professions", "list"],
+		queryKey: ["professions", "list", sortBy],
 		queryFn: async (): Promise<ProfessionListRes[]> =>
-			await fetchClient("/api/professions"),
+			await fetchClient(
+				`/api/professions?order_by=${SortTypeToColumn[sortBy]}`
+			),
 	});
 };
 

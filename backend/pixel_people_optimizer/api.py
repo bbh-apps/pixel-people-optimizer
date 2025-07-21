@@ -5,6 +5,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from .auth import get_current_user_id
+from .constants import ProfessionSortType
 from .db import get_db
 from .models import Building, MyBuilding, MyProfession, Profession
 from .recommend import recommend_professions
@@ -28,8 +29,8 @@ def list_buildings(db: Session = Depends(get_db)):
 
 
 @api_router.get("/professions", response_model=List[ProfessionListRes])
-def list_professions(db: Session = Depends(get_db)):
-    return db.query(Profession).order_by("name").all()
+def list_professions(order_by: ProfessionSortType, db: Session = Depends(get_db)):
+    return db.query(Profession).order_by(order_by).all()
 
 
 # --- User-specific routes ---
@@ -74,7 +75,6 @@ def sync_user_buildings(
         link_field="building_id",
     )
 
-    # ORM-style query to get synced building IDs
     saved_ids = (
         db.query(MyBuilding.building_id)
         .filter(MyBuilding.user_id == user_id)
@@ -99,7 +99,6 @@ def sync_user_professions(
         link_field="profession_id",
     )
 
-    # ORM-style query to get synced profession IDs
     saved_ids = (
         db.query(MyProfession.profession_id)
         .filter(MyProfession.user_id == user_id)

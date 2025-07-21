@@ -1,4 +1,4 @@
-import { Button, Modal, TextInput } from "@mantine/core";
+import { Button, Modal, Stack, Text, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useAuth } from "../api/useAuth";
 import useVerifyUser from "../api/useVerifyUser";
@@ -60,13 +60,10 @@ const AuthModal = ({
 	}, [clickedSignOut]);
 
 	return (
-		<Modal
-			opened={opened}
-			onClose={onClose}
-			title="Sign in/up to save your game data"
-		>
+		<Modal opened={opened} onClose={onClose} title="Sign In / Sign Up">
 			{step === "email" ? (
-				<>
+				<Stack>
+					<Text size="sm">Sign in/up to save your game data!</Text>
 					<TextInput
 						value={email}
 						onChange={(e) => setEmail(e.currentTarget.value)}
@@ -75,9 +72,10 @@ const AuthModal = ({
 					<Button mt="md" onClick={handleSendOtp}>
 						Send code to email
 					</Button>
-				</>
+				</Stack>
 			) : (
-				<>
+				<Stack>
+					<Text>Check your email for the 6-digit code and enter below.</Text>
 					<TextInput
 						value={code}
 						onChange={(e) => setCode(e.currentTarget.value)}
@@ -86,7 +84,7 @@ const AuthModal = ({
 					<Button mt="md" onClick={handleVerify} loading={isPending}>
 						Verify
 					</Button>
-				</>
+				</Stack>
 			)}
 		</Modal>
 	);

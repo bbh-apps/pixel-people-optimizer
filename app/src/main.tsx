@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router";
 import App from "./App";
 import { AuthProvider } from "./context/AuthProvider";
 
@@ -24,16 +25,18 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
-		<MantineProvider defaultColorScheme="auto" theme={theme}>
-			<MantineEmotionProvider>
-				<AuthProvider>
-					<QueryClientProvider client={queryClient}>
-						<Notifications />
-						<App />
-						<Analytics />
-					</QueryClientProvider>
-				</AuthProvider>
-			</MantineEmotionProvider>
-		</MantineProvider>
+		<BrowserRouter>
+			<QueryClientProvider client={queryClient}>
+				<MantineProvider defaultColorScheme="auto" theme={theme}>
+					<MantineEmotionProvider>
+						<AuthProvider>
+							<Notifications />
+							<App />
+							<Analytics />
+						</AuthProvider>
+					</MantineEmotionProvider>
+				</MantineProvider>
+			</QueryClientProvider>
+		</BrowserRouter>
 	</React.StrictMode>
 );
