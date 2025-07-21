@@ -33,7 +33,7 @@ export const recommendationKeyToLabel: { label: string; value: SortableKey }[] =
 		},
 		{
 			label: "Max CPS",
-			value: "score",
+			value: "max_cps",
 		},
 	];
 

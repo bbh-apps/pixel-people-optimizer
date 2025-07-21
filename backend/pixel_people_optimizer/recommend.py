@@ -19,7 +19,7 @@ class Candidate(NamedTuple):
     unlock_bldg: Building | None
     unlock_professions: List[Profession]
     extra_land_needed: int
-    score: float  # higher → better (coin_output × multiplier)
+    max_cps: int
 
 
 def build_lookup(session: Session) -> tuple[set[int], dict[int, Building]]:
@@ -70,6 +70,7 @@ def recommend_professions(
 
     candidates: list[Candidate] = []
     base_professions: set[Profession] = set()
+
     for [_, prof] in list(professions.items()):
         formula = formulas.get(prof.id)
         parent1 = (
@@ -88,14 +89,14 @@ def recommend_professions(
             base_professions.add(prof)
 
         if user_id:
-            # Require both parents to be discovered and the profession not yet discovered
-            if (
-                not formula
-                or not parent1
-                or not parent2
-                or parent1.id not in discovered_prof_ids
-                or parent2.id not in discovered_prof_ids
-                or prof.id in discovered_prof_ids
+            # Require both parents unless it's a base profession
+            if prof.id in discovered_prof_ids:
+                continue
+            if formula and (not parent1 or not parent2):
+                continue
+            if formula and (
+                (parent1 and parent1.id not in discovered_prof_ids)
+                or (parent2 and parent2.id not in discovered_prof_ids)
             ):
                 continue
         else:
@@ -127,10 +128,10 @@ def recommend_professions(
                 unlock_bldg=unlock_b,
                 unlock_professions=unlock_prof,
                 extra_land_needed=extra_land,
-                score=score,
+                max_cps=unlock_b.coin_output,
             )
         )
 
     # Sort and return top N
-    candidates.sort(key=lambda c: (c.extra_land_needed, -c.score))
+    candidates.sort(key=lambda c: (c.extra_land_needed, -c.max_cps))
     return candidates[:limit] if limit else candidates

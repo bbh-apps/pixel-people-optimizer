@@ -1,19 +1,20 @@
-import { Card, Text } from "@mantine/core";
+import { Card, Stack, Text } from "@mantine/core";
 import { useAuth } from "../../api/useAuth";
 
 const NoRecommendations = () => {
 	const { token } = useAuth();
 	return (
 		<Card withBorder>
-			<Text size="lg" ta="center" fw={500} pb="xs">
-				No possible combinations!
-			</Text>
-			<Text ta="center">
-				Increase your land remaining{" "}
-				{token != null
-					? "to see more."
-					: "or sign up/in to save more buildings and professions."}
-			</Text>
+			<Stack>
+				<Text size="lg" ta="center" fw={500}>
+					{token != null
+						? "No possible combinations!"
+						: "Sign up/in to view combinations."}
+				</Text>
+				{token != null && (
+					<Text ta="center">Increase your land remaining to see more.</Text>
+				)}
+			</Stack>
 		</Card>
 	);
 };

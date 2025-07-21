@@ -26,10 +26,14 @@ export interface RecommendationRes {
 	unlock_bldg: UnlockBuildingRes | null;
 	unlock_professions: ProfessionListRes[];
 	extra_land_needed: number;
-	score: number;
+	max_cps: number;
 }
 export interface UnlockBuildingRes {
 	id: number;
 	name: string;
 	professions: ProfessionListRes[];
+}
+export interface VerifiedUserRes {
+	email: string;
+	is_new_account: boolean;
 }

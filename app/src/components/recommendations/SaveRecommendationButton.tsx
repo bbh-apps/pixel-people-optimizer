@@ -12,11 +12,13 @@ import type { RecommendationRes } from "../../types/models";
 type SaveRecommendationButtonProps = {
 	recommendation: RecommendationRes;
 	refetch: () => void;
+	onConsumeLandRemaining: (landCost: number) => void;
 };
 
 const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 	recommendation,
 	refetch,
+	onConsumeLandRemaining,
 }) => {
 	const { data: savedBuildings } = useGetSavedBuildings();
 	const { data: savedProfessions } = useGetSavedProfessions();
@@ -54,6 +56,7 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 							loading: false,
 							autoClose: 2000,
 						});
+						onConsumeLandRemaining(extra_land_needed);
 					},
 					onError: (error) => {
 						notifications.update({

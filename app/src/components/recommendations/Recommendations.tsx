@@ -25,7 +25,7 @@ type RecommendationsProps = {
 const Recommendations: React.FC<RecommendationsProps> = ({
 	scrollIntoView,
 }) => {
-	const { clickedSignOut, setClickedSignOut } = useAuth();
+	const { token, clickedSignOut, setClickedSignOut } = useAuth();
 	const theme = useMantineTheme();
 	const colorScheme = useComputedColorScheme();
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
@@ -42,6 +42,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 		refetch,
 	} = useGetRecommendations(queryRemainingLand);
 	const showLoading = useDelayedLoading(isLoading, 1000);
+
+	const onConsumeLandRemaining = (landCost: number) => {
+		const updatedRemainingLand = (remainingLand ?? landCost) - landCost;
+		setRemainingLand(updatedRemainingLand);
+		setQueryRemainingLand(updatedRemainingLand);
+	};
 
 	useEffect(() => {
 		if (clickedSignOut) {
@@ -61,7 +67,8 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 			content = (
 				<RecommendationsOutput
 					recommendations={recommendations}
-					refetch={() => refetch()}
+					refetch={refetch}
+					onConsumeLandRemaining={onConsumeLandRemaining}
 				/>
 			);
 		} else {
@@ -94,6 +101,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 							}}
 							value={remainingLand ?? 0}
 							onChange={(val) => setRemainingLand(Number(val))}
+							disabled={!token}
 						/>
 					</Flex>
 					<Button
@@ -105,11 +113,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 								alignment: "start",
 							});
 						}}
+						disabled={!token}
 					>
 						Optimize
 					</Button>
 				</Flex>
-				{content}
+				{token != null ? content : <NoRecommendations />}
 			</Flex>
 		</Paper>
 	);

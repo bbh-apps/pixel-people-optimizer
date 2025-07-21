@@ -21,6 +21,7 @@ type RecommendationsTableProps = {
 	sortDirection: SortDirection;
 	onClickSorting: (key: SortableKey) => void;
 	refetch: () => void;
+	onConsumeLandRemaining: (landCost: number) => void;
 };
 
 const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
@@ -29,6 +30,7 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 	sortDirection,
 	onClickSorting,
 	refetch,
+	onConsumeLandRemaining,
 }) => {
 	const getIcon = (header: SortableKey) => {
 		const sorted = sortBy === header;
@@ -94,11 +96,12 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 						<Table.Td>
 							<ViewUnlockedProfessions recommendation={rec} />
 						</Table.Td>
-						<Table.Td>{rec.score}</Table.Td>
+						<Table.Td>{rec.max_cps}</Table.Td>
 						<Table.Td>
 							<SaveRecommendationButton
 								recommendation={rec}
 								refetch={refetch}
+								onConsumeLandRemaining={onConsumeLandRemaining}
 							/>
 						</Table.Td>
 					</Table.Tr>
