@@ -31,6 +31,10 @@ const ProfessionsList = () => {
 		base: "100%",
 		sm: "49%",
 	});
+	const justify = useMatches({
+		base: "end",
+		sm: "space-between",
+	});
 
 	const [sortType, setSortType] = useState<SortType>("gallery");
 	const { data: professions } = useGetProfessions(sortType);
@@ -128,8 +132,15 @@ const ProfessionsList = () => {
 						/>
 						<Flex direction="column" gap="md" pt="xs">
 							<CheckboxList items={filteredProfessions} />
-							<Group justify="space-between" px="md" pb="md" align="center">
-								<Text size="xs">* Note: Special genes listed at the end</Text>
+							<Text size="xs" hiddenFrom="sm" px="md">
+								* Note: Special genes listed at the end
+							</Text>
+							<Group justify={justify} px="md" pb="md" align="center">
+								<Flex flex={1}>
+									<Text size="xs" visibleFrom="sm">
+										Note: Special genes listed at the end
+									</Text>
+								</Flex>
 								<Group gap="xs">
 									<Menu>
 										<Menu.Target>

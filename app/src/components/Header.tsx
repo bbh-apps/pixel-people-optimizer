@@ -7,6 +7,8 @@ import {
 	Title,
 	useMantineColorScheme,
 	useMantineTheme,
+	useMatches,
+	type TitleOrder,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { GithubLogoIcon } from "@phosphor-icons/react";
@@ -24,6 +26,16 @@ const Header = () => {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
+
+	const titleSize: TitleOrder = useMatches({
+		base: 5,
+		sm: 4,
+	});
+
+	const buttonSize = useMatches({
+		base: "compact-xs",
+		sm: "xs",
+	});
 
 	const [isSignInModalOpen, signInModal] = useDisclosure();
 	const [isSignOutModalOpen, signOutModal] = useDisclosure();
@@ -60,9 +72,9 @@ const Header = () => {
 					c="var(--mantine-color-text)"
 					underline="never"
 				>
-					<Title order={4}>Pixel People Optimizer</Title>
+					<Title order={titleSize}>Pixel People Optimizer</Title>
 				</Anchor>
-				<Group align="center" justify="center" gap="lg">
+				<Group align="center" justify="center" gap="sm">
 					<Anchor
 						c="var(--mantine-color-text)"
 						underline="never"
@@ -95,7 +107,7 @@ const Header = () => {
 						</a>
 					</ActionIcon>
 
-					<Button variant="filled" size="xs" onClick={onClickAuth}>
+					<Button variant="filled" size={buttonSize} onClick={onClickAuth}>
 						Sign {token == null ? "in" : "out"}
 					</Button>
 				</Group>
