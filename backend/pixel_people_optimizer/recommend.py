@@ -47,7 +47,7 @@ def recommend_professions(
     limit: Optional[int] = None,
 ) -> list[Candidate]:
     # Load all professions, buildings, and formulas
-    professions = {p.id: p for p in session.query(Profession).order_by(Profession.id)}
+    professions = {p.id: p for p in session.query(Profession)}
     formulas = {f.id: f for f in session.query(SpliceFormula)}
     buildings = {b.id: b for b in session.query(Building)}
 
