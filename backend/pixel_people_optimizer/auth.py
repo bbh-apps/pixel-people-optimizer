@@ -74,11 +74,6 @@ def verify_supabase_jwt(token: str, jwks: dict, audience: str | None = None):
 def get_current_user_id(
     credentials: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ) -> str:
-    # token = credentials.credentials
-    # user = supabase_admin.auth.get_user(token)
-    # if not user or not user.user:
-    #     raise HTTPException(status_code=401, detail="Invalid or expired token")
-    # return user.user.id
     token = credentials.credentials
     try:
         jwks = get_jwks()
