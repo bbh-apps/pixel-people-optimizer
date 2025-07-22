@@ -5,9 +5,12 @@ import {
 	useSortRecommendationData,
 } from "./useSortRecommendationData";
 
+import { useSelectedDataCount } from "./useSelectedDataCount";
+
 export {
 	recommendationKeyToLabel,
 	useDelayedLoading,
+	useSelectedDataCount,
 	useSortRecommendationData,
 };
 export type { SortableKey, SortDirection };

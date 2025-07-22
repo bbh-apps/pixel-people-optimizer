@@ -3,7 +3,7 @@ import {
 	type UseSuspenseQueryResult,
 } from "@tanstack/react-query";
 import { fetchClient } from "../lib/fetchClient";
-import type { ProfessionListRes } from "../types/models";
+import type { ProfessionListWithMissionRes } from "../types/models";
 
 export type SortType = "abc" | "gallery";
 
@@ -14,10 +14,10 @@ const SortTypeToColumn = {
 
 const useGetProfessions = (
 	sortBy: SortType
-): UseSuspenseQueryResult<ProfessionListRes[]> => {
+): UseSuspenseQueryResult<ProfessionListWithMissionRes[]> => {
 	return useSuspenseQuery({
 		queryKey: ["professions", "list", sortBy],
-		queryFn: async (): Promise<ProfessionListRes[]> =>
+		queryFn: async (): Promise<ProfessionListWithMissionRes[]> =>
 			await fetchClient(
 				`/api/professions?order_by=${SortTypeToColumn[sortBy]}`
 			),

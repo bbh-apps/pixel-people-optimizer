@@ -6,6 +6,7 @@ export const saveEntitySchema = z.object({
 
 export type SaveBuildingsInput = z.infer<typeof saveEntitySchema>;
 export type SaveProfessionsInput = z.infer<typeof saveEntitySchema>;
+export type SaveMissionsInput = z.infer<typeof saveEntitySchema>;
 
 export const recommendationsSchema = z.object({
 	remaining_land: z.number(),

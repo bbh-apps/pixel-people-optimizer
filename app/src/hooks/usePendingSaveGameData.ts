@@ -2,12 +2,14 @@ import { create } from "zustand";
 import type { GameDataType } from "../components/shared/GameDataForm";
 import type {
 	SaveBuildingsInput,
+	SaveMissionsInput,
 	SaveProfessionsInput,
 } from "../components/shared/schema";
 
 type SaveInputMap = {
 	buildings: SaveBuildingsInput;
 	professions: SaveProfessionsInput;
+	missions: SaveMissionsInput;
 };
 
 type SaveEntry<K extends GameDataType = GameDataType> = {

@@ -1,34 +1,36 @@
-import { Checkbox, Group, ScrollArea } from "@mantine/core";
+import { Group, ScrollArea } from "@mantine/core";
 import { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type z from "zod";
+import CheckboxListItem from "./CheckboxListItem";
 import type { saveEntitySchema } from "./schema";
 
 type SaveCheckboxGroupInput = z.infer<typeof saveEntitySchema>;
+interface Data {
+	id: number;
+	name: string;
+}
+
+interface DisabledData extends Data {
+	reason: string;
+}
 
 type CheckboxListProps = {
-	items: { id: number; name: string }[];
+	items: Data[];
+	disabledItems: DisabledData[];
 };
 
-const CheckboxList: React.FC<CheckboxListProps> = ({ items }) => {
+const CheckboxList: React.FC<CheckboxListProps> = ({
+	items,
+	disabledItems = [],
+}) => {
 	const { control, watch } = useFormContext<SaveCheckboxGroupInput>();
 
 	const watchedIds = watch("ids");
 	const selectedSet = useMemo(() => new Set(watchedIds), [watchedIds]);
 
-	const handleCheckbox = (
-		ids: Set<number>,
-		id: number,
-		onChange: (v: number[]) => void
-	) => {
-		const newIds = new Set(ids);
-		if (newIds.has(id)) {
-			newIds.delete(id);
-		} else {
-			newIds.add(Number(id));
-		}
-		onChange(Array.from(newIds));
-	};
+	const disabledItemsMap: Map<number, DisabledData> = new Map();
+	disabledItems.forEach((item) => disabledItemsMap.set(item.id, item));
 
 	return (
 		<ScrollArea h={180} px="lg">
@@ -38,15 +40,12 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ items }) => {
 				render={({ field }) => (
 					<Group>
 						{items.map((item) => (
-							<Checkbox
-								w="45%"
+							<CheckboxListItem
 								key={`${item.id}-${item.name}`}
-								value={item.id.toString()}
-								label={item.name}
-								checked={selectedSet.has(item.id)}
-								onChange={() =>
-									handleCheckbox(selectedSet, item.id, field.onChange)
-								}
+								item={item}
+								disabledItemsMap={disabledItemsMap}
+								selectedSet={selectedSet}
+								onChange={field.onChange}
 							/>
 						))}
 					</Group>

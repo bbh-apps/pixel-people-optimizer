@@ -11,25 +11,28 @@ import {
 import { useDebouncedValue } from "@mantine/hooks";
 import { CheckIcon } from "@phosphor-icons/react";
 import type { UseMutationResult } from "@tanstack/react-query";
-import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "../../api/useAuth";
 import type { SortType } from "../../api/useGetAllProfessions";
+import { useSelectedDataCount } from "../../hooks";
 import { usePendingSaveGameData } from "../../hooks/usePendingSaveGameData";
 import { useSaveGameDataForms } from "../../hooks/useSaveGameDataForms";
 import type { IDList } from "../../types/models";
 import AuthModal from "../AuthModal";
-import AccordionCard from "./AccordionCard";
 import CheckboxList from "./CheckboxList";
-import { saveEntitySchema, type SaveBuildingsInput } from "./schema";
+import { saveEntitySchema } from "./schema";
 
-export type GameDataType = "buildings" | "professions";
+export type GameDataType = "buildings" | "professions" | "missions";
 
-type Data = {
+interface Data {
 	id: number;
 	name: string;
-};
+}
+
+interface DisabledData extends Data {
+	reason: string;
+}
 
 type GameDataFormProps<TData extends Data> = {
 	type: GameDataType;
@@ -44,6 +47,7 @@ type GameDataFormProps<TData extends Data> = {
 		},
 		unknown
 	>;
+	disabledData?: DisabledData[];
 	hasSort?: boolean;
 	sortType?: SortType;
 	setSortType?: (sortBy: SortType) => void;
@@ -55,15 +59,12 @@ const GameDataForm = <TData extends Data>({
 	savedData,
 	defaultIds,
 	saveMutation,
+	disabledData = [],
 	hasSort = false,
 	sortType = "abc",
 	setSortType = () => {},
 }: GameDataFormProps<TData>) => {
 	const { token } = useAuth();
-	const width = useMatches({
-		base: "100%",
-		sm: "49%",
-	});
 	const justify = useMatches(
 		hasSort
 			? {
@@ -73,7 +74,9 @@ const GameDataForm = <TData extends Data>({
 			: { base: "end" }
 	);
 
-	const formMethods = useForm<SaveBuildingsInput>({
+	const formMethods = useForm<{
+		ids: number[];
+	}>({
 		resolver: zodResolver(saveEntitySchema),
 		defaultValues: {
 			ids: [],
@@ -104,7 +107,10 @@ const GameDataForm = <TData extends Data>({
 	} = saveMutation;
 	const [authOpen, setAuthOpen] = useState(false);
 
-	const onSubmit = async (data: SaveBuildingsInput) => {
+	const selectedItems = watch("ids");
+	const { updateCount } = useSelectedDataCount();
+
+	const onSubmit = async (data: { ids: number[] }) => {
 		if (token) {
 			saveData(data);
 			reset(data);
@@ -142,85 +148,86 @@ const GameDataForm = <TData extends Data>({
 		setFilteredData(filtered);
 	}, [gameData, debounced]);
 
+	useEffect(() => {
+		const savedItemsCount = (watch("ids") ?? savedData ?? []).length;
+		updateCount(type, savedItemsCount);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [savedData, selectedItems.length]);
+
 	return (
-		<Flex w={width}>
+		<Flex w="100%">
 			<AuthModal opened={authOpen} onClose={() => setAuthOpen(false)} />
 			<FormProvider {...formMethods}>
 				<form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-					<AccordionCard
-						title={`My ${capitalize(type)}`}
-						savedItemCount={(watch("ids") ?? savedData ?? []).length}
-					>
-						<TextInput
-							placeholder={`Search ${type}`}
-							value={dataSearch}
-							onChange={(e) => setDataSearch(e.target.value)}
-							px="md"
-						/>
-						<Flex direction="column" gap="md" pt="xs">
-							<CheckboxList items={filteredData} />
+					<TextInput
+						placeholder={`Search ${type}`}
+						value={dataSearch}
+						onChange={(e) => setDataSearch(e.target.value)}
+						px="md"
+					/>
+					<Flex direction="column" gap="md" pt="xs">
+						<CheckboxList items={filteredData} disabledItems={disabledData} />
+						{hasSort && (
+							<Text size="xs" hiddenFrom="sm" px="md">
+								* Note: Special genes listed at the end
+							</Text>
+						)}
+						<Group justify={justify} px="md" align="center">
 							{hasSort && (
-								<Text size="xs" hiddenFrom="sm" px="md">
-									* Note: Special genes listed at the end
-								</Text>
-							)}
-							<Group justify={justify} px="md" pb="md" align="center">
-								{hasSort && (
-									<Flex flex={1}>
-										<Text size="xs" visibleFrom="sm">
-											Note: Special genes listed at the end
-										</Text>
-									</Flex>
-								)}
-								<Flex gap="sm">
-									{hasSort && (
-										<Menu>
-											<Menu.Target>
-												<Button px="xs">Sort order</Button>
-											</Menu.Target>
-											<Menu.Dropdown>
-												<Menu.Item
-													leftSection={
-														sortType === "gallery" ? (
-															<CheckIcon color="var(--mantine-color-text)" />
-														) : null
-													}
-													onClick={() => onClickSort("gallery")}
-												>
-													Gallery order
-												</Menu.Item>
-												<Menu.Item
-													leftSection={
-														sortType === "abc" ? (
-															<CheckIcon color="var(--mantine-color-text)" />
-														) : null
-													}
-													onClick={() => onClickSort("abc")}
-												>
-													ABC order
-												</Menu.Item>
-											</Menu.Dropdown>
-										</Menu>
-									)}
-									<Button
-										variant="filled"
-										disabled={!!token && !isDirty}
-										loading={isPending}
-										onClick={async () => {
-											if (!token) {
-												await triggerSaveAll();
-												setAuthOpen(true);
-											} else {
-												await handleSubmit(onSubmit)();
-											}
-										}}
-									>
-										Save
-									</Button>
+								<Flex flex={1}>
+									<Text size="xs" visibleFrom="sm">
+										Note: Special genes listed at the end
+									</Text>
 								</Flex>
-							</Group>
-						</Flex>
-					</AccordionCard>
+							)}
+							<Flex gap="sm">
+								{hasSort && (
+									<Menu>
+										<Menu.Target>
+											<Button px="xs">Sort order</Button>
+										</Menu.Target>
+										<Menu.Dropdown>
+											<Menu.Item
+												leftSection={
+													sortType === "gallery" ? (
+														<CheckIcon color="var(--mantine-color-text)" />
+													) : null
+												}
+												onClick={() => onClickSort("gallery")}
+											>
+												Gallery order
+											</Menu.Item>
+											<Menu.Item
+												leftSection={
+													sortType === "abc" ? (
+														<CheckIcon color="var(--mantine-color-text)" />
+													) : null
+												}
+												onClick={() => onClickSort("abc")}
+											>
+												ABC order
+											</Menu.Item>
+										</Menu.Dropdown>
+									</Menu>
+								)}
+								<Button
+									variant="filled"
+									disabled={!!token && !isDirty}
+									loading={isPending}
+									onClick={async () => {
+										if (!token) {
+											await triggerSaveAll();
+											setAuthOpen(true);
+										} else {
+											await handleSubmit(onSubmit)();
+										}
+									}}
+								>
+									Save
+								</Button>
+							</Flex>
+						</Group>
+					</Flex>
 				</form>
 			</FormProvider>
 		</Flex>

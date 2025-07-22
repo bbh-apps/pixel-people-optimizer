@@ -9,7 +9,7 @@ from typing import List, NamedTuple, Optional
 
 from sqlalchemy.orm import Session
 
-from .models import Building, MyBuilding, MyProfession, Profession, SpliceFormula
+from .models import Building, MyBuilding, MyProfession, Profession, SpliceFormula, MySpecialMission
 
 
 class Candidate(NamedTuple):
@@ -62,6 +62,10 @@ def recommend_professions(
         built_bldg_ids = {
             mb.building_id
             for mb in session.query(MyBuilding).filter(MyBuilding.user_id == user_id)
+        }
+
+        completed_missions = {
+            mm.mission_id for mm in session.query(MySpecialMission).filter(MySpecialMission.user_id == user_id)
         }
     else:
         # Anonymous user

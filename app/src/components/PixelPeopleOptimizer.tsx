@@ -8,12 +8,9 @@ import {
 	Title,
 } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
-import { Suspense } from "react";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
-import BuildingsList from "./BuildingsList";
-import ProfessionsList from "./ProfessionsList";
 import { Recommendations } from "./recommendations";
-import { CheckboxListFormSkeleton } from "./shared";
+import { SavedData } from "./saved-data";
 
 const PixelPeopleOptimizer = () => {
 	const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
@@ -40,23 +37,7 @@ const PixelPeopleOptimizer = () => {
 					</Accordion.Item>
 				</Accordion>
 			</Stack>
-			<Flex
-				gap="sm"
-				wrap="wrap"
-				direction={{ base: "column", sm: "row" }}
-				justify="center"
-			>
-				<Suspense fallback={<CheckboxListFormSkeleton title="My Buildings" />}>
-					<BuildingsList />
-				</Suspense>
-				<Suspense
-					fallback={
-						<CheckboxListFormSkeleton title="My Discovered Professions" />
-					}
-				>
-					<ProfessionsList />
-				</Suspense>
-			</Flex>
+			<SavedData />
 			<Flex ref={targetRef}>
 				<Recommendations scrollIntoView={scrollIntoView} />
 			</Flex>
