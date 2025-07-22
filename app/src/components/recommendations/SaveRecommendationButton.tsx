@@ -76,7 +76,7 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 		if (savedProfessions) {
 			const professionNotifId = notifications.show({
 				loading: true,
-				title: "Saving building...",
+				title: "Saving profession...",
 				message: profession?.name,
 				autoClose: false,
 				withCloseButton: false,
@@ -87,7 +87,6 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 				{ ids: savedProfIds.concat([unlockProfessionId]) },
 				{
 					onSuccess: () => {
-						refetch();
 						notifications.update({
 							id: professionNotifId,
 							color: "teal",
@@ -97,6 +96,7 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 							loading: false,
 							autoClose: 2000,
 						});
+						refetch();
 					},
 					onError: (error) => {
 						notifications.update({

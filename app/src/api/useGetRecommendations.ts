@@ -7,7 +7,7 @@ const useGetRecommendations = (remainingLand: number | null) => {
 	const { token } = useAuth();
 
 	return useQuery({
-		queryKey: ["recommendations", remainingLand],
+		queryKey: ["recommendations"],
 		queryFn: async (): Promise<RecommendationRes[]> =>
 			await fetchClient(
 				`/api/recommendations?remaining_land=${remainingLand ?? 0}`,
@@ -17,7 +17,7 @@ const useGetRecommendations = (remainingLand: number | null) => {
 					},
 				}
 			),
-		enabled: !!remainingLand && !!token,
+		enabled: typeof remainingLand === "number" && !!token,
 	});
 };
 
