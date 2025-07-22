@@ -33,47 +33,10 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 
 	const onClick = () => {
 		handlers.close();
-		const unlockBldgId = unlock_bldg?.id;
-		if (savedBuildings && unlockBldgId && hasLandCost) {
-			const buildingNotifId = notifications.show({
-				loading: true,
-				title: "Saving building...",
-				message: unlock_bldg?.name,
-				autoClose: false,
-				withCloseButton: false,
-			});
-			const savedBldgIds = savedBuildings.map((b) => b.id);
-			saveBuildings(
-				{ ids: savedBldgIds.concat([unlockBldgId]) },
-				{
-					onSuccess: () => {
-						notifications.update({
-							id: buildingNotifId,
-							color: "teal",
-							title: "Building saved!",
-							message: unlock_bldg?.name,
-							icon: <CheckCircleIcon size={18} />,
-							loading: false,
-							autoClose: 2000,
-						});
-						onConsumeLandRemaining(extra_land_needed);
-					},
-					onError: (error) => {
-						notifications.update({
-							id: buildingNotifId,
-							color: "red",
-							title: `Error saving ${unlock_bldg?.name}`,
-							message: error.message,
-							icon: <CheckCircleIcon size={18} />,
-							loading: false,
-							withCloseButton: true,
-						});
-					},
-				}
-			);
-		}
 
 		if (savedProfessions) {
+			const unlockProfessionId = profession.id;
+			const savedProfIds = savedProfessions.map((p) => p.id);
 			const professionNotifId = notifications.show({
 				loading: true,
 				title: "Saving profession...",
@@ -81,10 +44,10 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 				autoClose: false,
 				withCloseButton: false,
 			});
-			const unlockProfessionId = profession.id;
-			const savedProfIds = savedProfessions.map((p) => p.id);
 			saveProfessions(
-				{ ids: savedProfIds.concat([unlockProfessionId]) },
+				{
+					ids: savedProfIds.concat([unlockProfessionId]),
+				},
 				{
 					onSuccess: () => {
 						notifications.update({
@@ -96,18 +59,37 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 							loading: false,
 							autoClose: 2000,
 						});
+						const unlockBldgId = unlock_bldg?.id;
+						if (savedBuildings && unlockBldgId && hasLandCost) {
+							const savedBldgIds = savedBuildings?.map((b) => b.id);
+							const buildingNotifId = notifications.show({
+								loading: true,
+								title: "Saving building...",
+								message: unlock_bldg?.name,
+								autoClose: false,
+								withCloseButton: false,
+							});
+							saveBuildings(
+								{
+									ids: savedBldgIds.concat([unlockBldgId]),
+								},
+								{
+									onSuccess: () => {
+										notifications.update({
+											id: buildingNotifId,
+											color: "teal",
+											title: "Building saved!",
+											message: unlock_bldg?.name,
+											icon: <CheckCircleIcon size={18} />,
+											loading: false,
+											autoClose: 2000,
+										});
+										onConsumeLandRemaining(extra_land_needed);
+									},
+								}
+							);
+						}
 						refetch();
-					},
-					onError: (error) => {
-						notifications.update({
-							id: professionNotifId,
-							color: "red",
-							title: `Error saving ${profession?.name}`,
-							message: error.message,
-							icon: <CheckCircleIcon size={18} />,
-							loading: false,
-							withCloseButton: true,
-						});
 					},
 				}
 			);

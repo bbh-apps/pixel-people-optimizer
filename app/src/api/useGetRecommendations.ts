@@ -17,7 +17,7 @@ const useGetRecommendations = (remainingLand: number | null) => {
 					},
 				}
 			),
-		enabled: !!remainingLand && typeof remainingLand === "number" && !!token,
+		enabled: remainingLand != null && !!token,
 	});
 };
 
