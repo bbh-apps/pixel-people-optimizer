@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { SaveProfessionsInput } from "../components/shared/schema";
 import { fetchClient } from "../lib/fetchClient";
+import type { IDList } from "../types/models";
 import { useAuth } from "./useAuth";
 
 const useSaveProfessions = () => {
 	const queryClient = useQueryClient();
 	const { token } = useAuth();
-	return useMutation({
+	return useMutation<IDList, Error, SaveProfessionsInput>({
 		mutationKey: ["professions", "save"],
 		mutationFn: async (data: SaveProfessionsInput) =>
 			await fetchClient("/api/professions", {

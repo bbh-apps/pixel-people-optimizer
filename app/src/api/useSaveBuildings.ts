@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { SaveBuildingsInput } from "../components/shared/schema";
 import { fetchClient } from "../lib/fetchClient";
+import type { IDList } from "../types/models";
 import { useAuth } from "./useAuth";
 
 const useSaveBuildings = () => {
 	const queryClient = useQueryClient();
 	const { token } = useAuth();
-	return useMutation({
+	return useMutation<IDList, Error, SaveBuildingsInput>({
 		mutationKey: ["buildings", "save"],
 		mutationFn: async (data: SaveBuildingsInput) =>
 			await fetchClient("/api/buildings", {

@@ -31,7 +31,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ items }) => {
 	};
 
 	return (
-		<ScrollArea h={180} px="md">
+		<ScrollArea h={180} px="lg">
 			<Controller
 				control={control}
 				name="ids"

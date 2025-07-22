@@ -63,7 +63,7 @@ const AuthModal = ({
 		<Modal opened={opened} onClose={onClose} title="Sign In / Sign Up">
 			{step === "email" ? (
 				<Stack>
-					<Text size="sm">Sign in/up to save your game data!</Text>
+					<Text size="sm">Sign in / up to save your game data!</Text>
 					<TextInput
 						value={email}
 						onChange={(e) => setEmail(e.currentTarget.value)}
@@ -75,14 +75,16 @@ const AuthModal = ({
 				</Stack>
 			) : (
 				<Stack>
-					<Text>Check your email for the 6-digit code and enter below.</Text>
+					<Text size="sm">
+						Check your email for the 6-digit code and enter below.
+					</Text>
 					<TextInput
 						value={code}
 						onChange={(e) => setCode(e.currentTarget.value)}
 						label="Enter code"
 					/>
 					<Button mt="md" onClick={handleVerify} loading={isPending}>
-						Verify
+						Verify code & sign in
 					</Button>
 				</Stack>
 			)}

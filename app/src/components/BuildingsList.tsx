@@ -1,129 +1,23 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, TextInput, useMatches } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
-import { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useAuth } from "../api/useAuth";
 import useGetBuildings from "../api/useGetAllBuildings";
 import useGetSavedBuildings from "../api/useGetSavedBuildings";
 import useSaveBuildings from "../api/useSaveBuildings";
-import { usePendingSaveGameData } from "../hooks/usePendingSaveGameData";
-import { useSaveGameDataForms } from "../hooks/useSaveGameDataForms";
-import type { BuildingListRes } from "../types/models";
-import AuthModal from "./AuthModal";
-import { AccordionCard, CheckboxList } from "./shared";
-import { saveEntitySchema, type SaveBuildingsInput } from "./shared/schema";
+import { GameDataForm } from "./shared";
 
 const DEFAULT_START_BLDG_IDS = [9, 140];
 
 const BuildingsList = () => {
-	const { token } = useAuth();
-	const width = useMatches({
-		base: "100%",
-		sm: "49%",
-	});
 	const { data: buildings } = useGetBuildings();
 	const { data: userBuildings } = useGetSavedBuildings();
-
-	const formMethods = useForm<SaveBuildingsInput>({
-		resolver: zodResolver(saveEntitySchema),
-		defaultValues: {
-			ids: [],
-		},
-		values: {
-			ids: !token
-				? DEFAULT_START_BLDG_IDS
-				: userBuildings?.map((b) => b.id) ?? [],
-		},
-	});
-	const {
-		handleSubmit,
-		formState: { isDirty },
-		reset,
-		watch,
-	} = formMethods;
-
-	const [buildingSearch, setBuildingSearch] = useState<string>("");
-	const [debounced] = useDebouncedValue(buildingSearch, 200);
-	const [filteredBuildings, setFilteredBuildings] =
-		useState<BuildingListRes[]>(buildings);
-
-	const { registerSaveCallback, unregisterSaveCallback, triggerSaveAll } =
-		useSaveGameDataForms();
-	const { addPendingSave } = usePendingSaveGameData();
-	const {
-		mutate: saveBuildings,
-		mutateAsync: saveBuildingsAsync,
-		isPending,
-	} = useSaveBuildings();
-	const [authOpen, setAuthOpen] = useState(false);
-
-	const onSubmit = async (data: SaveBuildingsInput) => {
-		if (token) {
-			saveBuildings(data);
-			reset(data);
-		} else {
-			addPendingSave("buildings", data, async (input) => {
-				await saveBuildingsAsync(input);
-			});
-		}
-	};
-
-	useEffect(() => {
-		if (!token) {
-			registerSaveCallback("buildings", () => handleSubmit(onSubmit)());
-
-			return () => unregisterSaveCallback("buildings");
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [token, handleSubmit, onSubmit]);
-
-	useEffect(() => {
-		const filtered = buildings.filter((b) =>
-			b.name.toLowerCase().includes(debounced)
-		);
-		setFilteredBuildings(filtered);
-	}, [buildings, debounced]);
+	const saveBuildingsMutation = useSaveBuildings();
 
 	return (
-		<Flex w={width}>
-			<AuthModal opened={authOpen} onClose={() => setAuthOpen(false)} />
-			<FormProvider {...formMethods}>
-				<form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-					<AccordionCard
-						title="My Buildings"
-						savedItemCount={(watch("ids") ?? userBuildings ?? []).length}
-					>
-						<TextInput
-							placeholder="Search for a building"
-							value={buildingSearch}
-							onChange={(e) => setBuildingSearch(e.target.value)}
-							px="md"
-						/>
-						<Flex direction="column" gap="md" pt="xs">
-							<CheckboxList items={filteredBuildings} />
-							<Flex justify="end" px="md" pb="md">
-								<Button
-									variant="filled"
-									disabled={!!token && !isDirty}
-									loading={isPending}
-									onClick={async () => {
-										if (!token) {
-											await triggerSaveAll();
-											setAuthOpen(true);
-										} else {
-											await handleSubmit(onSubmit)();
-										}
-									}}
-								>
-									Save
-								</Button>
-							</Flex>
-						</Flex>
-					</AccordionCard>
-				</form>
-			</FormProvider>
-		</Flex>
+		<GameDataForm
+			type="buildings"
+			gameData={buildings}
+			savedData={userBuildings}
+			defaultIds={DEFAULT_START_BLDG_IDS}
+			saveMutation={saveBuildingsMutation}
+		/>
 	);
 };
 

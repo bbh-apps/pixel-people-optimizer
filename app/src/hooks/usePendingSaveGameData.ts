@@ -1,18 +1,16 @@
 import { create } from "zustand";
+import type { GameDataType } from "../components/shared/GameDataForm";
 import type {
 	SaveBuildingsInput,
 	SaveProfessionsInput,
 } from "../components/shared/schema";
-
-// Define valid keys and their associated input types
-type SaveKey = "buildings" | "professions";
 
 type SaveInputMap = {
 	buildings: SaveBuildingsInput;
 	professions: SaveProfessionsInput;
 };
 
-type SaveEntry<K extends SaveKey = SaveKey> = {
+type SaveEntry<K extends GameDataType = GameDataType> = {
 	key: K;
 	save: (input: SaveInputMap[K]) => Promise<void>;
 	input: SaveInputMap[K];
@@ -20,10 +18,10 @@ type SaveEntry<K extends SaveKey = SaveKey> = {
 
 type PendingSaveStore = {
 	saves: Partial<{
-		[K in SaveKey]: SaveEntry<K>;
+		[K in GameDataType]: SaveEntry<K>;
 	}>;
 
-	addPendingSave: <K extends SaveKey>(
+	addPendingSave: <K extends GameDataType>(
 		key: K,
 		input: SaveInputMap[K],
 		save: (input: SaveInputMap[K]) => Promise<void>
@@ -47,7 +45,7 @@ export const usePendingSaveGameData = create<PendingSaveStore>((set, get) => ({
 	submitAllPendingSaves: async () => {
 		const { saves, clear } = get();
 		for (const key in saves) {
-			const entry = saves[key as SaveKey];
+			const entry = saves[key as GameDataType];
 			if (!entry) continue;
 
 			try {

@@ -1,4 +1,12 @@
-import { Accordion, Flex, Stack, Text, Title } from "@mantine/core";
+import {
+	Accordion,
+	Flex,
+	Group,
+	Image,
+	Stack,
+	Text,
+	Title,
+} from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { Suspense } from "react";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
@@ -16,7 +24,11 @@ const PixelPeopleOptimizer = () => {
 	return (
 		<Flex direction="column" gap="xl">
 			<Stack gap="sm">
-				<Title order={1}>Pixel People Optimizer</Title>
+				<Group gap="xs" align="center">
+					<Image src="../../public/Mayor.webp" h={48} w={48} />
+					<Title order={1}>Pixel People Optimizer</Title>
+				</Group>
+
 				<Text>
 					Welcome! I made this free open-source tool to make splicing easier in
 					one of my favorite games.
