@@ -119,7 +119,6 @@ def recommend_professions(
             continue
 
         unlock_prof = get_unlocked_professions(session, prof.id)
-        score = unlock_b.coin_output * unlock_b.multiplier
         candidates.append(
             Candidate(
                 profession=prof,
