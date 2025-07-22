@@ -25,7 +25,7 @@ const PixelPeopleOptimizer = () => {
 		<Flex direction="column" gap="xl">
 			<Stack gap="sm">
 				<Group gap="xs" align="center">
-					<Image src="../../public/Mayor.webp" h={48} w={48} />
+					<Image src="/Mayor.webp" h={48} w={48} />
 					<Title order={1}>Pixel People Optimizer</Title>
 				</Group>
 
