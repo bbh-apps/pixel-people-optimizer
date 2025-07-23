@@ -1,12 +1,34 @@
 import { useQueries } from "@tanstack/react-query";
-import { getBuildingsOptions } from "../api/useGetAllBuildings";
-import { getMissionsOptions } from "../api/useGetAllMissions";
-import { getProfessionsOptions } from "../api/useGetAllProfessions";
+import { fetchClient } from "../lib/fetchClient";
+import type {
+	BuildingListRes,
+	MissionListRes,
+	ProfessionListWithMissionRes,
+} from "../types/models";
 import { PublicDataContext } from "./PublicDataContext";
 
 const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 	const results = useQueries({
-		queries: [getBuildingsOptions, getProfessionsOptions, getMissionsOptions],
+		queries: [
+			{
+				queryKey: ["buildings", "list"],
+				queryFn: async (): Promise<BuildingListRes[]> =>
+					await fetchClient("/api/buildings"),
+				staleTime: Infinity,
+			},
+			{
+				queryKey: ["professions", "list"],
+				queryFn: async (): Promise<ProfessionListWithMissionRes[]> =>
+					await fetchClient(`/api/professions`),
+				staleTime: Infinity,
+			},
+			{
+				queryKey: ["missions", "list"],
+				queryFn: async (): Promise<MissionListRes[]> =>
+					await fetchClient("/api/missions"),
+				staleTime: Infinity,
+			},
+		],
 	});
 
 	return (

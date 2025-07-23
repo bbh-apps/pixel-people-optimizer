@@ -103,7 +103,6 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 			</Popover.Target>
 			<Popover.Dropdown style={{ pointerEvents: "none" }}>
 				{disabledItemsMap.get(item.id)?.popoverContent}
-				{/* <Text size="sm">{disabledItemsMap.get(item.id)?.reason ?? "n/a"}</Text> */}
 			</Popover.Dropdown>
 		</Popover>
 	);
