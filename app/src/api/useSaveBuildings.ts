@@ -20,6 +20,7 @@ const useSaveBuildings = () => {
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["buildings", "saved"] });
+			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		},
 	});
 };

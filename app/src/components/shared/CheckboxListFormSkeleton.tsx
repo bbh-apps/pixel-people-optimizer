@@ -24,9 +24,19 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 		md: "23%",
 	});
 
+	const sizes = useMatches({
+		base: "xs",
+		sm: "sm",
+	});
+
+	const numItems = useMatches({
+		base: 13,
+		sm: 19,
+	});
+
 	const getRandomWidth = () => {
-		const minWidth = 70;
-		const maxWidth = 80;
+		const minWidth = 65;
+		const maxWidth = 70;
 		return Math.random() * (maxWidth - minWidth) + minWidth;
 	};
 
@@ -34,9 +44,9 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 		<Flex direction="column" gap="md" pt="xs" px="md">
 			<TextInput disabled />
 			<Group gap="md">
-				{range(0, 19).map((idx) => (
+				{range(0, numItems).map((idx) => (
 					<Group w={widths} key={`${type}-${idx}`}>
-						<Checkbox.Indicator disabled />
+						<Checkbox.Indicator disabled size={sizes} />
 						<Skeleton height={8} w={`${getRandomWidth()}%`} />
 					</Group>
 				))}

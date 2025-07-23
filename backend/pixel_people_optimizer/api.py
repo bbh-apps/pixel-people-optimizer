@@ -5,7 +5,6 @@ from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session, joinedload
 
 from .auth import get_current_user_id
-from .constants import ProfessionSortType
 from .db import get_db
 from .models import (
     Building,
@@ -14,6 +13,7 @@ from .models import (
     MySpecialMission,
     Profession,
     SpecialMission,
+    SpliceFormula,
 )
 from .recommend import recommend_professions
 from .schema import (
@@ -23,9 +23,10 @@ from .schema import (
     ProfessionListRes,
     ProfessionListWithMissionRes,
     RecommendationRes,
+    SavedProfessionListRes,
     UnlockBuildingRes,
 )
-from .service import sync_user_items
+from .service import get_profession_list_with_mission_response, sync_user_items
 
 api_router = APIRouter(prefix="/api", tags=["api"])
 
@@ -38,28 +39,19 @@ def list_buildings(db: Session = Depends(get_db)):
 
 
 @api_router.get("/professions", response_model=List[ProfessionListWithMissionRes])
-def list_professions(order_by: ProfessionSortType, db: Session = Depends(get_db)):
+def list_professions(db: Session = Depends(get_db)):
     professions = (
         db.query(Profession)
-        .order_by(order_by)
-        .options(joinedload(Profession.unlock_mission))
+        .options(
+            joinedload(Profession.unlock_mission),
+            joinedload(Profession.formula).joinedload(SpliceFormula.parent1),
+            joinedload(Profession.formula).joinedload(SpliceFormula.parent2),
+        )
         .all()
     )
+
     return [
-        ProfessionListWithMissionRes(
-            id=p.id,
-            name=p.name,
-            category=p.category,
-            mission=(
-                MissionListRes(
-                    id=p.unlock_mission.id,
-                    name=p.unlock_mission.name,
-                )
-                if p.unlock_mission
-                else None
-            ),
-        )
-        for p in professions
+        get_profession_list_with_mission_response(profession=p) for p in professions
     ]
 
 
@@ -83,7 +75,7 @@ def get_user_buildings(
     )
 
 
-@api_router.get("/me/professions", response_model=List[ProfessionListWithMissionRes])
+@api_router.get("/me/professions", response_model=List[SavedProfessionListRes])
 def get_user_professions(
     user_id: str = Depends(get_current_user_id), db: Session = Depends(get_db)
 ):
@@ -96,7 +88,7 @@ def get_user_professions(
     )
 
     return [
-        ProfessionListWithMissionRes(
+        SavedProfessionListRes(
             id=p.id,
             name=p.name,
             category=p.category,

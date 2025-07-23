@@ -14,25 +14,18 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "../../api/useAuth";
-import type { SortType } from "../../api/useGetAllProfessions";
+
 import { useSelectedDataCount } from "../../hooks";
 import { usePendingSaveGameData } from "../../hooks/usePendingSaveGameData";
 import { useSaveGameDataForms } from "../../hooks/useSaveGameDataForms";
 import type { IDList } from "../../types/models";
 import AuthModal from "../AuthModal";
+import type { ProfessionSortType } from "../saved-data/ProfessionsList";
 import CheckboxList from "./CheckboxList";
+import type { Data, DisabledData } from "./CheckboxListItem";
 import { saveEntitySchema } from "./schema";
 
 export type GameDataType = "buildings" | "professions" | "missions";
-
-interface Data {
-	id: number;
-	name: string;
-}
-
-interface DisabledData extends Data {
-	reason: string;
-}
 
 type GameDataFormProps<TData extends Data> = {
 	type: GameDataType;
@@ -49,8 +42,8 @@ type GameDataFormProps<TData extends Data> = {
 	>;
 	disabledData?: DisabledData[];
 	hasSort?: boolean;
-	sortType?: SortType;
-	setSortType?: (sortBy: SortType) => void;
+	ProfessionSortType?: ProfessionSortType;
+	setProfessionSortType?: (sortBy: ProfessionSortType) => void;
 };
 
 const GameDataForm = <TData extends Data>({
@@ -61,8 +54,8 @@ const GameDataForm = <TData extends Data>({
 	saveMutation,
 	disabledData = [],
 	hasSort = false,
-	sortType = "abc",
-	setSortType = () => {},
+	ProfessionSortType = "abc",
+	setProfessionSortType = () => {},
 }: GameDataFormProps<TData>) => {
 	const { token } = useAuth();
 	const justify = useMatches(
@@ -106,8 +99,7 @@ const GameDataForm = <TData extends Data>({
 		isPending,
 	} = saveMutation;
 	const [authOpen, setAuthOpen] = useState(false);
-
-	const selectedItems = watch("ids");
+	const selectedSet = watch("ids");
 	const { updateCount } = useSelectedDataCount();
 
 	const onSubmit = async (data: { ids: number[] }) => {
@@ -121,16 +113,26 @@ const GameDataForm = <TData extends Data>({
 		}
 	};
 
-	const onClickSort = (newSortType: SortType) => {
-		if (newSortType !== sortType) {
-			if (newSortType === "abc") {
-				setSortedData(gameData.sort((a, b) => a.name.localeCompare(b.name)));
-			} else if (newSortType === "gallery") {
-				setSortedData(gameData.sort((a, b) => a.id - b.id));
-			}
-			setSortType(newSortType);
+	const sortItems = (sortBy: ProfessionSortType) => {
+		if (sortBy === "abc") {
+			setSortedData(gameData.sort((a, b) => a.name.localeCompare(b.name)));
+		} else if (sortBy === "gallery") {
+			setSortedData(gameData.sort((a, b) => a.id - b.id));
 		}
 	};
+
+	const onClickSort = (newProfessionSortType: ProfessionSortType) => {
+		if (newProfessionSortType !== ProfessionSortType) {
+			sortItems(newProfessionSortType);
+			setProfessionSortType(newProfessionSortType);
+		}
+	};
+
+	// Initialize with sorted data
+	useEffect(() => {
+		sortItems(ProfessionSortType);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!token) {
@@ -149,10 +151,13 @@ const GameDataForm = <TData extends Data>({
 	}, [gameData, debounced]);
 
 	useEffect(() => {
-		const savedItemsCount = (watch("ids") ?? savedData ?? []).length;
-		updateCount(type, savedItemsCount);
+		if (savedData) {
+			updateCount(type, savedData.length);
+		} else {
+			updateCount(type, selectedSet.length);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [savedData, selectedItems.length]);
+	}, [savedData, selectedSet]);
 
 	return (
 		<Flex w="100%">
@@ -166,7 +171,11 @@ const GameDataForm = <TData extends Data>({
 						px="md"
 					/>
 					<Flex direction="column" gap="md" pt="xs">
-						<CheckboxList items={filteredData} disabledItems={disabledData} />
+						<CheckboxList
+							type={type}
+							items={filteredData}
+							disabledItems={disabledData}
+						/>
 						{hasSort && (
 							<Text size="xs" hiddenFrom="sm" px="md">
 								* Note: Special genes listed at the end
@@ -189,7 +198,7 @@ const GameDataForm = <TData extends Data>({
 										<Menu.Dropdown>
 											<Menu.Item
 												leftSection={
-													sortType === "gallery" ? (
+													ProfessionSortType === "gallery" ? (
 														<CheckIcon color="var(--mantine-color-text)" />
 													) : null
 												}
@@ -199,7 +208,7 @@ const GameDataForm = <TData extends Data>({
 											</Menu.Item>
 											<Menu.Item
 												leftSection={
-													sortType === "abc" ? (
+													ProfessionSortType === "abc" ? (
 														<CheckIcon color="var(--mantine-color-text)" />
 													) : null
 												}

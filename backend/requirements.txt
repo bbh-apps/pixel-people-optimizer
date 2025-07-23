@@ -3,8 +3,10 @@ annotated-types==0.7.0
 anyio==4.9.0
 beautifulsoup4==4.13.4
 certifi==2025.7.14
+cffi==1.17.1
 charset-normalizer==3.4.2
 click==8.2.1
+cryptography==45.0.5
 deprecation==2.1.0
 dotenv==0.9.9
 ecdsa==0.19.1
@@ -29,6 +31,7 @@ pandas-stubs==2.3.0.250703
 postgrest==1.1.1
 psycopg2==2.9.10
 pyasn1==0.6.1
+pycparser==2.22
 pydantic==2.11.7
 pydantic-to-typescript==2.0.0
 pydantic_core==2.33.2

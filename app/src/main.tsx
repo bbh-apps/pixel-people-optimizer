@@ -27,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<QueryClientProvider client={queryClient}>
+				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 				<MantineProvider defaultColorScheme="auto" theme={theme}>
 					<MantineEmotionProvider>
 						<AuthProvider>

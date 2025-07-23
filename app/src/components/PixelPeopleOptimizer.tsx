@@ -8,6 +8,7 @@ import {
 	Title,
 } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
+import PublicDataProvider from "../context/PublicDataProvider";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
 import { Recommendations } from "./recommendations";
 import { SavedData } from "./saved-data";
@@ -37,7 +38,9 @@ const PixelPeopleOptimizer = () => {
 					</Accordion.Item>
 				</Accordion>
 			</Stack>
-			<SavedData />
+			<PublicDataProvider>
+				<SavedData />
+			</PublicDataProvider>
 			<Flex ref={targetRef}>
 				<Recommendations scrollIntoView={scrollIntoView} />
 			</Flex>

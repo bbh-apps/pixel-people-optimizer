@@ -28,6 +28,12 @@ class ProfessionListRes(BaseEntityRes):
 class ProfessionListWithMissionRes(ProfessionListRes):
     category: str
     mission: MissionListRes | None
+    formula: List[ProfessionListRes] | None
+
+
+class SavedProfessionListRes(ProfessionListRes):
+    category: str
+    mission: MissionListRes | None
 
 
 class IDList(BaseModel):

@@ -20,6 +20,7 @@ const useSaveProfessions = () => {
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["professions", "saved"] });
+			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		},
 	});
 };

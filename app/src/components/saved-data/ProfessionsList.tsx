@@ -1,25 +1,28 @@
-import { useEffect, useState } from "react";
-import useGetProfessions, {
-	type SortType,
-} from "../../api/useGetAllProfessions";
+import { useContext, useEffect, useState } from "react";
 import useGetSavedMissions from "../../api/useGetSavedMissions";
 import useGetSavedProfessions from "../../api/useGetSavedProfessions";
 import useSaveProfessions from "../../api/useSaveProfessions";
+import { PublicDataContext } from "../../context/PublicDataContext";
 import { useSelectedDataCount } from "../../hooks";
-import { GameDataForm } from "../shared";
+import { CheckboxListFormSkeleton, GameDataForm } from "../shared";
+import type { DisabledData } from "../shared/CheckboxListItem";
+import UnlockMissionContent from "./UnlockMissionContent";
+
+export type ProfessionSortType = "abc" | "gallery";
 
 const DEFAULT_START_PROF_IDS = [1, 2];
 
 const ProfessionsList = () => {
-	const [sortType, setSortType] = useState<SortType>("gallery");
-	const { data: professions } = useGetProfessions(sortType);
+	const [ProfessionSortType, setProfessionSortType] =
+		useState<ProfessionSortType>("gallery");
+	const { professions } = useContext(PublicDataContext);
 	const { data: userProfessions } = useGetSavedProfessions();
 	const { data: userMissions } = useGetSavedMissions();
 	const saveProfessionsMutation = useSaveProfessions();
 	const { updateCount } = useSelectedDataCount();
 
 	const [disabledProfessions, setDisabledProfessions] = useState<
-		{ id: number; name: string; reason: string }[]
+		DisabledData[]
 	>([]);
 
 	useEffect(() => {
@@ -31,7 +34,10 @@ const ProfessionsList = () => {
 
 	useEffect(() => {
 		if (userProfessions && userMissions) {
-			const profToDisable = professions
+			const userProfessionsSet = new Set(
+				userProfessions.map((mission) => mission.id)
+			);
+			const profToDisable = (professions ?? [])
 				.filter((prof) => {
 					const requiresMission = prof.mission != null;
 					const userCompletedMission = userMissions.find(
@@ -42,16 +48,23 @@ const ProfessionsList = () => {
 				.map((prof) => ({
 					id: prof.id,
 					name: prof.name,
-					reason: `Must complete the special mission first: ${
-						prof.mission?.name ?? "n/a"
-					}`,
+					popoverContent:
+						prof.mission && prof.formula ? (
+							<UnlockMissionContent
+								mission={prof.mission}
+								formula={prof.formula.map((p) => ({
+									...p,
+									isUnlocked: userProfessionsSet.has(p.id),
+								}))}
+							/>
+						) : null,
 				}));
 			setDisabledProfessions(profToDisable);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userProfessions, userMissions]);
 
-	return (
+	return professions != null ? (
 		<GameDataForm
 			type="professions"
 			gameData={professions}
@@ -60,9 +73,11 @@ const ProfessionsList = () => {
 			defaultIds={DEFAULT_START_PROF_IDS}
 			saveMutation={saveProfessionsMutation}
 			hasSort={true}
-			sortType={sortType}
-			setSortType={setSortType}
+			ProfessionSortType={ProfessionSortType}
+			setProfessionSortType={setProfessionSortType}
 		/>
+	) : (
+		<CheckboxListFormSkeleton type="professions" />
 	);
 };
 

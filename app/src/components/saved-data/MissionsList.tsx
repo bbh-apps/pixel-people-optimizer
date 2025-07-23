@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import useGetMissions from "../../api/useGetAllMissions";
+import { useContext, useEffect } from "react";
 import useGetSavedMissions from "../../api/useGetSavedMissions";
 import useSaveMissions from "../../api/useSaveMissions";
+import { PublicDataContext } from "../../context/PublicDataContext";
 import { useSelectedDataCount } from "../../hooks";
-import { GameDataForm } from "../shared";
+import { CheckboxListFormSkeleton, GameDataForm } from "../shared";
 
 const MissionsList = () => {
-	const { data: missions } = useGetMissions();
+	const { missions } = useContext(PublicDataContext);
 	const { data: userMissions } = useGetSavedMissions();
 	const saveMissionsMutation = useSaveMissions();
 	const { updateCount } = useSelectedDataCount();
@@ -18,7 +18,7 @@ const MissionsList = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userMissions]);
 
-	return (
+	return missions != null ? (
 		<GameDataForm
 			type="missions"
 			gameData={missions}
@@ -26,6 +26,8 @@ const MissionsList = () => {
 			defaultIds={[]}
 			saveMutation={saveMissionsMutation}
 		/>
+	) : (
+		<CheckboxListFormSkeleton type="missions" />
 	);
 };
 

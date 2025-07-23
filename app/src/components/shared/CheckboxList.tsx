@@ -1,30 +1,32 @@
-import { Group, ScrollArea } from "@mantine/core";
-import { useMemo } from "react";
+import { Group, ScrollArea, useMatches } from "@mantine/core";
+import React, { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type z from "zod";
-import CheckboxListItem from "./CheckboxListItem";
+import CheckboxListItem, {
+	type Data,
+	type DisabledData,
+} from "./CheckboxListItem";
+import type { GameDataType } from "./GameDataForm";
 import type { saveEntitySchema } from "./schema";
 
 type SaveCheckboxGroupInput = z.infer<typeof saveEntitySchema>;
-interface Data {
-	id: number;
-	name: string;
-}
-
-interface DisabledData extends Data {
-	reason: string;
-}
 
 type CheckboxListProps = {
+	type: GameDataType;
 	items: Data[];
 	disabledItems: DisabledData[];
 };
 
 const CheckboxList: React.FC<CheckboxListProps> = ({
+	type,
 	items,
 	disabledItems = [],
 }) => {
 	const { control, watch } = useFormContext<SaveCheckboxGroupInput>();
+	const height = useMatches({
+		base: 155,
+		sm: 180,
+	});
 
 	const watchedIds = watch("ids");
 	const selectedSet = useMemo(() => new Set(watchedIds), [watchedIds]);
@@ -33,15 +35,16 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 	disabledItems.forEach((item) => disabledItemsMap.set(item.id, item));
 
 	return (
-		<ScrollArea h={180} px="lg">
+		<ScrollArea h={height} px="lg">
 			<Controller
 				control={control}
 				name="ids"
 				render={({ field }) => (
-					<Group>
+					<Group align="start" gap="sm">
 						{items.map((item) => (
 							<CheckboxListItem
 								key={`${item.id}-${item.name}`}
+								type={type}
 								item={item}
 								disabledItemsMap={disabledItemsMap}
 								selectedSet={selectedSet}

@@ -9,7 +9,14 @@ from typing import List, NamedTuple, Optional
 
 from sqlalchemy.orm import Session
 
-from .models import Building, MyBuilding, MyProfession, Profession, SpliceFormula, MySpecialMission
+from .models import (
+    Building,
+    MyBuilding,
+    MyProfession,
+    MySpecialMission,
+    Profession,
+    SpliceFormula,
+)
 
 
 class Candidate(NamedTuple):
@@ -65,12 +72,16 @@ def recommend_professions(
         }
 
         completed_missions = {
-            mm.mission_id for mm in session.query(MySpecialMission).filter(MySpecialMission.user_id == user_id)
+            mm.mission_id
+            for mm in session.query(MySpecialMission).filter(
+                MySpecialMission.user_id == user_id
+            )
         }
     else:
         # Anonymous user
         discovered_prof_ids = set()
         built_bldg_ids = set()
+        completed_missions = set()
 
     candidates: list[Candidate] = []
     base_professions: set[Profession] = set()
@@ -110,6 +121,13 @@ def recommend_professions(
             if not (is_parent1_in_formula and is_parent2_in_formula):
                 continue
             if prof.category == "Special":
+                continue
+
+        # Check if completed mission
+        requires_mission = prof.unlock_mission_id is not None
+        if requires_mission:
+            has_completed_mission = prof.unlock_mission_id in completed_missions
+            if not has_completed_mission:
                 continue
 
         # Check if unlocked building

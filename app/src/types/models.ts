@@ -33,6 +33,7 @@ export interface ProfessionListWithMissionRes {
   name: string;
   category: string;
   mission: MissionListRes | null;
+  formula: ProfessionListRes[] | null;
 }
 export interface RecommendationRes {
   profession: ProfessionListRes;
@@ -47,6 +48,12 @@ export interface UnlockBuildingRes {
   id: number;
   name: string;
   professions: ProfessionListRes[];
+}
+export interface SavedProfessionListRes {
+  id: number;
+  name: string;
+  category: string;
+  mission: MissionListRes | null;
 }
 export interface VerifiedUserRes {
   email: string;

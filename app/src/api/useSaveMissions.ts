@@ -20,6 +20,7 @@ const useSaveMissions = () => {
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["missions", "saved"] });
+			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		},
 	});
 };

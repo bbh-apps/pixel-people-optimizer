@@ -1,16 +1,14 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { fetchClient } from "../lib/fetchClient";
-import type { ProfessionListWithMissionRes } from "../types/models";
+import type { SavedProfessionListRes } from "../types/models";
 import { useAuth } from "./useAuth";
 
-const useGetSavedProfessions = (): UseQueryResult<
-	ProfessionListWithMissionRes[]
-> => {
+const useGetSavedProfessions = (): UseQueryResult<SavedProfessionListRes[]> => {
 	const { token } = useAuth();
 
 	return useQuery({
 		queryKey: ["professions", "saved"],
-		queryFn: async (): Promise<ProfessionListWithMissionRes[]> =>
+		queryFn: async (): Promise<SavedProfessionListRes[]> =>
 			await fetchClient("/api/me/professions", {
 				headers: {
 					Authorization: token ? `Bearer ${token}` : "",

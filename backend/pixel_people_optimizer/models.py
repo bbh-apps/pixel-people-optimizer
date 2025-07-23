@@ -85,6 +85,10 @@ class Profession(Base):
         "Building", foreign_keys=[unlock_bldg_id]
     )
 
+    formula: Mapped[Optional["SpliceFormula"]] = relationship(
+        back_populates="profession", foreign_keys="[SpliceFormula.id]"
+    )
+
 
 class SpecialMission(Base):
     __tablename__ = "special_missions"
@@ -107,6 +111,12 @@ class SpliceFormula(Base):
     )
     parent2_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("professions.id"), nullable=True
+    )
+    parent1: Mapped[Optional["Profession"]] = relationship(foreign_keys=[parent1_id])
+    parent2: Mapped[Optional["Profession"]] = relationship(foreign_keys=[parent2_id])
+
+    profession: Mapped["Profession"] = relationship(
+        back_populates="formula", foreign_keys=[id]
     )
 
 

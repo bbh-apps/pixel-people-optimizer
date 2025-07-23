@@ -1,2 +1,5 @@
 import SavedData from "./SavedData";
-export { SavedData };
+
+type ProfessionProfessionSortType = "abc" | "gallery";
+
+export { SavedData, type ProfessionProfessionSortType };
