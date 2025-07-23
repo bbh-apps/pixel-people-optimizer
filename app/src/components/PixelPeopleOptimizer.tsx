@@ -6,6 +6,8 @@ import {
 	Stack,
 	Text,
 	Title,
+	useMatches,
+	type TitleOrder,
 } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import PublicDataProvider from "../context/PublicDataProvider";
@@ -14,6 +16,10 @@ import { Recommendations } from "./recommendations";
 import { SavedData } from "./saved-data";
 
 const PixelPeopleOptimizer = () => {
+	const titleSize: TitleOrder = useMatches({
+		base: 3,
+		sm: 1,
+	});
 	const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
 		offset: 70,
 	});
@@ -24,7 +30,7 @@ const PixelPeopleOptimizer = () => {
 			<Stack gap="sm">
 				<Group gap="xs" align="center">
 					<Image src="/Mayor.webp" h={48} w={48} />
-					<Title order={1}>Pixel People Optimizer</Title>
+					<Title order={titleSize}>Pixel People Optimizer</Title>
 				</Group>
 
 				<Text>
