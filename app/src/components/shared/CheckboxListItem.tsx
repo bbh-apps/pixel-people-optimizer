@@ -15,6 +15,8 @@ import type { GameDataType } from "./GameDataForm";
 export interface Data {
 	id: number;
 	name: string;
+	popoverContent?: React.ReactNode;
+	isUnlocked?: boolean;
 }
 
 export interface DisabledData extends Data {
@@ -45,8 +47,8 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 	});
 
 	const popoverWidths = useMatches({
-		base: 200,
-		sm: 300,
+		base: 300,
+		sm: 400,
 	});
 
 	const checkboxPadding = useMatches({
@@ -90,7 +92,10 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 			shadow="md"
 			opened={opened}
 			key={`${item.id}-${item.name}`}
-			disabled={!disabledItemsMap.has(item.id)}
+			disabled={
+				(item?.isUnlocked || item?.popoverContent == null) &&
+				!disabledItemsMap.has(item.id)
+			}
 		>
 			<Popover.Target>
 				<Group
@@ -112,6 +117,12 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 						/>
 					</Flex>
 
+					{!item?.isUnlocked && item?.popoverContent != null && (
+						<Flex mt={1}>
+							<QuestionIcon color={theme.colors.dark[2]} />
+						</Flex>
+					)}
+
 					{disabledItemsMap.has(item.id) && (
 						<Flex hiddenFrom="sm" mt={1}>
 							<QuestionIcon color={theme.colors.dark[2]} />
@@ -120,7 +131,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 				</Group>
 			</Popover.Target>
 			<Popover.Dropdown style={{ pointerEvents: "none" }}>
-				{disabledItemsMap.get(item.id)?.popoverContent}
+				{item?.popoverContent ?? disabledItemsMap.get(item.id)?.popoverContent}
 			</Popover.Dropdown>
 		</Popover>
 	);

@@ -7,7 +7,7 @@ import PixelPeopleOptimizer from "./components/PixelPeopleOptimizer";
 
 export default function App() {
 	const spacing = useMatches({
-		base: "sm",
+		base: "xs",
 		lg: "lg",
 	});
 

@@ -6,6 +6,7 @@ import CheckboxListItem, {
 	type Data,
 	type DisabledData,
 } from "./CheckboxListItem";
+import CheckboxListItemMobile from "./CheckboxListItemMobile";
 import type { GameDataType } from "./GameDataForm";
 import type { saveEntitySchema } from "./schema";
 
@@ -40,18 +41,32 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 				control={control}
 				name="ids"
 				render={({ field }) => (
-					<Group align="start" gap="sm">
-						{items.map((item) => (
-							<CheckboxListItem
-								key={`${item.id}-${item.name}`}
-								type={type}
-								item={item}
-								disabledItemsMap={disabledItemsMap}
-								selectedSet={selectedSet}
-								onChange={field.onChange}
-							/>
-						))}
-					</Group>
+					<>
+						<Group align="start" gap="sm" visibleFrom="sm">
+							{items.map((item) => (
+								<CheckboxListItem
+									key={`${item.id}-${item.name}`}
+									type={type}
+									item={item}
+									disabledItemsMap={disabledItemsMap}
+									selectedSet={selectedSet}
+									onChange={field.onChange}
+								/>
+							))}
+						</Group>
+						<Group align="start" gap="sm" hiddenFrom="sm">
+							{items.map((item) => (
+								<CheckboxListItemMobile
+									key={`${item.id}-${item.name}-mobile`}
+									type={type}
+									item={item}
+									disabledItemsMap={disabledItemsMap}
+									selectedSet={selectedSet}
+									onChange={field.onChange}
+								/>
+							))}
+						</Group>
+					</>
 				)}
 			/>
 		</ScrollArea>

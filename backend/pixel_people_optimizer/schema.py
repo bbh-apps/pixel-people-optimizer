@@ -25,6 +25,11 @@ class ProfessionListRes(BaseEntityRes):
     category: str
 
 
+class MissionListWithDetailRes(BaseEntityRes):
+    cost: str
+    professions: List[ProfessionListRes]
+
+
 class ProfessionListWithMissionRes(ProfessionListRes):
     category: str
     mission: MissionListRes | None

@@ -3,7 +3,6 @@ import {
 	em,
 	Flex,
 	Input,
-	NumberInput,
 	Paper,
 	useComputedColorScheme,
 	useMantineTheme,
@@ -14,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../api/useAuth";
 import useGetRecommendations from "../../api/useGetRecommendations";
 import { useDelayedLoading } from "../../hooks";
+import { NumberInput } from "../shared";
 import LoadingRecommendations from "./LoadingRecommendations";
 import NoRecommendations from "./NoRecommendations";
 import RecommendationsOutput from "./RecommendationsOutput";
@@ -88,16 +88,16 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 					<Flex
 						flex={1}
 						direction={isMobile ? "column" : "row"}
-						gap="xs"
+						gap="md"
 						align={isMobile ? "start" : "center"}
 					>
 						<Input.Label>Land remaining</Input.Label>
 						<NumberInput
 							label="Land remaining"
 							placeholder="0"
+							size={isMobile ? "lg" : "md"}
 							styles={{
 								label: { display: "none" },
-								wrapper: { width: isMobile ? "50%" : "auto" },
 							}}
 							value={remainingLand ?? 0}
 							onChange={(val) => setRemainingLand(Number(val))}

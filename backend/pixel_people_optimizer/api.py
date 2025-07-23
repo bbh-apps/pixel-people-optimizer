@@ -20,6 +20,7 @@ from .schema import (
     BuildingListRes,
     IDList,
     MissionListRes,
+    MissionListWithDetailRes,
     ProfessionListRes,
     ProfessionListWithMissionRes,
     RecommendationRes,
@@ -55,9 +56,14 @@ def list_professions(db: Session = Depends(get_db)):
     ]
 
 
-@api_router.get("/missions", response_model=List[MissionListRes])
+@api_router.get("/missions", response_model=List[MissionListWithDetailRes])
 def list_missions(db: Session = Depends(get_db)):
-    return db.query(SpecialMission).order_by("name").all()
+    return (
+        db.query(SpecialMission)
+        .options(joinedload(SpecialMission.professions))
+        .order_by("name")
+        .all()
+    )
 
 
 # --- User-specific routes ---
