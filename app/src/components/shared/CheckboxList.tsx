@@ -24,7 +24,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 }) => {
 	const { control, watch } = useFormContext<SaveCheckboxGroupInput>();
 	const height = useMatches({
-		base: 155,
+		base: 190,
 		sm: 180,
 	});
 

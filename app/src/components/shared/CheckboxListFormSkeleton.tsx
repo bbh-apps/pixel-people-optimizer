@@ -24,13 +24,8 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 		md: "23%",
 	});
 
-	const sizes = useMatches({
-		base: "xs",
-		sm: "sm",
-	});
-
 	const numItems = useMatches({
-		base: 13,
+		base: 9,
 		sm: 19,
 	});
 
@@ -46,7 +41,7 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 			<Group gap="md">
 				{range(0, numItems).map((idx) => (
 					<Group w={widths} key={`${type}-${idx}`}>
-						<Checkbox.Indicator disabled size={sizes} />
+						<Checkbox.Indicator disabled />
 						<Skeleton height={8} w={`${getRandomWidth()}%`} />
 					</Group>
 				))}

@@ -43,10 +43,6 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 		sm: "30%",
 		md: "23%",
 	});
-	const sizes = useMatches({
-		base: "xs",
-		sm: "sm",
-	});
 
 	const popoverWidths = useMatches({
 		base: 200,
@@ -90,7 +86,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 							checked={selectedSet.has(item.id)}
 							onChange={() => handleCheckbox(selectedSet, item.id, onChange)}
 							disabled={disabledItemsMap.has(item.id)}
-							size={sizes}
+							size="sm"
 						/>
 					</Flex>
 
