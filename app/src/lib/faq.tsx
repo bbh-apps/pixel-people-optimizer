@@ -16,9 +16,9 @@ export const TOOL_USAGE_FAQ = [
 					in. Clicking "Save" will prompt you to sign up/in.
 				</List.Item>
 				<List.Item>
-					You can also start by saving buildings and professions you have
-					already unlocked. If this is your first time, it will prompt you to
-					create an account to save your game data.
+					You can also start by saving buildings, professions, and missions you
+					have already unlocked. If this is your first time, it will prompt you
+					to create an account to save your game data.
 				</List.Item>
 				<List.Item>
 					After signing in, click the "Optimize" button to see which new
@@ -35,12 +35,13 @@ export const TOOL_USAGE_FAQ = [
 			<Stack>
 				<Text>
 					For professions, I recommend sorting by gallery order. Then, open up
-					the gallery in your game. As you flip through the gallery, check off
-					on the list.
+					the gallery in your game. As you flip through the gallery, you can
+					check it off the list.
 				</Text>
 				<Text>
 					Unfortunately, for buildings, I don't think there's an easy list to
 					reference unless you have been tracking things with a spreadsheet.
+					I've added a search bar that should help speed things along.
 				</Text>
 			</Stack>
 		),

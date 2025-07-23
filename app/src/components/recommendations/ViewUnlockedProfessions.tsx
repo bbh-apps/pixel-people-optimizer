@@ -4,7 +4,7 @@ import {
 	Modal,
 	Paper,
 	Text,
-	useMantineColorScheme,
+	useComputedColorScheme,
 	useMantineTheme,
 	useMatches,
 } from "@mantine/core";
@@ -21,7 +21,7 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 	recommendation,
 }) => {
 	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const colorScheme = useComputedColorScheme("light");
 	const parentColor =
 		colorScheme === "light" ? theme.colors.blue[0] : theme.colors.dark[4];
 

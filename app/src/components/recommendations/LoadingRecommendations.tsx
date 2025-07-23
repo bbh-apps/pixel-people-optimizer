@@ -2,7 +2,7 @@ import {
 	em,
 	Flex,
 	Title,
-	useMantineColorScheme,
+	useComputedColorScheme,
 	useMatches,
 } from "@mantine/core";
 import { createStyles, keyframes } from "@mantine/emotion";
@@ -22,7 +22,7 @@ const useStyles = createStyles(() => ({
 
 const LoadingRecommendations = () => {
 	const { classes } = useStyles();
-	const { colorScheme } = useMantineColorScheme();
+	const colorScheme = useComputedColorScheme("light");
 	const parentColor = colorScheme === "light" ? "blue.0" : "dark.5";
 
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);

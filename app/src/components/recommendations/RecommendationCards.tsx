@@ -8,7 +8,7 @@ import {
 	Select,
 	Stack,
 	Text,
-	useMantineColorScheme,
+	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
 
@@ -42,7 +42,7 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 	onConsumeLandRemaining,
 }) => {
 	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const colorScheme = useComputedColorScheme("light");
 	const parentColor =
 		colorScheme === "light" ? theme.colors.blue[0] : theme.colors.dark[4];
 

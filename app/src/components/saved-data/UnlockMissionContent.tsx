@@ -3,7 +3,7 @@ import {
 	Paper,
 	Stack,
 	Text,
-	useMantineColorScheme,
+	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
 import React from "react";
@@ -21,7 +21,7 @@ const UnlockMissionContent: React.FC<UnlockMissionContentProps> = ({
 	formula,
 }) => {
 	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const colorScheme = useComputedColorScheme("light");
 	const parentColor =
 		colorScheme === "light" ? theme.colors.blue[0] : theme.colors.dark[4];
 

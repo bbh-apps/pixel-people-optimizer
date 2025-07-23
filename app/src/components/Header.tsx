@@ -5,7 +5,7 @@ import {
 	Group,
 	lighten,
 	Title,
-	useMantineColorScheme,
+	useComputedColorScheme,
 	useMantineTheme,
 	useMatches,
 	type TitleOrder,
@@ -24,7 +24,7 @@ const Header = () => {
 	const { token, clickedSignOut, setClickedSignOut } = useAuth();
 	const queryClient = useQueryClient();
 	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const colorScheme = useComputedColorScheme("light");
 	const navigate = useNavigate();
 
 	const titleSize: TitleOrder = useMatches({

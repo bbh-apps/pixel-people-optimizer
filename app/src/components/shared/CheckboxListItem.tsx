@@ -49,6 +49,21 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 		sm: 300,
 	});
 
+	const checkboxPadding = useMatches({
+		base: "6px",
+		sm: "12px",
+	});
+
+	const checkboxesGap = useMatches({
+		base: 2,
+		sm: "md",
+	});
+
+	const align = useMatches({
+		base: "start",
+		sm: "center",
+	});
+
 	const [opened, { close, open }] = useDisclosure(false);
 	const { updateCount } = useSelectedDataCount();
 
@@ -78,7 +93,13 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 			disabled={!disabledItemsMap.has(item.id)}
 		>
 			<Popover.Target>
-				<Group w={widths} gap={4} onMouseEnter={open} onMouseLeave={close}>
+				<Group
+					w={widths}
+					gap={checkboxesGap}
+					onMouseEnter={open}
+					onMouseLeave={close}
+					align={align}
+				>
 					<Flex flex={1}>
 						<Checkbox
 							value={item.id.toString()}
@@ -87,11 +108,12 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 							onChange={() => handleCheckbox(selectedSet, item.id, onChange)}
 							disabled={disabledItemsMap.has(item.id)}
 							size="sm"
+							styles={{ label: { paddingInlineStart: checkboxPadding } }}
 						/>
 					</Flex>
 
 					{disabledItemsMap.has(item.id) && (
-						<Flex hiddenFrom="sm" align="center">
+						<Flex hiddenFrom="sm" mt={1}>
 							<QuestionIcon color={theme.colors.dark[2]} />
 						</Flex>
 					)}

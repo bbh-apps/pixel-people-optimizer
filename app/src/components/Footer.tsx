@@ -1,14 +1,14 @@
 import {
 	Group,
 	Text,
-	useMantineColorScheme,
+	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
 import { CopyrightIcon } from "@phosphor-icons/react";
 
 const Footer = () => {
 	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const colorScheme = useComputedColorScheme("light");
 
 	return (
 		<Group
