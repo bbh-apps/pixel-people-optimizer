@@ -47,6 +47,30 @@ export const TOOL_USAGE_FAQ = [
 		),
 	},
 	{
+		title: "How do you come up with the splicing recommendations?",
+		value: "recommendation-logic",
+		description: (
+			<Stack>
+				<Text>
+					First, I take into account the professions you have unlocked (make
+					sure you have checked off any special genes you have too). Both genes
+					needed for the formula must be unlocked.
+				</Text>
+				<Text>
+					Then, I check if the profession requires a mission to unlock it. If
+					so, I check whether you have completed the mission or not.
+				</Text>
+				<Text>
+					Lastly, I take a look at how much land you have left and whether you
+					have already unlocked the building that the profession unlocks. If you
+					have the building already, then there is no land cost. If the building
+					land cost is higher than the remaining land you have, then we will not
+					recommend this profession.
+				</Text>
+			</Stack>
+		),
+	},
+	{
 		title: "How do I request more features?",
 		value: "feature-request",
 		description: (
