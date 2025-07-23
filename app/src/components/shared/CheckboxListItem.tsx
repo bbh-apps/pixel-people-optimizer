@@ -124,7 +124,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 					)}
 
 					{disabledItemsMap.has(item.id) && (
-						<Flex hiddenFrom="sm" mt={1}>
+						<Flex mt={1}>
 							<QuestionIcon color={theme.colors.dark[2]} />
 						</Flex>
 					)}
