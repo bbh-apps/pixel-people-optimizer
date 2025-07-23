@@ -2,7 +2,7 @@ import { useQueries } from "@tanstack/react-query";
 import { fetchClient } from "../lib/fetchClient";
 import type {
 	BuildingListRes,
-	MissionListRes,
+	MissionListWithDetailRes,
 	ProfessionListWithMissionRes,
 } from "../types/models";
 import { PublicDataContext } from "./PublicDataContext";
@@ -24,7 +24,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 			},
 			{
 				queryKey: ["missions", "list"],
-				queryFn: async (): Promise<MissionListRes[]> =>
+				queryFn: async (): Promise<MissionListWithDetailRes[]> =>
 					await fetchClient("/api/missions"),
 				staleTime: Infinity,
 			},
