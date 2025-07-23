@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy import (
     TIMESTAMP,
     Column,
@@ -36,6 +38,9 @@ class User(Base):
     my_professions: Mapped[list["MyProfession"]] = relationship(
         "MyProfession", back_populates="user", cascade="all, delete-orphan"
     )
+    my_special_missions: Mapped[list["MySpecialMission"]] = relationship(
+        "MySpecialMission", back_populates="user", cascade="all, delete-orphan"
+    )
     created_at = Column(
         TIMESTAMP(timezone=True),
         server_default=func.now(),
@@ -66,12 +71,34 @@ class Profession(Base):
         secondary=profession_building, back_populates="professions"
     )
 
+    unlock_mission_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("special_missions.id"), nullable=True
+    )
+    unlock_mission: Mapped[Optional["SpecialMission"]] = relationship(
+        back_populates="professions"
+    )
+
     unlock_bldg_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("buildings.id"), nullable=True
     )
     unlock_bldg: Mapped[Building | None] = relationship(
         "Building", foreign_keys=[unlock_bldg_id]
     )
+
+    formula: Mapped[Optional["SpliceFormula"]] = relationship(
+        back_populates="profession", foreign_keys="[SpliceFormula.id]"
+    )
+
+
+class SpecialMission(Base):
+    __tablename__ = "special_missions"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
+    professions: Mapped[list["Profession"]] = relationship(
+        back_populates="unlock_mission"
+    )
+    season: Mapped[str] = mapped_column(String, nullable=True)
+    cost: Mapped[str] = mapped_column(String)
 
 
 class SpliceFormula(Base):
@@ -84,6 +111,12 @@ class SpliceFormula(Base):
     )
     parent2_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("professions.id"), nullable=True
+    )
+    parent1: Mapped[Optional["Profession"]] = relationship(foreign_keys=[parent1_id])
+    parent2: Mapped[Optional["Profession"]] = relationship(foreign_keys=[parent2_id])
+
+    profession: Mapped["Profession"] = relationship(
+        back_populates="formula", foreign_keys=[id]
     )
 
 
@@ -106,6 +139,19 @@ class MyProfession(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     profession_id: Mapped[int] = mapped_column(Integer, ForeignKey("professions.id"))
     user: Mapped["User"] = relationship(back_populates="my_professions")
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+
+class MySpecialMission(Base):
+    __tablename__ = "my_special_missions"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    mission_id: Mapped[int] = mapped_column(Integer, ForeignKey("special_missions.id"))
+    user: Mapped["User"] = relationship(back_populates="my_special_missions")
     created_at = Column(
         TIMESTAMP(timezone=True),
         server_default=func.now(),

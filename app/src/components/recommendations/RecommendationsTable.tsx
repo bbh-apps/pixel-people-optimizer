@@ -1,4 +1,4 @@
-import { Group, Table, Text, UnstyledButton } from "@mantine/core";
+import { Group, ScrollArea, Table, Text, UnstyledButton } from "@mantine/core";
 import {
 	CaretDownIcon,
 	CaretUpDownIcon,
@@ -61,53 +61,55 @@ const RecommendationsTable: React.FC<RecommendationsTableProps> = ({
 	));
 
 	return (
-		<Table visibleFrom="sm">
-			<Table.Thead>
-				<Table.Tr>
-					{headers}
-					<Table.Th>Actions</Table.Th>
-				</Table.Tr>
-			</Table.Thead>
-			<Table.Tbody>
-				{recommendations.map((rec) => (
-					<Table.Tr key={rec.profession.name}>
-						<Table.Td>
-							<Text size="sm" fw={500}>
-								{rec.profession.name}
-							</Text>
-							<Text size="xs">{rec.profession.category}</Text>
-						</Table.Td>
-						<Table.Td>
-							<Text size="sm" fw={500}>
-								{rec.parent1?.name}
-							</Text>
-							<Text size="xs">{rec.parent1?.category}</Text>
-						</Table.Td>
-						<Table.Td>
-							<Text size="sm" fw={500}>
-								{rec.parent2?.name}
-							</Text>
-							<Text size="xs">{rec.parent2?.category}</Text>
-						</Table.Td>
-						<Table.Td>{rec.extra_land_needed}</Table.Td>
-						<Table.Td>
-							<ViewBuildingProfessions recommendation={rec} />
-						</Table.Td>
-						<Table.Td>
-							<ViewUnlockedProfessions recommendation={rec} />
-						</Table.Td>
-						<Table.Td>{rec.max_cps}</Table.Td>
-						<Table.Td>
-							<SaveRecommendationButton
-								recommendation={rec}
-								refetch={refetch}
-								onConsumeLandRemaining={onConsumeLandRemaining}
-							/>
-						</Table.Td>
+		<ScrollArea w="100%" pb="md" visibleFrom="sm">
+			<Table>
+				<Table.Thead>
+					<Table.Tr>
+						{headers}
+						<Table.Th>Actions</Table.Th>
 					</Table.Tr>
-				))}
-			</Table.Tbody>
-		</Table>
+				</Table.Thead>
+				<Table.Tbody>
+					{recommendations.map((rec) => (
+						<Table.Tr key={rec.profession.name}>
+							<Table.Td>
+								<Text size="sm" fw={500}>
+									{rec.profession.name}
+								</Text>
+								<Text size="xs">{rec.profession.category}</Text>
+							</Table.Td>
+							<Table.Td>
+								<Text size="sm" fw={500}>
+									{rec.parent1?.name}
+								</Text>
+								<Text size="xs">{rec.parent1?.category}</Text>
+							</Table.Td>
+							<Table.Td>
+								<Text size="sm" fw={500}>
+									{rec.parent2?.name}
+								</Text>
+								<Text size="xs">{rec.parent2?.category}</Text>
+							</Table.Td>
+							<Table.Td>{rec.extra_land_needed}</Table.Td>
+							<Table.Td>
+								<ViewBuildingProfessions recommendation={rec} />
+							</Table.Td>
+							<Table.Td>
+								<ViewUnlockedProfessions recommendation={rec} />
+							</Table.Td>
+							<Table.Td>{rec.max_cps}</Table.Td>
+							<Table.Td>
+								<SaveRecommendationButton
+									recommendation={rec}
+									refetch={refetch}
+									onConsumeLandRemaining={onConsumeLandRemaining}
+								/>
+							</Table.Td>
+						</Table.Tr>
+					))}
+				</Table.Tbody>
+			</Table>
+		</ScrollArea>
 	);
 };
 

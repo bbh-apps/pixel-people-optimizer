@@ -4,12 +4,20 @@
 /* Do not modify it by hand - just update the pydantic models and then re-run the script
 */
 
+export interface BaseEntityRes {
+	id: number;
+	name: string;
+}
 export interface BuildingListRes {
 	id: number;
 	name: string;
 }
 export interface IDList {
 	ids: number[];
+}
+export interface MissionListRes {
+	id: number;
+	name: string;
 }
 export interface OTPReq {
 	email: string;
@@ -18,6 +26,13 @@ export interface ProfessionListRes {
 	id: number;
 	name: string;
 	category: string;
+}
+export interface ProfessionListWithMissionRes {
+	id: number;
+	name: string;
+	category: string;
+	mission: MissionListRes | null;
+	formula: ProfessionListRes[] | null;
 }
 export interface RecommendationRes {
 	profession: ProfessionListRes;
@@ -32,6 +47,12 @@ export interface UnlockBuildingRes {
 	id: number;
 	name: string;
 	professions: ProfessionListRes[];
+}
+export interface SavedProfessionListRes {
+	id: number;
+	name: string;
+	category: string;
+	mission: MissionListRes | null;
 }
 export interface VerifiedUserRes {
 	email: string;

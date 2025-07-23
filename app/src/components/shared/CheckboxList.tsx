@@ -1,52 +1,54 @@
-import { Checkbox, Group, ScrollArea } from "@mantine/core";
-import { useMemo } from "react";
+import { Group, ScrollArea, useMatches } from "@mantine/core";
+import React, { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type z from "zod";
+import CheckboxListItem, {
+	type Data,
+	type DisabledData,
+} from "./CheckboxListItem";
+import type { GameDataType } from "./GameDataForm";
 import type { saveEntitySchema } from "./schema";
 
 type SaveCheckboxGroupInput = z.infer<typeof saveEntitySchema>;
 
 type CheckboxListProps = {
-	items: { id: number; name: string }[];
+	type: GameDataType;
+	items: Data[];
+	disabledItems: DisabledData[];
 };
 
-const CheckboxList: React.FC<CheckboxListProps> = ({ items }) => {
+const CheckboxList: React.FC<CheckboxListProps> = ({
+	type,
+	items,
+	disabledItems = [],
+}) => {
 	const { control, watch } = useFormContext<SaveCheckboxGroupInput>();
+	const height = useMatches({
+		base: 155,
+		sm: 180,
+	});
 
 	const watchedIds = watch("ids");
 	const selectedSet = useMemo(() => new Set(watchedIds), [watchedIds]);
 
-	const handleCheckbox = (
-		ids: Set<number>,
-		id: number,
-		onChange: (v: number[]) => void
-	) => {
-		const newIds = new Set(ids);
-		if (newIds.has(id)) {
-			newIds.delete(id);
-		} else {
-			newIds.add(Number(id));
-		}
-		onChange(Array.from(newIds));
-	};
+	const disabledItemsMap: Map<number, DisabledData> = new Map();
+	disabledItems.forEach((item) => disabledItemsMap.set(item.id, item));
 
 	return (
-		<ScrollArea h={180} px="lg">
+		<ScrollArea h={height} px="lg">
 			<Controller
 				control={control}
 				name="ids"
 				render={({ field }) => (
-					<Group>
+					<Group align="start" gap="sm">
 						{items.map((item) => (
-							<Checkbox
-								w="45%"
+							<CheckboxListItem
 								key={`${item.id}-${item.name}`}
-								value={item.id.toString()}
-								label={item.name}
-								checked={selectedSet.has(item.id)}
-								onChange={() =>
-									handleCheckbox(selectedSet, item.id, field.onChange)
-								}
+								type={type}
+								item={item}
+								disabledItemsMap={disabledItemsMap}
+								selectedSet={selectedSet}
+								onChange={field.onChange}
 							/>
 						))}
 					</Group>

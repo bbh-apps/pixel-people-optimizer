@@ -8,15 +8,32 @@ class VerifiedUserRes(BaseModel):
     is_new_account: bool
 
 
-class BuildingListRes(BaseModel):
+class BaseEntityRes(BaseModel):
     id: int
     name: str
 
 
-class ProfessionListRes(BaseModel):
-    id: int
-    name: str
+class BuildingListRes(BaseEntityRes):
+    pass
+
+
+class MissionListRes(BaseEntityRes):
+    pass
+
+
+class ProfessionListRes(BaseEntityRes):
     category: str
+
+
+class ProfessionListWithMissionRes(ProfessionListRes):
+    category: str
+    mission: MissionListRes | None
+    formula: List[ProfessionListRes] | None
+
+
+class SavedProfessionListRes(ProfessionListRes):
+    category: str
+    mission: MissionListRes | None
 
 
 class IDList(BaseModel):

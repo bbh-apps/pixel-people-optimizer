@@ -1,12 +1,13 @@
-import type { Session, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { getInitialSession } from "../lib/authUtils";
 import { supabase } from "../lib/supabaseClient";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-	const [user, setUser] = useState<User | null>(null);
-	const [token, setToken] = useState<string | null>(null);
-	const [clickedSignOut, setClickedSignOut] = useState<boolean>(false);
+	const initialSession = getInitialSession();
+	const [user, setUser] = useState(initialSession?.user ?? null);
+	const [token, setToken] = useState(initialSession?.access_token ?? null);
+	const [clickedSignOut, setClickedSignOut] = useState(false);
 
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
@@ -17,18 +18,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		});
 
 		const { data: subscription } = supabase.auth.onAuthStateChange(
-			(_event: string, session: Session | null) => {
-				setTimeout(async () => {
-					if (session) {
-						setUser(session.user);
-						setToken(session.access_token);
-					} else {
-						setUser(null);
-						setToken(null);
-					}
-				}, 0);
+			(_event, session) => {
+				if (session) {
+					setUser(session.user);
+					setToken(session.access_token);
+					localStorage.setItem("supabase.session", JSON.stringify(session));
+				} else {
+					setUser(null);
+					setToken(null);
+					localStorage.removeItem("supabase.session");
+				}
 			}
 		);
+
 		return () => subscription.subscription.unsubscribe();
 	}, []);
 

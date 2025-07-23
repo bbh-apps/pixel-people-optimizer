@@ -71,23 +71,20 @@ const ViewBuildingProfessions: React.FC<ViewBuildingProfessionsProps> = ({
 				onClose={handlers.close}
 				centered
 				title={
-					<>
-						<Text fw={700} span>
+					<Text size="sm">
+						<Text fw={700} span inherit>
 							{unlock_bldg?.name}
-						</Text>
-						<Text span> is the workplace for these professions</Text>
-					</>
+						</Text>{" "}
+						is the workplace for these professions
+					</Text>
 				}
 			>
-				<>
-					<Text span c="blue" size="sm">
+				<Text size="sm">
+					<Text span c="blue" inherit>
 						Blue
-					</Text>
-					<Text span size="sm">
-						{" "}
-						represents professions you already unlocked.
-					</Text>
-				</>
+					</Text>{" "}
+					represents professions you already unlocked.
+				</Text>
 				<Group mt="sm">{getProfessionsList()}</Group>
 			</Modal>
 		</>

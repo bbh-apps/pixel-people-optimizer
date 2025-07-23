@@ -3,7 +3,13 @@ from typing import Type
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from .schema import IDList
+from .models import Profession, SpliceFormula
+from .schema import (
+    IDList,
+    MissionListRes,
+    ProfessionListRes,
+    ProfessionListWithMissionRes,
+)
 
 
 def sync_user_items(
@@ -47,3 +53,35 @@ def sync_user_items(
         db.add(link_model(user_id=user_id, **{link_field: item_id}))
 
     db.commit()
+
+
+def get_profession_list_with_mission_response(
+    profession: Profession,
+) -> ProfessionListWithMissionRes:
+    mission = (
+        MissionListRes(
+            id=profession.unlock_mission.id,
+            name=profession.unlock_mission.name,
+        )
+        if profession.unlock_mission
+        else None
+    )
+
+    formula = profession.formula
+    parents = [formula.parent1, formula.parent2] if formula else []
+
+    return ProfessionListWithMissionRes(
+        id=profession.id,
+        name=profession.name,
+        category=profession.category,
+        mission=mission,
+        formula=(
+            [
+                ProfessionListRes(id=p.id, name=p.name, category=p.category)
+                for p in parents
+                if p
+            ]
+            if parents
+            else None
+        ),
+    )

@@ -1,65 +1,61 @@
 import {
-	Accordion,
 	Button,
 	Checkbox,
 	Flex,
 	Group,
 	Skeleton,
-	Text,
+	TextInput,
 	useMatches,
 } from "@mantine/core";
 import { range } from "@mantine/hooks";
 import React from "react";
+import type { GameDataType } from "./GameDataForm";
 
 type CheckboxListFormSkeletonProps = {
-	title: string;
+	type: GameDataType;
 };
 
 const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
-	title,
+	type,
 }) => {
-	const width = useMatches({
-		base: "100%",
-		sm: "49%",
+	const widths = useMatches({
+		base: "45%",
+		sm: "30%",
+		md: "23%",
+	});
+
+	const sizes = useMatches({
+		base: "xs",
+		sm: "sm",
+	});
+
+	const numItems = useMatches({
+		base: 13,
+		sm: 19,
 	});
 
 	const getRandomWidth = () => {
-		const minWidth = 60;
+		const minWidth = 65;
 		const maxWidth = 70;
 		return Math.random() * (maxWidth - minWidth) + minWidth;
 	};
 
 	return (
-		<Flex w={width}>
-			<Accordion
-				chevronPosition="left"
-				variant="contained"
-				defaultValue={title}
-				w="100%"
-			>
-				<Accordion.Item value={title} key={title}>
-					<Accordion.Control>
-						<Text>{title}</Text>
-					</Accordion.Control>
-					<Accordion.Panel>
-						<Flex direction="column" gap="md" pt="xs">
-							<Group gap="md">
-								{range(0, 13).map((idx) => (
-									<Group w="45%" key={`${title}-${idx}`}>
-										<Checkbox.Indicator disabled />
-										<Skeleton height={8} w={`${getRandomWidth()}%`} />
-									</Group>
-								))}
-							</Group>
-							<Flex justify="end">
-								<Button variant="filled" disabled>
-									Save
-								</Button>
-							</Flex>
-						</Flex>
-					</Accordion.Panel>
-				</Accordion.Item>
-			</Accordion>
+		<Flex direction="column" gap="md" pt="xs" px="md">
+			<TextInput disabled />
+			<Group gap="md">
+				{range(0, numItems).map((idx) => (
+					<Group w={widths} key={`${type}-${idx}`}>
+						<Checkbox.Indicator disabled size={sizes} />
+						<Skeleton height={8} w={`${getRandomWidth()}%`} />
+					</Group>
+				))}
+			</Group>
+			<Flex justify="end">
+				<Button variant="filled" disabled>
+					Save
+				</Button>
+			</Flex>
 		</Flex>
 	);
 };

@@ -2,21 +2,31 @@ from typing import List
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from .auth import get_current_user_id
-from .constants import ProfessionSortType
 from .db import get_db
-from .models import Building, MyBuilding, MyProfession, Profession
+from .models import (
+    Building,
+    MyBuilding,
+    MyProfession,
+    MySpecialMission,
+    Profession,
+    SpecialMission,
+    SpliceFormula,
+)
 from .recommend import recommend_professions
 from .schema import (
     BuildingListRes,
     IDList,
+    MissionListRes,
     ProfessionListRes,
+    ProfessionListWithMissionRes,
     RecommendationRes,
+    SavedProfessionListRes,
     UnlockBuildingRes,
 )
-from .service import sync_user_items
+from .service import get_profession_list_with_mission_response, sync_user_items
 
 api_router = APIRouter(prefix="/api", tags=["api"])
 
@@ -28,9 +38,26 @@ def list_buildings(db: Session = Depends(get_db)):
     return db.query(Building).all()
 
 
-@api_router.get("/professions", response_model=List[ProfessionListRes])
-def list_professions(order_by: ProfessionSortType, db: Session = Depends(get_db)):
-    return db.query(Profession).order_by(order_by).all()
+@api_router.get("/professions", response_model=List[ProfessionListWithMissionRes])
+def list_professions(db: Session = Depends(get_db)):
+    professions = (
+        db.query(Profession)
+        .options(
+            joinedload(Profession.unlock_mission),
+            joinedload(Profession.formula).joinedload(SpliceFormula.parent1),
+            joinedload(Profession.formula).joinedload(SpliceFormula.parent2),
+        )
+        .all()
+    )
+
+    return [
+        get_profession_list_with_mission_response(profession=p) for p in professions
+    ]
+
+
+@api_router.get("/missions", response_model=List[MissionListRes])
+def list_missions(db: Session = Depends(get_db)):
+    return db.query(SpecialMission).order_by("name").all()
 
 
 # --- User-specific routes ---
@@ -48,14 +75,44 @@ def get_user_buildings(
     )
 
 
-@api_router.get("/me/professions", response_model=List[ProfessionListRes])
+@api_router.get("/me/professions", response_model=List[SavedProfessionListRes])
 def get_user_professions(
     user_id: str = Depends(get_current_user_id), db: Session = Depends(get_db)
 ):
-    return (
+    professions = (
         db.query(Profession)
         .join(MyProfession, Profession.id == MyProfession.profession_id)
+        .options(joinedload(Profession.unlock_mission))
         .filter(MyProfession.user_id == user_id)
+        .all()
+    )
+
+    return [
+        SavedProfessionListRes(
+            id=p.id,
+            name=p.name,
+            category=p.category,
+            mission=(
+                MissionListRes(
+                    id=p.unlock_mission.id,
+                    name=p.unlock_mission.name,
+                )
+                if p.unlock_mission
+                else None
+            ),
+        )
+        for p in professions
+    ]
+
+
+@api_router.get("/me/missions", response_model=List[MissionListRes])
+def get_user_missions(
+    user_id: str = Depends(get_current_user_id), db: Session = Depends(get_db)
+):
+    return (
+        db.query(SpecialMission)
+        .join(MySpecialMission, SpecialMission.id == MySpecialMission.mission_id)
+        .filter(MySpecialMission.user_id == user_id)
         .all()
     )
 
@@ -103,6 +160,30 @@ def sync_user_professions(
         db.query(MyProfession.profession_id)
         .filter(MyProfession.user_id == user_id)
         .order_by(MyProfession.profession_id)
+        .all()
+    )
+    return IDList(ids=[id_tuple[0] for id_tuple in saved_ids])
+
+
+@api_router.post("/missions", response_model=IDList)
+def sync_user_missions(
+    payload: IDList,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    sync_user_items(
+        user_id=user_id,
+        db=db,
+        payload=payload,
+        item_model=SpecialMission,
+        link_model=MySpecialMission,
+        link_field="mission_id",
+    )
+
+    saved_ids = (
+        db.query(MySpecialMission.mission_id)
+        .filter(MySpecialMission.user_id == user_id)
+        .order_by(MySpecialMission.mission_id)
         .all()
     )
     return IDList(ids=[id_tuple[0] for id_tuple in saved_ids])

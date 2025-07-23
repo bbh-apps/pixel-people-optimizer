@@ -1,5 +1,5 @@
 import { Pagination, Stack } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSortRecommendationData } from "../../hooks/useSortRecommendationData";
 import type { RecommendationRes } from "../../types/models";
 import RecommendationCards from "./RecommendationCards";
@@ -25,6 +25,13 @@ const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 		sortBy,
 		sortDirection,
 	} = useSortRecommendationData(recommendations);
+
+	useEffect(() => {
+		if (recommendations) {
+			setPage(1);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recommendations]);
 
 	return (
 		<Stack align="center">

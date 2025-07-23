@@ -2,6 +2,7 @@ import {
 	ActionIcon,
 	Badge,
 	Card,
+	Flex,
 	Group,
 	Paper,
 	Select,
@@ -64,15 +65,19 @@ const RecommendationCards: React.FC<RecommendationsCardProps> = ({
 			{recommendations.map((rec) => (
 				<Card key={rec.profession.name} withBorder w="100%">
 					<Stack>
-						<Group justify="space-between">
-							<Stack flex={1} gap={4}>
-								<Group gap="xs">
-									<Text fw={700}>{rec.profession.name}</Text>
-									<SaveRecommendationButton
-										recommendation={rec}
-										refetch={refetch}
-										onConsumeLandRemaining={onConsumeLandRemaining}
-									/>
+						<Group justify="space-between" align="start">
+							<Stack flex={1} gap={4} w="65%">
+								<Group gap="xs" align="start">
+									<Flex flex={1} w="60%">
+										<Text fw={700}>{rec.profession.name}</Text>
+									</Flex>
+									<Flex mt={2}>
+										<SaveRecommendationButton
+											recommendation={rec}
+											refetch={refetch}
+											onConsumeLandRemaining={onConsumeLandRemaining}
+										/>
+									</Flex>
 								</Group>
 								<Text size="xs">
 									Unlocks: <ViewBuildingProfessions recommendation={rec} />
