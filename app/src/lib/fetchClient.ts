@@ -9,6 +9,7 @@ export async function fetchClient<T>(
 	options: FetchOptions = {}
 ): Promise<T> {
 	const url = `${BASE_URL}${endpoint}`;
+	console.log("API Base URL:", import.meta.env.VITE_API_URL);
 
 	const res = await fetch(url, {
 		...options,
