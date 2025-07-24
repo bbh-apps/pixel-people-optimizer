@@ -1,5 +1,6 @@
 import {
 	Accordion,
+	Alert,
 	Flex,
 	Group,
 	Image,
@@ -10,6 +11,7 @@ import {
 	type TitleOrder,
 } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
+import { WarningCircleIcon } from "@phosphor-icons/react";
 import PublicDataProvider from "../context/PublicDataProvider";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
 import { Recommendations } from "./recommendations";
@@ -37,6 +39,15 @@ const PixelPeopleOptimizer = () => {
 					Welcome! I made this free open-source tool to make splicing easier in
 					one of my favorite games.
 				</Text>
+				<Alert
+					variant="light"
+					color="red"
+					title="Known bug"
+					icon={<WarningCircleIcon />}
+				>
+					There is a bug with recommendations not working on Safari. Please use
+					a different browser! Thanks for your patience while I look into a fix.
+				</Alert>
 				<Accordion chevronPosition="left" variant="contained">
 					<Accordion.Item key={howToUseFaq.value} value={howToUseFaq.value}>
 						<Accordion.Control>{howToUseFaq.title}</Accordion.Control>
