@@ -32,12 +32,12 @@ const ProfessionDetailContent: React.FC<ProfessionDetailContentProps> = ({
 				is unlocked with:
 			</Text>
 			<Group>
-				{formula.map((prof) => (
+				{formula.map((prof, idx) => (
 					<Paper
 						withBorder={colorScheme === "light"}
 						bg={prof.is_unlocked ? "blue" : parentColor}
 						p={6}
-						key={`${name}-formula-tooltip-${prof.name}`}
+						key={`${name}-formula-tooltip-${prof.name}-${idx}`}
 					>
 						<Text size="xs" fw={700}>
 							{prof.name}

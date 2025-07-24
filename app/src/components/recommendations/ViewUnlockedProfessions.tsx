@@ -11,8 +11,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import pluralize from "pluralize";
-import React, { useContext } from "react";
-import useGetSavedProfessions from "../../api/useGetSavedProfessions";
+import React, { useContext, useMemo } from "react";
 import { PublicDataContext } from "../../context/PublicDataContext";
 import type { RecommendationRes } from "../../types/models";
 
@@ -39,22 +38,24 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 	const { profession, unlock_professions } = recommendation;
 
 	const { professions } = useContext(PublicDataContext);
-	const { data: userProfessions } = useGetSavedProfessions();
-	const userProfessionsSet = new Set((userProfessions ?? [])?.map((p) => p.id));
-
-	const unlockProfessionsWithFormula = unlock_professions
-		.map((up) => {
-			const detail = professions?.find((p) => p.id === up.id);
-			if (detail) {
-				return {
-					...detail,
-					isPartialUnlock: detail.formula?.some((f) =>
-						userProfessionsSet.has(f.id)
-					),
-				};
-			}
-		})
-		.filter((up) => up != null);
+	const unlockProfessionsWithFormula = useMemo(
+		() =>
+			unlock_professions
+				.map((up) => {
+					const detail = professions?.find((p) => p.id === up.id);
+					if (detail) {
+						return {
+							...detail,
+							isPartialUnlock: detail.formula?.some(
+								(p) => p.is_unlocked === true
+							),
+						};
+					}
+				})
+				.filter((up) => up != null),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[professions]
+	);
 
 	return (
 		<>
@@ -90,7 +91,11 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 							Orange
 						</Text>{" "}
 						means you have unlocked one part of the formula for that profession
-						already.
+						already. You'll be able to unlock it after splicing{" "}
+						<Text fw={700} span inherit>
+							{profession.name}
+						</Text>
+						.
 					</Text>
 					<Group>
 						{unlockProfessionsWithFormula.map((prof) => (
