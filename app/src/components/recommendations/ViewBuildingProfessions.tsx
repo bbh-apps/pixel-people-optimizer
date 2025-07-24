@@ -42,7 +42,7 @@ const ViewBuildingProfessions: React.FC<ViewBuildingProfessionsProps> = ({
 				savedProfessions.find((savedProf) => savedProf.name === prof.name);
 			return (
 				<Paper
-					withBorder
+					withBorder={colorScheme === "light"}
 					bg={isUnlocked ? "blue" : parentColor}
 					p={6}
 					key={`unlock-bldg-modal-${prof.name}`}

@@ -46,11 +46,6 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 		md: "23%",
 	});
 
-	const popoverWidths = useMatches({
-		base: 300,
-		sm: 400,
-	});
-
 	const checkboxPadding = useMatches({
 		base: "6px",
 		sm: "12px",
@@ -68,6 +63,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 
 	const [opened, { close, open }] = useDisclosure(false);
 	const { updateCount } = useSelectedDataCount();
+	const isDisabledItem = disabledItemsMap.has(item.id);
 
 	const handleCheckbox = (
 		ids: Set<number>,
@@ -86,7 +82,6 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 
 	return (
 		<Popover
-			width={popoverWidths}
 			position="bottom"
 			withArrow
 			shadow="md"
@@ -96,6 +91,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 				(item?.isUnlocked || item?.popoverContent == null) &&
 				!disabledItemsMap.has(item.id)
 			}
+			styles={{ dropdown: { maxWidth: "400px" } }}
 		>
 			<Popover.Target>
 				<Group
@@ -117,13 +113,15 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 						/>
 					</Flex>
 
-					{!item?.isUnlocked && item?.popoverContent != null && (
-						<Flex mt={1}>
-							<QuestionIcon color={theme.colors.dark[2]} />
-						</Flex>
-					)}
+					{!isDisabledItem &&
+						!item?.isUnlocked &&
+						item?.popoverContent != null && (
+							<Flex mt={1}>
+								<QuestionIcon color={theme.colors.dark[2]} />
+							</Flex>
+						)}
 
-					{disabledItemsMap.has(item.id) && (
+					{isDisabledItem && (
 						<Flex mt={1}>
 							<QuestionIcon color={theme.colors.dark[2]} />
 						</Flex>
@@ -131,7 +129,9 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 				</Group>
 			</Popover.Target>
 			<Popover.Dropdown style={{ pointerEvents: "none" }}>
-				{item?.popoverContent ?? disabledItemsMap.get(item.id)?.popoverContent}
+				{isDisabledItem
+					? disabledItemsMap.get(item.id)?.popoverContent
+					: item?.popoverContent}
 			</Popover.Dropdown>
 		</Popover>
 	);

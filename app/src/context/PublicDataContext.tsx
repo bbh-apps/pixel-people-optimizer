@@ -2,12 +2,12 @@ import { createContext } from "react";
 import type {
 	BuildingListRes,
 	MissionListWithDetailRes,
-	ProfessionListWithMissionRes,
+	ProfessionListWithDetailRes,
 } from "../types/models";
 
 type PublicDataContextType = {
 	buildings: BuildingListRes[] | undefined;
-	professions: ProfessionListWithMissionRes[] | undefined;
+	professions: ProfessionListWithDetailRes[] | undefined;
 	missions: MissionListWithDetailRes[] | undefined;
 };
 

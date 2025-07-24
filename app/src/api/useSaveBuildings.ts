@@ -10,7 +10,7 @@ const useSaveBuildings = () => {
 	return useMutation<IDList, Error, SaveBuildingsInput>({
 		mutationKey: ["buildings", "save"],
 		mutationFn: async (data: SaveBuildingsInput) =>
-			await fetchClient("/api/buildings", {
+			await fetchClient("/api/buildings/me", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

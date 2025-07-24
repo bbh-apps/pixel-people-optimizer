@@ -10,7 +10,7 @@ const useSaveMissions = () => {
 	return useMutation<IDList, Error, SaveMissionsInput>({
 		mutationKey: ["missions", "save"],
 		mutationFn: async (data: SaveMissionsInput) =>
-			await fetchClient("/api/missions", {
+			await fetchClient("/api/missions/me", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

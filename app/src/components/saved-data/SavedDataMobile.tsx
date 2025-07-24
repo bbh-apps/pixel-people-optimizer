@@ -28,7 +28,7 @@ const SelectOption = ({ title, value, icon }: SavedDataItem) => {
 	return (
 		<Group gap="xs">
 			{icon}
-			<Text>{title}</Text>
+			<Text size="sm">{title}</Text>
 			{count == null ? (
 				<Skeleton h={12} w={12} radius="xs" />
 			) : (

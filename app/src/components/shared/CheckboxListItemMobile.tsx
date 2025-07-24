@@ -8,7 +8,7 @@ import {
 	useMatches,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { QuestionMarkIcon } from "@phosphor-icons/react";
+import { QuestionIcon } from "@phosphor-icons/react";
 import React from "react";
 import { useSelectedDataCount } from "../../hooks";
 import type { Data, DisabledData } from "./CheckboxListItem";
@@ -32,13 +32,13 @@ const CheckboxListItemMobile: React.FC<CheckboxListItemMobileProps> = ({
 }) => {
 	const theme = useMantineTheme();
 	const widths = useMatches({
-		base: "45%",
+		base: "48%",
 		sm: "30%",
 		md: "23%",
 	});
 
 	const checkboxPadding = useMatches({
-		base: "6px",
+		base: "8px",
 		sm: "12px",
 	});
 
@@ -54,6 +54,7 @@ const CheckboxListItemMobile: React.FC<CheckboxListItemMobileProps> = ({
 
 	const [opened, { close, open }] = useDisclosure(false);
 	const { updateCount } = useSelectedDataCount();
+	const isDisabledItem = disabledItemsMap.has(item.id);
 
 	const handleCheckbox = (
 		ids: Set<number>,
@@ -93,38 +94,28 @@ const CheckboxListItemMobile: React.FC<CheckboxListItemMobileProps> = ({
 					/>
 				</Flex>
 
-				{!item?.isUnlocked && item?.popoverContent != null && (
-					<Flex mt={4}>
-						<ActionIcon
-							variant="outline"
-							onClick={open}
-							p={0}
-							bdrs="xl"
-							size={12}
-							color="dark.1"
-						>
-							<QuestionMarkIcon color={theme.colors.dark[2]} size={10} />
-						</ActionIcon>
-					</Flex>
-				)}
+				{!isDisabledItem &&
+					!item?.isUnlocked &&
+					item?.popoverContent != null && (
+						<Flex mt={2}>
+							<ActionIcon variant="transparent" onClick={open} p={0} size={16}>
+								<QuestionIcon color={theme.colors.dark[2]} size={16} />
+							</ActionIcon>
+						</Flex>
+					)}
 
-				{disabledItemsMap.has(item.id) && (
-					<Flex mt={4}>
-						<ActionIcon
-							variant="outline"
-							onClick={open}
-							p={0}
-							bdrs="xl"
-							size={12}
-							color="dark.1"
-						>
-							<QuestionMarkIcon color={theme.colors.dark[2]} size={10} />
+				{isDisabledItem && (
+					<Flex mt={2}>
+						<ActionIcon variant="transparent" onClick={open} p={0} size={16}>
+							<QuestionIcon color={theme.colors.dark[2]} size={16} />
 						</ActionIcon>
 					</Flex>
 				)}
 			</Group>
-			<Modal opened={opened} onClose={close} centered>
-				{item?.popoverContent ?? disabledItemsMap.get(item.id)?.popoverContent}
+			<Modal opened={opened} onClose={close} centered withCloseButton={false}>
+				{isDisabledItem
+					? disabledItemsMap.get(item.id)?.popoverContent
+					: item?.popoverContent}
 			</Modal>
 		</>
 	);

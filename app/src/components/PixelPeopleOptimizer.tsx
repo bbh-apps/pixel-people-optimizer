@@ -46,10 +46,10 @@ const PixelPeopleOptimizer = () => {
 			</Stack>
 			<PublicDataProvider>
 				<SavedData />
+				<Flex ref={targetRef}>
+					<Recommendations scrollIntoView={scrollIntoView} />
+				</Flex>
 			</PublicDataProvider>
-			<Flex ref={targetRef}>
-				<Recommendations scrollIntoView={scrollIntoView} />
-			</Flex>
 		</Flex>
 	);
 };

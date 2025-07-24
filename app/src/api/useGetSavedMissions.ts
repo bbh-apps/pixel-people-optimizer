@@ -9,7 +9,7 @@ const useGetSavedMissions = (): UseQueryResult<MissionListRes[]> => {
 	return useQuery({
 		queryKey: ["missions", "saved"],
 		queryFn: async (): Promise<MissionListRes[]> =>
-			await fetchClient("/api/me/missions", {
+			await fetchClient("/api/missions/me", {
 				headers: {
 					Authorization: token ? `Bearer ${token}` : "",
 				},

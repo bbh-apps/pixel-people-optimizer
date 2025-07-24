@@ -7,14 +7,16 @@ import {
 	useMantineTheme,
 } from "@mantine/core";
 import React from "react";
-import type { MissionListWithDetailRes } from "../../types/models";
+import type { SavedProfessionFormulaRes } from "../../types/models";
 
-type MissionDetailContentProps = {
-	mission: MissionListWithDetailRes;
+type ProfessionDetailContentProps = {
+	name: string;
+	formula: SavedProfessionFormulaRes[];
 };
 
-const MissionDetailContent: React.FC<MissionDetailContentProps> = ({
-	mission,
+const ProfessionDetailContent: React.FC<ProfessionDetailContentProps> = ({
+	name,
+	formula,
 }) => {
 	const theme = useMantineTheme();
 	const colorScheme = useComputedColorScheme("light");
@@ -23,18 +25,19 @@ const MissionDetailContent: React.FC<MissionDetailContentProps> = ({
 
 	return (
 		<Stack>
-			<Text size="sm">This mission requires the following things:</Text>
-			<Text size="xs">{mission.cost}</Text>
-
-			<Text size="sm">Completing this mission will unlock:</Text>
-
+			<Text size="sm">
+				<Text span fw={700} inherit>
+					{name}
+				</Text>{" "}
+				is unlocked with:
+			</Text>
 			<Group>
-				{mission.professions.map((prof) => (
+				{formula.map((prof, idx) => (
 					<Paper
 						withBorder={colorScheme === "light"}
-						bg={parentColor}
+						bg={prof.is_unlocked ? "blue" : parentColor}
 						p={6}
-						key={`unlock-prof-tooltip-${prof.name}`}
+						key={`${name}-formula-tooltip-${prof.name}-${idx}`}
 					>
 						<Text size="xs" fw={700}>
 							{prof.name}
@@ -47,4 +50,4 @@ const MissionDetailContent: React.FC<MissionDetailContentProps> = ({
 	);
 };
 
-export default MissionDetailContent;
+export default ProfessionDetailContent;
