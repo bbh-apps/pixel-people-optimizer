@@ -9,7 +9,7 @@ const useGetSavedBuildings = (): UseQueryResult<BuildingListRes[]> => {
 	return useQuery({
 		queryKey: ["buildings", "saved"],
 		queryFn: async (): Promise<BuildingListRes[]> =>
-			await fetchClient("/api/me/buildings", {
+			await fetchClient("/api/buildings/me", {
 				headers: {
 					Authorization: token ? `Bearer ${token}` : "",
 				},

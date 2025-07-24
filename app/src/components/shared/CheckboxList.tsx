@@ -54,7 +54,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 								/>
 							))}
 						</Group>
-						<Group align="start" gap="sm" hiddenFrom="sm">
+						<Group align="start" gap="xs" hiddenFrom="sm">
 							{items.map((item) => (
 								<CheckboxListItemMobile
 									key={`${item.id}-${item.name}-mobile`}

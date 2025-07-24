@@ -10,7 +10,7 @@ const useSaveProfessions = () => {
 	return useMutation<IDList, Error, SaveProfessionsInput>({
 		mutationKey: ["professions", "save"],
 		mutationFn: async (data: SaveProfessionsInput) =>
-			await fetchClient("/api/professions", {
+			await fetchClient("/api/professions/me", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

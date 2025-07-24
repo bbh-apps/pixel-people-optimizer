@@ -7,16 +7,11 @@ from __future__ import annotations
 
 from typing import List, NamedTuple, Optional
 
+from pixel_people_optimizer.buildings.models import Building, MyBuilding
+from pixel_people_optimizer.formulas.models import SpliceFormula
+from pixel_people_optimizer.missions.models import MySpecialMission
+from pixel_people_optimizer.professions.models import MyProfession, Profession
 from sqlalchemy.orm import Session
-
-from .models import (
-    Building,
-    MyBuilding,
-    MyProfession,
-    MySpecialMission,
-    Profession,
-    SpliceFormula,
-)
 
 
 class Candidate(NamedTuple):

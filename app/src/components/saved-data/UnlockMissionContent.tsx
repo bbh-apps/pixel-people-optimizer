@@ -7,13 +7,14 @@ import {
 	useMantineTheme,
 } from "@mantine/core";
 import React from "react";
-import type { MissionListRes, ProfessionListRes } from "../../types/models";
-
-type Formula = ProfessionListRes & { isUnlocked: boolean };
+import type {
+	SavedProfessionFormulaRes,
+	SavedProfessionMissionRes,
+} from "../../types/models";
 
 type UnlockMissionContentProps = {
-	mission: MissionListRes;
-	formula: Formula[];
+	mission: SavedProfessionMissionRes;
+	formula: SavedProfessionFormulaRes[];
 };
 
 const UnlockMissionContent: React.FC<UnlockMissionContentProps> = ({
@@ -27,32 +28,37 @@ const UnlockMissionContent: React.FC<UnlockMissionContentProps> = ({
 
 	return (
 		<Stack>
-			<Text size="sm">
-				Must complete the special mission first: {mission.name ?? "n/a"}
-			</Text>
+			<Stack gap={2}>
+				<Text size="sm">Must complete the special mission:</Text>
+				<Text size="sm">{mission.name ?? "n/a"}</Text>
+			</Stack>
 
-			<Text size="xs">
-				<Text span c="blue" fw={700} inherit>
-					Blue
-				</Text>{" "}
-				represents professions you already unlocked.
-			</Text>
+			{formula.length > 0 && (
+				<Text size="xs">
+					<Text span c="blue" fw={700} inherit>
+						Blue
+					</Text>{" "}
+					represents professions you already unlocked.
+				</Text>
+			)}
 
-			<Group>
-				{formula.map((prof) => (
-					<Paper
-						withBorder
-						bg={prof.isUnlocked ? "blue" : parentColor}
-						p={6}
-						key={`unlock-prof-modal-${prof.name}`}
-					>
-						<Text size="xs" fw={700}>
-							{prof.name}
-						</Text>
-						<Text size="xs">{prof.category}</Text>
-					</Paper>
-				))}
-			</Group>
+			{formula.length > 0 && (
+				<Group>
+					{formula.map((prof) => (
+						<Paper
+							withBorder={colorScheme === "light"}
+							bg={prof.is_unlocked ? "blue" : parentColor}
+							p={6}
+							key={`unlock-prof-modal-${prof.name}`}
+						>
+							<Text size="xs" fw={700}>
+								{prof.name}
+							</Text>
+							<Text size="xs">{prof.category}</Text>
+						</Paper>
+					))}
+				</Group>
+			)}
 		</Stack>
 	);
 };
