@@ -27,6 +27,8 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 	const parentColor =
 		colorScheme === "light" ? theme.colors.blue[0] : theme.colors.dark[4];
 	const partialUnlockColor =
+		colorScheme === "light" ? theme.colors.green[6] : theme.colors.green[5];
+	const missionUnlockColor =
 		colorScheme === "light" ? theme.colors.orange[6] : theme.colors.orange[5];
 
 	const size = useMatches({
@@ -47,7 +49,15 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 						return {
 							...detail,
 							isPartialUnlock: detail.formula?.some(
-								(p) => p.is_unlocked === true
+								(p) =>
+									p.is_unlocked === true &&
+									!(detail.mission != null && !detail.mission?.is_complete)
+							),
+							isMissionNeeded: detail.formula?.some(
+								(p) =>
+									p.is_unlocked === true &&
+									detail.mission != null &&
+									!detail.mission?.is_complete
 							),
 						};
 					}
@@ -88,20 +98,35 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 				<Stack>
 					<Text size="sm">
 						<Text fw={700} span inherit c={partialUnlockColor}>
-							Orange
+							Green
 						</Text>{" "}
 						means you have unlocked one part of the formula for that profession
-						already. You'll be able to unlock it after splicing{" "}
+						already and have completed the special mission (if applicable). It
+						will be ready to splice after splicing{" "}
 						<Text fw={700} span inherit>
 							{profession.name}
 						</Text>
 						.
 					</Text>
+					<Text size="sm">
+						<Text fw={700} span inherit c={missionUnlockColor}>
+							Orange
+						</Text>{" "}
+						means you have unlocked at least one part of the formula for that
+						profession already but you still need to complete a special mission
+						to unlock it.
+					</Text>
 					<Group>
 						{unlockProfessionsWithFormula.map((prof) => (
 							<Paper
 								withBorder={colorScheme === "light"}
-								bg={prof.isPartialUnlock ? partialUnlockColor : parentColor}
+								bg={
+									prof.isPartialUnlock
+										? partialUnlockColor
+										: prof.isMissionNeeded
+										? missionUnlockColor
+										: parentColor
+								}
 								p={6}
 								key={`unlock-prof-modal-${prof.name}`}
 							>
@@ -109,7 +134,7 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 									size="xs"
 									fw={700}
 									c={
-										prof.isPartialUnlock
+										prof.isPartialUnlock || prof.isMissionNeeded
 											? theme.colors.gray[9]
 											: "var(--mantine-color-text)"
 									}
@@ -119,7 +144,7 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 								<Text
 									size="xs"
 									c={
-										prof.isPartialUnlock
+										prof.isPartialUnlock || prof.isMissionNeeded
 											? theme.colors.gray[9]
 											: "var(--mantine-color-text)"
 									}
