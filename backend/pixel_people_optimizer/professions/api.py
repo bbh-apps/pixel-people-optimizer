@@ -6,13 +6,12 @@ from pixel_people_optimizer.auth.service import (
     get_current_user_id_optional,
 )
 from pixel_people_optimizer.db import get_db
-from pixel_people_optimizer.lib import sync_user_items
+from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.professions import queries, service
 from pixel_people_optimizer.professions.models import MyProfession, Profession
 from pixel_people_optimizer.professions.schema import (
     ProfessionListRes,
     ProfessionListWithDetailRes,
-    SavedProfessionListRes,
 )
 from pixel_people_optimizer.schema import IDList
 from sqlalchemy.orm import Session

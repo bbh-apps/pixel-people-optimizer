@@ -5,7 +5,7 @@ from pixel_people_optimizer.auth.service import get_current_user_id
 from pixel_people_optimizer.buildings.models import Building, MyBuilding
 from pixel_people_optimizer.buildings.schema import BuildingListRes
 from pixel_people_optimizer.db import get_db
-from pixel_people_optimizer.lib import sync_user_items
+from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.schema import IDList
 from sqlalchemy.orm import Session
 

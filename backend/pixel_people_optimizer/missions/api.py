@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from gotrue import Session
 from pixel_people_optimizer.auth.service import get_current_user_id
 from pixel_people_optimizer.db import get_db
-from pixel_people_optimizer.lib import sync_user_items
+from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.missions.models import MySpecialMission, SpecialMission
 from pixel_people_optimizer.missions.schema import (
     MissionListRes,
