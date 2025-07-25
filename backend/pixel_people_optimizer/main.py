@@ -18,7 +18,7 @@ app.add_middleware(
     allow_origin_regex=CORS_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_headers=["*"],
 )
 
 app.include_router(auth_router)

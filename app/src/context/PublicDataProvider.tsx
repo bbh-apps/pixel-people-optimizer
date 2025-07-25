@@ -17,7 +17,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 			{
 				queryKey: ["buildings", "list", tokenQueryKey],
 				queryFn: async (): Promise<BuildingListRes[]> =>
-					await fetchClient("/api/buildings", {
+					await fetchClient("/api/buildings/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
 				enabled: token !== undefined,
@@ -25,7 +25,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 			{
 				queryKey: ["professions", "list", tokenQueryKey],
 				queryFn: async (): Promise<ProfessionListWithDetailRes[]> =>
-					await fetchClient(`/api/professions`, {
+					await fetchClient(`/api/professions/`, {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
 				enabled: token !== undefined,
@@ -33,7 +33,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 			{
 				queryKey: ["missions", "list", tokenQueryKey],
 				queryFn: async (): Promise<MissionListWithDetailRes[]> =>
-					await fetchClient("/api/missions", {
+					await fetchClient("/api/missions/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
 				enabled: token !== undefined,

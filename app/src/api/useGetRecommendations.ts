@@ -10,7 +10,7 @@ const useGetRecommendations = (remainingLand: number | null) => {
 		queryKey: ["recommendations", remainingLand],
 		queryFn: async (): Promise<RecommendationRes[]> =>
 			await fetchClient(
-				`/api/recommendations?remaining_land=${remainingLand ?? 0}`,
+				`/api/recommendations/?remaining_land=${remainingLand ?? 0}`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
