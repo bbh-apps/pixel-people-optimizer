@@ -5,8 +5,8 @@ import React, { useMemo, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type z from "zod";
 import CheckboxListItem, {
-	type Data,
 	type DisabledData,
+	type EntityDetail,
 } from "./CheckboxListItem";
 import CheckboxListItemMobile from "./CheckboxListItemMobile";
 import type { GameDataType } from "./GameDataForm";
@@ -16,7 +16,7 @@ type SaveCheckboxGroupInput = z.infer<typeof saveEntitySchema>;
 
 type CheckboxListProps = {
 	type: GameDataType;
-	items: Data[];
+	items: EntityDetail[];
 	disabledItems: DisabledData[];
 };
 

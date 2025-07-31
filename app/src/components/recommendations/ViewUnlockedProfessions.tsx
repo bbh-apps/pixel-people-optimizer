@@ -96,26 +96,6 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 				}
 			>
 				<Stack>
-					<Text size="sm">
-						<Text fw={700} span inherit c={partialUnlockColor}>
-							Green
-						</Text>{" "}
-						means you have unlocked one part of the formula for that profession
-						already and have completed the special mission (if applicable). It
-						will be ready to splice after splicing{" "}
-						<Text fw={700} span inherit>
-							{profession.name}
-						</Text>
-						.
-					</Text>
-					<Text size="sm">
-						<Text fw={700} span inherit c={missionUnlockColor}>
-							Orange
-						</Text>{" "}
-						means you have unlocked at least one part of the formula for that
-						profession already but you still need to complete a special mission
-						to unlock it.
-					</Text>
 					<Group>
 						{unlockProfessionsWithFormula.map((prof) => (
 							<Paper
@@ -154,6 +134,26 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 							</Paper>
 						))}
 					</Group>
+					<Stack gap="xs">
+						<Text size="xs">
+							<Text fw={700} span inherit c={partialUnlockColor}>
+								Green
+							</Text>
+							: this is ready to splice after splicing{" "}
+							<Text fw={700} span inherit>
+								{profession.name}
+							</Text>
+							. You have unlocked the other half of the formula already and have
+							completed the special mission (if applicable).
+						</Text>
+						<Text size="xs">
+							<Text fw={700} span inherit c={missionUnlockColor}>
+								Orange
+							</Text>
+							: you have unlocked half of the formula already but still need to
+							complete a special mission to unlock it.
+						</Text>
+					</Stack>
 				</Stack>
 			</Modal>
 		</>

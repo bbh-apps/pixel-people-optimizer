@@ -3,13 +3,11 @@ import {
 	Button,
 	Flex,
 	Group,
-	Menu,
 	Text,
 	TextInput,
 	useMatches,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { CheckIcon } from "@phosphor-icons/react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -20,17 +18,21 @@ import { usePendingSaveGameData } from "../../hooks/usePendingSaveGameData";
 import { useSaveGameDataForms } from "../../hooks/useSaveGameDataForms";
 import type { IDList } from "../../types/models";
 import AuthModal from "../AuthModal";
-import type { ProfessionSortType } from "../saved-data/ProfessionsList";
 import CheckboxList from "./CheckboxList";
-import type { Data, DisabledData } from "./CheckboxListItem";
+import type { DisabledData, EntityDetail } from "./CheckboxListItem";
 import { saveEntitySchema } from "./schema";
+import SortMenu, { type SortOptions } from "./SortMenu";
 
 export type GameDataType = "buildings" | "professions" | "missions";
 
-type GameDataFormProps<TData extends Data> = {
+type GameDataFormProps<
+	TData extends EntityDetail,
+	TUserData extends EntityDetail,
+	TSortType extends string
+> = {
 	type: GameDataType;
 	gameData: TData[];
-	savedData: TData[] | undefined;
+	savedData: TUserData[] | undefined;
 	defaultIds: number[];
 	saveMutation: UseMutationResult<
 		IDList,
@@ -42,11 +44,17 @@ type GameDataFormProps<TData extends Data> = {
 	>;
 	disabledData?: DisabledData[];
 	hasSort?: boolean;
-	ProfessionSortType?: ProfessionSortType;
-	setProfessionSortType?: (sortBy: ProfessionSortType) => void;
+	sortOptions?: SortOptions<TSortType>[];
+	sortType?: TSortType;
+	setSortType?: (sortBy: TSortType) => void;
+	sortFn?: (sortBy: TSortType, data: TData[]) => TData[];
 };
 
-const GameDataForm = <TData extends Data>({
+const GameDataForm = <
+	TData extends EntityDetail,
+	TUserData extends EntityDetail,
+	TSortType extends string
+>({
 	type,
 	gameData,
 	savedData,
@@ -54,9 +62,11 @@ const GameDataForm = <TData extends Data>({
 	saveMutation,
 	disabledData = [],
 	hasSort = false,
-	ProfessionSortType = "abc",
-	setProfessionSortType = () => {},
-}: GameDataFormProps<TData>) => {
+	sortOptions = [],
+	sortType,
+	setSortType = () => {},
+	sortFn = () => [],
+}: GameDataFormProps<TData, TUserData, TSortType>) => {
 	const { token } = useAuth();
 	const justify = useMatches(
 		hasSort
@@ -113,27 +123,6 @@ const GameDataForm = <TData extends Data>({
 		}
 	};
 
-	const sortItems = (sortBy: ProfessionSortType) => {
-		if (sortBy === "abc") {
-			setSortedData(gameData.sort((a, b) => a.name.localeCompare(b.name)));
-		} else if (sortBy === "gallery") {
-			setSortedData(gameData.sort((a, b) => a.id - b.id));
-		}
-	};
-
-	const onClickSort = (newProfessionSortType: ProfessionSortType) => {
-		if (newProfessionSortType !== ProfessionSortType) {
-			sortItems(newProfessionSortType);
-			setProfessionSortType(newProfessionSortType);
-		}
-	};
-
-	// Initialize with sorted data
-	useEffect(() => {
-		sortItems(ProfessionSortType);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	useEffect(() => {
 		if (!token) {
 			registerSaveCallback(type, () => handleSubmit(onSubmit)());
@@ -144,11 +133,19 @@ const GameDataForm = <TData extends Data>({
 	}, [token, handleSubmit, onSubmit]);
 
 	useEffect(() => {
-		const filtered = gameData.filter((b) =>
-			b.name.toLowerCase().includes(debounced.toLowerCase())
+		if (!sortFn || !sortType) return;
+
+		// Step 1: sort first
+		const sorted = sortFn(sortType, gameData);
+
+		// Step 2: apply filter
+		const filtered = sorted.filter((item) =>
+			item.name.toLowerCase().includes(debounced.toLowerCase())
 		);
+
+		setSortedData(sorted); // optional: keep for other uses
 		setFilteredData(filtered);
-	}, [gameData, debounced]);
+	}, [gameData, debounced, sortType, sortFn]);
 
 	useEffect(() => {
 		const selectedCount = selectedSet.length;
@@ -188,40 +185,20 @@ const GameDataForm = <TData extends Data>({
 						<Group justify={justify} px="md" align="center">
 							{hasSort && (
 								<Flex flex={1}>
-									<Text size="xs" visibleFrom="sm">
-										Note: Special genes listed at the end
-									</Text>
+									{type === "professions" && (
+										<Text size="xs" visibleFrom="sm">
+											Note: Special genes listed at the end
+										</Text>
+									)}
 								</Flex>
 							)}
 							<Flex gap="sm">
 								{hasSort && (
-									<Menu>
-										<Menu.Target>
-											<Button px="xs">Sort order</Button>
-										</Menu.Target>
-										<Menu.Dropdown>
-											<Menu.Item
-												leftSection={
-													ProfessionSortType === "gallery" ? (
-														<CheckIcon color="var(--mantine-color-text)" />
-													) : null
-												}
-												onClick={() => onClickSort("gallery")}
-											>
-												Gallery order
-											</Menu.Item>
-											<Menu.Item
-												leftSection={
-													ProfessionSortType === "abc" ? (
-														<CheckIcon color="var(--mantine-color-text)" />
-													) : null
-												}
-												onClick={() => onClickSort("abc")}
-											>
-												ABC order
-											</Menu.Item>
-										</Menu.Dropdown>
-									</Menu>
+									<SortMenu
+										sortOptions={sortOptions}
+										sortType={sortType as TSortType}
+										setSortType={setSortType}
+									/>
 								)}
 								<Button
 									variant="filled"

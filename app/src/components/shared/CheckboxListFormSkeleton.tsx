@@ -33,7 +33,7 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 	return (
 		<Flex direction="column" gap="md" pt="xs" px="md">
 			<TextInput disabled />
-			<Group gap="md">
+			<Group gap="sm">
 				{range(0, numItems).map((idx) => (
 					<Group
 						w={{

@@ -2,7 +2,7 @@ import { useQueries } from "@tanstack/react-query";
 import { useAuth } from "../api/useAuth";
 import { fetchClient } from "../lib/fetchClient";
 import type {
-	BuildingListRes,
+	BuildingListWithDetailRes,
 	MissionListWithDetailRes,
 	ProfessionListWithDetailRes,
 } from "../types/models";
@@ -16,7 +16,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 		queries: [
 			{
 				queryKey: ["buildings", "list", tokenQueryKey],
-				queryFn: async (): Promise<BuildingListRes[]> =>
+				queryFn: async (): Promise<BuildingListWithDetailRes[]> =>
 					await fetchClient("/api/buildings/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),

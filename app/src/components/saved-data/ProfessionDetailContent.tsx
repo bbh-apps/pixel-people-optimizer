@@ -46,6 +46,12 @@ const ProfessionDetailContent: React.FC<ProfessionDetailContentProps> = ({
 					</Paper>
 				))}
 			</Group>
+			<Text size="xs">
+				<Text span c="blue" fw={700} inherit>
+					Blue
+				</Text>{" "}
+				represents professions you already unlocked.
+			</Text>
 		</Stack>
 	);
 };
