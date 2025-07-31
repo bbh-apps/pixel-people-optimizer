@@ -1,13 +1,13 @@
 import {
 	Button,
 	Checkbox,
-	em,
 	Flex,
 	Group,
 	Skeleton,
 	TextInput,
+	useMatches,
 } from "@mantine/core";
-import { range, useMediaQuery } from "@mantine/hooks";
+import { range } from "@mantine/hooks";
 import React from "react";
 import type { GameDataType } from "./GameDataForm";
 
@@ -18,8 +18,11 @@ type CheckboxListFormSkeletonProps = {
 const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 	type,
 }) => {
-	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
-	const numItems = isMobile ? 9 : 19;
+	const numItems = useMatches({
+		base: 4,
+		sm: 14,
+		md: 19,
+	});
 
 	const getRandomWidth = () => {
 		const minWidth = 65;

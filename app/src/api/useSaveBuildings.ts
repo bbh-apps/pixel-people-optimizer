@@ -19,7 +19,6 @@ const useSaveBuildings = () => {
 				body: JSON.stringify(data),
 			}),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["saved_items_count"] });
 			queryClient.invalidateQueries({ queryKey: ["buildings", "saved"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		},

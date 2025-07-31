@@ -60,6 +60,7 @@ const Header: React.FC<HeaderProps> = ({ isNavBarOpen, navBarToggle }) => {
 		if (clickedSignOut && token == null) {
 			queryClient.invalidateQueries({ queryKey: ["buildings", "saved"] });
 			queryClient.invalidateQueries({ queryKey: ["professions", "saved"] });
+			queryClient.invalidateQueries({ queryKey: ["missions", "saved"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

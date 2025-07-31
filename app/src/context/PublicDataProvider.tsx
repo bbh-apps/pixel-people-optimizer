@@ -1,4 +1,4 @@
-import { useSuspenseQueries } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useAuth } from "../api/useAuth";
 import { fetchClient } from "../lib/fetchClient";
 import type {
@@ -12,7 +12,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 	const { token } = useAuth();
 	const tokenQueryKey = token != null ? "hasToken" : "notHasToken";
 
-	const results = useSuspenseQueries({
+	const results = useQueries({
 		queries: [
 			{
 				queryKey: ["buildings", "list", tokenQueryKey],

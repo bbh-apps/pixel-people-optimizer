@@ -1,7 +1,5 @@
 import { Tabs } from "@mantine/core";
-import React, { Suspense, useEffect, useState } from "react";
-import useGetUserSavedItemsCount from "../../api/useGetUserSavedItemsCount";
-import { useSelectedDataCount } from "../../hooks";
+import React, { Suspense, useState } from "react";
 import { CheckboxListFormSkeleton } from "../shared";
 import type { GameDataType } from "../shared/GameDataForm";
 import BuildingsList from "./BuildingsList";
@@ -16,34 +14,19 @@ type SavedDataTabsProps = {
 
 const SavedDataTabs: React.FC<SavedDataTabsProps> = ({ items }) => {
 	const [tab, setTab] = useState<GameDataType | null>("buildings");
-	const { updateCount } = useSelectedDataCount();
-	const { data: userSavedItemsCount } = useGetUserSavedItemsCount();
 
 	const getListToRender = (value: GameDataType) => {
 		switch (value) {
 			case "buildings":
-				// return null;
 				return <BuildingsList />;
 			case "professions":
-				// return null;
 				return <ProfessionsList />;
 			case "missions":
-				// return null;
 				return <MissionsList />;
 			default:
 				return null;
 		}
 	};
-
-	useEffect(() => {
-		if (userSavedItemsCount != null) {
-			const { buildings_count, professions_count, missions_count } =
-				userSavedItemsCount;
-			updateCount("buildings", buildings_count);
-			updateCount("professions", professions_count);
-			updateCount("missions", missions_count);
-		}
-	}, [updateCount, userSavedItemsCount]);
 
 	return (
 		<Tabs
@@ -77,14 +60,12 @@ const SavedDataTabs: React.FC<SavedDataTabsProps> = ({ items }) => {
 
 			{items.map((item) => (
 				<Tabs.Panel value={item.value} key={`${item.value}-tab-panel`}>
-					{tab === item.value && (
-						<Suspense
-							key="saved-data-tabs-suspense"
-							fallback={<CheckboxListFormSkeleton type={item.value} />}
-						>
-							{getListToRender(item.value)}
-						</Suspense>
-					)}
+					<Suspense
+						key="saved-data-tabs-suspense"
+						fallback={<CheckboxListFormSkeleton type={item.value} />}
+					>
+						{getListToRender(item.value)}
+					</Suspense>
 				</Tabs.Panel>
 			))}
 		</Tabs>

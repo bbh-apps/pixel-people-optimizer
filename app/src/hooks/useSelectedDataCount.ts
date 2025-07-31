@@ -10,9 +10,9 @@ type SelectedDataStore = {
 };
 
 export const useSelectedDataCount = create<SelectedDataStore>((set, get) => ({
-	buildingCount: 2,
-	professionCount: 2,
-	missionCount: 0,
+	buildingCount: null,
+	professionCount: null,
+	missionCount: null,
 	updateCount: (key, count) =>
 		set(() => {
 			if (key === "buildings") {

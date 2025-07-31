@@ -1,7 +1,5 @@
-import { Accordion, Center, Flex, Loader, Stack, Title } from "@mantine/core";
+import { Accordion, Flex, Stack, Title } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
-import { useIsFetching } from "@tanstack/react-query";
-import { Suspense } from "react";
 import PublicDataProvider from "../context/PublicDataProvider";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
 import { Recommendations } from "./recommendations";
@@ -12,7 +10,6 @@ const PixelPeopleOptimizer = () => {
 		offset: 70,
 	});
 	const howToUseFaq = TOOL_USAGE_FAQ[0];
-	const isFetching = useIsFetching();
 
 	return (
 		<Flex direction="column" gap="xl">
@@ -25,27 +22,12 @@ const PixelPeopleOptimizer = () => {
 					</Accordion.Item>
 				</Accordion>
 			</Stack>
-			{isFetching ? (
-				<Center>
-					<Loader />
-				</Center>
-			) : (
-				<Suspense
-					key="optimizer-suspense"
-					fallback={
-						<Center>
-							<Loader />
-						</Center>
-					}
-				>
-					<PublicDataProvider>
-						<SavedData />
-						<Flex ref={targetRef}>
-							<Recommendations scrollIntoView={scrollIntoView} />
-						</Flex>
-					</PublicDataProvider>
-				</Suspense>
-			)}
+			<PublicDataProvider>
+				<SavedData />
+				<Flex ref={targetRef}>
+					<Recommendations scrollIntoView={scrollIntoView} />
+				</Flex>
+			</PublicDataProvider>
 		</Flex>
 	);
 };

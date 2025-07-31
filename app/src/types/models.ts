@@ -75,11 +75,6 @@ export interface SavedProfessionListRes {
   mission: SavedProfessionMissionRes | null;
   formula: SavedProfessionFormulaRes[];
 }
-export interface UserSavedItemCountRes {
-  buildings_count: number;
-  professions_count: number;
-  missions_count: number;
-}
 export interface VerifiedUserRes {
   email: string;
   is_new_account: boolean;

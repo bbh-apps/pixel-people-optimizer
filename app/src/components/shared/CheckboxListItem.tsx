@@ -69,7 +69,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 				<Group
 					w={{
 						base: "48%",
-						sm: "32%",
+						sm: "30%",
 						md: "23%",
 					}}
 					gap="md"

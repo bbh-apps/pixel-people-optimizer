@@ -151,10 +151,14 @@ const GameDataForm = <TData extends Data>({
 	}, [gameData, debounced]);
 
 	useEffect(() => {
-		if (savedData) {
-			updateCount(type, savedData.length);
+		const selectedCount = selectedSet.length;
+		if (token && savedData) {
+			updateCount(
+				type,
+				selectedCount > savedData.length ? selectedCount : savedData.length
+			);
 		} else {
-			updateCount(type, selectedSet.length);
+			updateCount(type, selectedCount);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [savedData, selectedSet]);

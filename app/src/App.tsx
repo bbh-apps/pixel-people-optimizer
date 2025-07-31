@@ -1,15 +1,11 @@
 import { AppShell, Container } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { lazy } from "react";
 import { Route, Routes } from "react-router";
 import FaqPage from "./components/FaqPage";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
-
-const PixelPeopleOptimizer = lazy(
-	() => import("./components/PixelPeopleOptimizer")
-);
+import PixelPeopleOptimizer from "./components/PixelPeopleOptimizer";
 
 export default function App() {
 	const [isNavBarOpen, navBar] = useDisclosure();
