@@ -4,7 +4,6 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"prebuild": "python ../backend/pixel_people_optimizer/scripts/generate_graph_json.py --output ./public/data/graph.json",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
