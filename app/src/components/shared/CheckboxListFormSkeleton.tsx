@@ -1,13 +1,13 @@
 import {
 	Button,
 	Checkbox,
+	em,
 	Flex,
 	Group,
 	Skeleton,
 	TextInput,
-	useMatches,
 } from "@mantine/core";
-import { range } from "@mantine/hooks";
+import { range, useMediaQuery } from "@mantine/hooks";
 import React from "react";
 import type { GameDataType } from "./GameDataForm";
 
@@ -18,16 +18,8 @@ type CheckboxListFormSkeletonProps = {
 const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 	type,
 }) => {
-	const widths = useMatches({
-		base: "45%",
-		sm: "30%",
-		md: "23%",
-	});
-
-	const numItems = useMatches({
-		base: 9,
-		sm: 19,
-	});
+	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+	const numItems = isMobile ? 9 : 19;
 
 	const getRandomWidth = () => {
 		const minWidth = 65;
@@ -40,7 +32,14 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 			<TextInput disabled />
 			<Group gap="md">
 				{range(0, numItems).map((idx) => (
-					<Group w={widths} key={`${type}-${idx}`}>
+					<Group
+						w={{
+							base: "45%",
+							sm: "30%",
+							md: "23%",
+						}}
+						key={`${type}-${idx}`}
+					>
 						<Checkbox.Indicator disabled />
 						<Skeleton height={8} w={`${getRandomWidth()}%`} />
 					</Group>

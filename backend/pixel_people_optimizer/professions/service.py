@@ -1,5 +1,7 @@
-from typing import Any, List
+from collections import defaultdict
+from typing import Any, List, Optional
 
+from pixel_people_optimizer.formulas.models import SpliceFormula
 from pixel_people_optimizer.missions import queries as mission_queries
 from pixel_people_optimizer.professions.schema import (
     ProfessionListWithDetailRes,
@@ -134,3 +136,61 @@ def get_user_professions(
             )
         )
     return results
+
+
+def build_reverse_graph(
+    splice_formulas: List[SpliceFormula],
+) -> defaultdict[int, list[tuple[Optional[int], Optional[int]]]]:
+    graph = defaultdict(list)
+    for sf in splice_formulas:
+        graph[sf.id].append((sf.parent1_id, sf.parent2_id))
+    return graph
+
+
+def deduplicate_path_list(paths: list[list[int]]) -> list[list[int]]:
+    seen = set()
+    deduped = []
+    for path in paths:
+        t = tuple(path)
+        if t not in seen:
+            seen.add(t)
+            deduped.append(path)
+    return deduped
+
+
+def compute_shortest_paths_to_target(
+    target_profession_id: int,
+    reverse_graph: dict[int, list[tuple[Optional[int], Optional[int]]]],
+) -> list[list[int]]:
+    """
+    Returns all paths from roots (professions with no parents) to the given target profession.
+    Each path is a list of profession IDs from root to target.
+    """
+    memo: dict[int, list[list[int]]] = {}
+
+    def dfs(current: int, stack: set[int]) -> list[list[int]]:
+        if current in stack:
+            return []  # cycle
+
+        if current in memo:
+            return memo[current]
+
+        parents = reverse_graph.get(current, [])
+        if not parents or all(p == (None, None) for p in parents):
+            memo[current] = [[current]]
+            return memo[current]
+
+        stack.add(current)
+        paths = []
+        for p1, p2 in parents:
+            for parent in (p1, p2):
+                if parent is not None:
+                    for path in dfs(parent, stack):
+                        paths.append(path + [current])
+        stack.remove(current)
+
+        memo[current] = paths
+        return paths
+
+    all_paths = dfs(target_profession_id, set())
+    return deduplicate_path_list(all_paths)

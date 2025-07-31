@@ -27,3 +27,7 @@ class SavedProfessionListRes(ProfessionListRes):
     category: str
     mission: SavedProfessionMissionRes | None
     formula: List[SavedProfessionFormulaRes]
+
+
+class ProfessionPathsRes(BaseModel):
+    paths: list[list[int]]

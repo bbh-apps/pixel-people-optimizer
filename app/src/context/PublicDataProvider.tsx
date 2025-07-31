@@ -1,4 +1,4 @@
-import { useQueries } from "@tanstack/react-query";
+import { useSuspenseQueries } from "@tanstack/react-query";
 import { useAuth } from "../api/useAuth";
 import { fetchClient } from "../lib/fetchClient";
 import type {
@@ -12,7 +12,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 	const { token } = useAuth();
 	const tokenQueryKey = token != null ? "hasToken" : "notHasToken";
 
-	const results = useQueries({
+	const results = useSuspenseQueries({
 		queries: [
 			{
 				queryKey: ["buildings", "list", tokenQueryKey],
@@ -20,7 +20,8 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient("/api/buildings/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				enabled: token !== undefined,
+				// enabled: token !== undefined,
+				staleTime: 1000 * 60 * 5,
 			},
 			{
 				queryKey: ["professions", "list", tokenQueryKey],
@@ -28,7 +29,8 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient(`/api/professions/`, {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				enabled: token !== undefined,
+				// enabled: token !== undefined,
+				staleTime: 1000 * 60 * 5,
 			},
 			{
 				queryKey: ["missions", "list", tokenQueryKey],
@@ -36,17 +38,33 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient("/api/missions/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				enabled: token !== undefined,
+				// enabled: token !== undefined,
+				staleTime: 1000 * 60 * 5,
 			},
 		],
 	});
 
+	// const isLoading = results.some(
+	// 	(r) => r.isFetching || r.isLoading || r.data == null
+	// );
+	const buildings = results[0].data;
+	const professions = results[1].data;
+	const missions = results[2].data;
+
+	// if (isLoading) {
+	// 	return (
+	// 		<Center h="100%">
+	// 			<Loader size="lg" />
+	// 		</Center>
+	// 	);
+	// }
+
 	return (
 		<PublicDataContext.Provider
 			value={{
-				buildings: results[0].data,
-				professions: results[1].data,
-				missions: results[2].data,
+				buildings,
+				professions,
+				missions,
 			}}
 		>
 			{children}

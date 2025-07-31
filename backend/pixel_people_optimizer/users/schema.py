@@ -8,3 +8,9 @@ class VerifiedUserRes(BaseModel):
 
 class OTPReq(BaseModel):
     email: str
+
+
+class UserSavedItemCountRes(BaseModel):
+    buildings_count: int
+    professions_count: int
+    missions_count: int

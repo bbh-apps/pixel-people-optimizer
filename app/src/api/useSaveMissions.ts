@@ -19,6 +19,7 @@ const useSaveMissions = () => {
 				body: JSON.stringify(data),
 			}),
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["saved_items_count"] });
 			queryClient.invalidateQueries({ queryKey: ["missions", "saved"] });
 			queryClient.invalidateQueries({ queryKey: ["professions", "saved"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendations"] });

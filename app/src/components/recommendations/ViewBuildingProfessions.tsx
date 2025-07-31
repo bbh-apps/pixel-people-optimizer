@@ -24,7 +24,6 @@ const ViewBuildingProfessions: React.FC<ViewBuildingProfessionsProps> = ({
 	const colorScheme = useComputedColorScheme("light");
 	const parentColor =
 		colorScheme === "light" ? theme.colors.blue[0] : theme.colors.dark[4];
-
 	const size = useMatches({
 		base: "xs",
 		sm: "sm",

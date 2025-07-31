@@ -1,15 +1,9 @@
 from typing import List
 
 from pixel_people_optimizer.formulas.models import SpliceFormula
-from pixel_people_optimizer.missions import queries as mission_queries
-from pixel_people_optimizer.missions.models import MySpecialMission, SpecialMission
+from pixel_people_optimizer.missions.models import MySpecialMission
 from pixel_people_optimizer.professions.models import MyProfession, Profession
-from pixel_people_optimizer.professions.schema import (
-    ProfessionListRes,
-    ProfessionListWithDetailRes,
-    SavedProfessionFormulaRes,
-    SavedProfessionMissionRes,
-)
+from pixel_people_optimizer.professions.schema import ProfessionListRes
 from sqlalchemy import case, select
 from sqlalchemy.orm import Session, aliased, selectinload
 
@@ -46,3 +40,7 @@ def get_all_professions(db: Session):
 def get_user_professions(user_id: int, db: Session) -> List[ProfessionListRes]:
     subquery = get_user_unlocked_professions(user_id, db)
     return db.query(Profession).filter(Profession.id.in_(subquery)).all()
+
+
+def get_profession_by_id(profession_id: int, db: Session):
+    return db.query(Profession).filter(Profession.id == profession_id).first()

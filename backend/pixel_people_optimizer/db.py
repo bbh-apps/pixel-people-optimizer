@@ -19,7 +19,11 @@ class Base(DeclarativeBase):
 
 
 def init_db() -> None:
-    from . import models  # Ensures all models are loaded
+    from .buildings import models
+    from .formulas import models
+    from .missions import models
+    from .professions import models
+    from .users import models
 
     Base.metadata.create_all(engine)
 

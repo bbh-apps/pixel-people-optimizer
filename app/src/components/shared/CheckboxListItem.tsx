@@ -1,11 +1,4 @@
-import {
-	Checkbox,
-	Flex,
-	Group,
-	Popover,
-	useMantineTheme,
-	useMatches,
-} from "@mantine/core";
+import { Checkbox, Flex, Group, Popover, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { QuestionIcon } from "@phosphor-icons/react";
 import React from "react";
@@ -40,27 +33,6 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 	onChange,
 }) => {
 	const theme = useMantineTheme();
-	const widths = useMatches({
-		base: "45%",
-		sm: "30%",
-		md: "23%",
-	});
-
-	const checkboxPadding = useMatches({
-		base: "6px",
-		sm: "12px",
-	});
-
-	const checkboxesGap = useMatches({
-		base: 2,
-		sm: "md",
-	});
-
-	const align = useMatches({
-		base: "start",
-		sm: "center",
-	});
-
 	const [opened, { close, open }] = useDisclosure(false);
 	const { updateCount } = useSelectedDataCount();
 	const isDisabledItem = disabledItemsMap.has(item.id);
@@ -95,11 +67,15 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 		>
 			<Popover.Target>
 				<Group
-					w={widths}
-					gap={checkboxesGap}
+					w={{
+						base: "48%",
+						sm: "32%",
+						md: "23%",
+					}}
+					gap="md"
 					onMouseEnter={open}
 					onMouseLeave={close}
-					align={align}
+					align="start"
 				>
 					<Flex flex={1}>
 						<Checkbox
@@ -109,20 +85,20 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 							onChange={() => handleCheckbox(selectedSet, item.id, onChange)}
 							disabled={disabledItemsMap.has(item.id)}
 							size="sm"
-							styles={{ label: { paddingInlineStart: checkboxPadding } }}
+							styles={{ label: { paddingInlineStart: "12px" } }}
 						/>
 					</Flex>
 
 					{!isDisabledItem &&
 						!item?.isUnlocked &&
 						item?.popoverContent != null && (
-							<Flex mt={1}>
+							<Flex mt={2}>
 								<QuestionIcon color={theme.colors.dark[2]} />
 							</Flex>
 						)}
 
 					{isDisabledItem && (
-						<Flex mt={1}>
+						<Flex mt={2}>
 							<QuestionIcon color={theme.colors.dark[2]} />
 						</Flex>
 					)}

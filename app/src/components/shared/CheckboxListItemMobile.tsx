@@ -5,7 +5,6 @@ import {
 	Group,
 	Modal,
 	useMantineTheme,
-	useMatches,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { QuestionIcon } from "@phosphor-icons/react";
@@ -31,27 +30,6 @@ const CheckboxListItemMobile: React.FC<CheckboxListItemMobileProps> = ({
 	onChange,
 }) => {
 	const theme = useMantineTheme();
-	const widths = useMatches({
-		base: "48%",
-		sm: "30%",
-		md: "23%",
-	});
-
-	const checkboxPadding = useMatches({
-		base: "8px",
-		sm: "12px",
-	});
-
-	const checkboxesGap = useMatches({
-		base: 4,
-		sm: "md",
-	});
-
-	const align = useMatches({
-		base: "start",
-		sm: "center",
-	});
-
 	const [opened, { close, open }] = useDisclosure(false);
 	const { updateCount } = useSelectedDataCount();
 	const isDisabledItem = disabledItemsMap.has(item.id);
@@ -74,11 +52,11 @@ const CheckboxListItemMobile: React.FC<CheckboxListItemMobileProps> = ({
 	return (
 		<>
 			<Group
-				w={widths}
-				gap={checkboxesGap}
+				w="100%"
+				gap={2}
 				onMouseEnter={open}
 				onMouseLeave={close}
-				align={align}
+				align="start"
 			>
 				<Flex flex={1}>
 					<Checkbox
@@ -89,7 +67,7 @@ const CheckboxListItemMobile: React.FC<CheckboxListItemMobileProps> = ({
 						disabled={disabledItemsMap.has(item.id)}
 						size="sm"
 						styles={{
-							label: { paddingInlineStart: checkboxPadding },
+							label: { paddingInlineStart: "8px" },
 						}}
 					/>
 				</Flex>

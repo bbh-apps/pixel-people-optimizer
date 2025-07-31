@@ -1,41 +1,42 @@
 import {
 	ActionIcon,
 	Anchor,
+	Burger,
 	Button,
+	em,
 	Group,
+	Image,
 	lighten,
 	Title,
 	useComputedColorScheme,
 	useMantineTheme,
-	useMatches,
 	type TitleOrder,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { GithubLogoIcon } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../api/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import AuthModal from "./AuthModal";
 import SignOutModal from "./SignOutModal";
 
-const Header = () => {
+type HeaderProps = {
+	isNavBarOpen: boolean;
+	navBarToggle: () => void;
+};
+
+const Header: React.FC<HeaderProps> = ({ isNavBarOpen, navBarToggle }) => {
 	const { token, clickedSignOut, setClickedSignOut } = useAuth();
 	const queryClient = useQueryClient();
 	const theme = useMantineTheme();
 	const colorScheme = useComputedColorScheme("light");
 	const navigate = useNavigate();
 
-	const titleSize: TitleOrder = useMatches({
-		base: 5,
-		sm: 4,
-	});
-
-	const buttonSize = useMatches({
-		base: "compact-xs",
-		sm: "xs",
-	});
+	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+	const titleSize: TitleOrder = isMobile ? 5 : 4;
+	const buttonSize = isMobile ? "compact-xs" : "xs";
 
 	const [isSignInModalOpen, signInModal] = useDisclosure();
 	const [isSignOutModalOpen, signOutModal] = useDisclosure();
@@ -67,21 +68,25 @@ const Header = () => {
 	return (
 		<>
 			<Group h="100%" px="md" align="center" justify="space-between">
-				<Anchor
-					onClick={() => navigate({ pathname: "/" })}
-					c="var(--mantine-color-text)"
-					underline="never"
-				>
-					<Title order={titleSize}>Pixel People Optimizer</Title>
-				</Anchor>
-				<Group align="center" justify="center" gap="sm">
+				<Group gap="xs" align="center">
+					<Image src="/Mayor.webp" h={32} w={32} />
 					<Anchor
+						onClick={() => navigate({ pathname: "/" })}
 						c="var(--mantine-color-text)"
 						underline="never"
-						onClick={() => navigate({ pathname: "/faq" })}
 					>
-						FAQ
+						<Title order={titleSize}>Pixel People Optimizer</Title>
 					</Anchor>
+				</Group>
+
+				<Group hiddenFrom="sm">
+					<Button variant="filled" size={buttonSize} onClick={onClickAuth}>
+						Sign {token == null ? "in" : "out"}
+					</Button>
+					<Burger opened={isNavBarOpen} onClick={navBarToggle} size="sm" />
+				</Group>
+
+				<Group align="center" justify="center" gap="sm" visibleFrom="sm">
 					<ActionIcon
 						radius="xl"
 						autoContrast

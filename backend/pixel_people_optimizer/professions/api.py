@@ -1,17 +1,19 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pixel_people_optimizer.auth.service import (
     get_current_user_id,
     get_current_user_id_optional,
 )
 from pixel_people_optimizer.db import get_db
+from pixel_people_optimizer.formulas.models import SpliceFormula
 from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.professions import queries, service
 from pixel_people_optimizer.professions.models import MyProfession, Profession
 from pixel_people_optimizer.professions.schema import (
     ProfessionListRes,
     ProfessionListWithDetailRes,
+    ProfessionPathsRes,
 )
 from pixel_people_optimizer.schema import IDList
 from sqlalchemy.orm import Session
@@ -25,6 +27,19 @@ def list_professions(
     db: Session = Depends(get_db),
 ):
     return service.get_all_professions_with_user_data(user_id, db)
+
+
+@router.get("/{id:int}/paths", response_model=ProfessionPathsRes)
+def get_paths_to_profession(id: int, db: Session = Depends(get_db)):
+    if not queries.get_profession_by_id(profession_id=id, db=db):
+        raise HTTPException(status_code=404, detail="Profession not found")
+
+    splice_formulas = db.query(SpliceFormula).all()
+    reverse_graph = service.build_reverse_graph(splice_formulas=splice_formulas)
+    shortest_paths = service.compute_shortest_paths_to_target(
+        target_profession_id=id, reverse_graph=reverse_graph
+    )
+    return ProfessionPathsRes(paths=shortest_paths)
 
 
 @router.get("/me", response_model=List[ProfessionListRes])
