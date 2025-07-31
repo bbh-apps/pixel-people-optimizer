@@ -20,7 +20,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient("/api/buildings/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				enabled: token !== undefined,
+				staleTime: 1000 * 60 * 5,
 			},
 			{
 				queryKey: ["professions", "list", tokenQueryKey],
@@ -28,7 +28,7 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient(`/api/professions/`, {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				enabled: token !== undefined,
+				staleTime: 1000 * 60 * 5,
 			},
 			{
 				queryKey: ["missions", "list", tokenQueryKey],
@@ -36,17 +36,21 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient("/api/missions/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				enabled: token !== undefined,
+				staleTime: 1000 * 60 * 5,
 			},
 		],
 	});
 
+	const buildings = results[0].data;
+	const professions = results[1].data;
+	const missions = results[2].data;
+
 	return (
 		<PublicDataContext.Provider
 			value={{
-				buildings: results[0].data,
-				professions: results[1].data,
-				missions: results[2].data,
+				buildings,
+				professions,
+				missions,
 			}}
 		>
 			{children}

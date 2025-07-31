@@ -1,3 +1,5 @@
+import { em } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import {
 	BuildingOfficeIcon,
 	PersonIcon,
@@ -14,6 +16,7 @@ export type SavedDataItem = {
 };
 
 const SavedData = () => {
+	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 	const items: SavedDataItem[] = [
 		{
 			title: "My Buildings",
@@ -32,11 +35,10 @@ const SavedData = () => {
 		},
 	];
 
-	return (
-		<>
-			<SavedDataMobile items={items} />
-			<SavedDataTabs items={items} />
-		</>
+	return isMobile ? (
+		<SavedDataMobile items={items} />
+	) : (
+		<SavedDataTabs items={items} />
 	);
 };
 

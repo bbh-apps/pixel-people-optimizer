@@ -1,10 +1,4 @@
-import {
-	em,
-	Flex,
-	Title,
-	useComputedColorScheme,
-	useMatches,
-} from "@mantine/core";
+import { em, Flex, Title, useComputedColorScheme } from "@mantine/core";
 import { createStyles, keyframes } from "@mantine/emotion";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -26,18 +20,16 @@ const LoadingRecommendations = () => {
 	const parentColor = colorScheme === "light" ? "blue.0" : "dark.5";
 
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
-	const height = useMatches({
-		base: "200px",
-		sm: "580px",
-	});
-
 	const text = "Figuring out what to splice...";
 
 	return (
 		<Flex
 			bg={parentColor}
 			p="md"
-			h={height}
+			h={{
+				base: "200px",
+				sm: "580px",
+			}}
 			align="center"
 			justify="center"
 			opacity={0.5}

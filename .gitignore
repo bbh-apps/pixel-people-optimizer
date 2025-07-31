@@ -17,4 +17,4 @@ dist/
 
 # Python
 .venv
-scripts
+backend/pixel_people_optimizer/scripts/private/

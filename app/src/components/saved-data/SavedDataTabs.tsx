@@ -1,5 +1,6 @@
 import { Tabs } from "@mantine/core";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
+import { CheckboxListFormSkeleton } from "../shared";
 import type { GameDataType } from "../shared/GameDataForm";
 import BuildingsList from "./BuildingsList";
 import MissionsList from "./MissionsList";
@@ -59,7 +60,12 @@ const SavedDataTabs: React.FC<SavedDataTabsProps> = ({ items }) => {
 
 			{items.map((item) => (
 				<Tabs.Panel value={item.value} key={`${item.value}-tab-panel`}>
-					{getListToRender(item.value)}
+					<Suspense
+						key="saved-data-tabs-suspense"
+						fallback={<CheckboxListFormSkeleton type={item.value} />}
+					>
+						{getListToRender(item.value)}
+					</Suspense>
 				</Tabs.Panel>
 			))}
 		</Tabs>
