@@ -1,4 +1,5 @@
 import {
+	Badge,
 	Group,
 	Paper,
 	Stack,
@@ -42,18 +43,18 @@ const BuildingDetailContent: React.FC<BuildingDetailContentProps> = ({
 	return (
 		<Stack>
 			<Group>
-				<Text size="sm">
-					<Text span fw={700} inherit>
+				<Group>
+					<Text size="sm" fw={700}>
 						Land Cost
 					</Text>
-					: {land_cost}
-				</Text>
-				<Text size="sm">
-					<Text span fw={700} inherit>
+					<Badge>{land_cost}</Badge>
+				</Group>
+				<Group>
+					<Text size="sm" fw={700}>
 						Max CPS
 					</Text>
-					: {max_cps}
-				</Text>
+					<Badge>{max_cps}</Badge>
+				</Group>
 			</Group>
 			<Text size="sm">
 				<Text span fw={700} inherit>
