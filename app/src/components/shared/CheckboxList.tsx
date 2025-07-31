@@ -53,7 +53,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 	const rowVirtualizer = useVirtualizer({
 		count: rows.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: () => 48, // average row height in px
+		estimateSize: () => 48,
 		overscan: 5,
 	});
 
@@ -63,7 +63,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 		<ScrollArea
 			h={{
 				base: 190,
-				sm: 180,
+				sm: 160,
 			}}
 			px="lg"
 			viewportRef={parentRef}
@@ -121,32 +121,6 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 							);
 						})}
 					</Box>
-					// <>
-					// 	<Group align="start" gap="sm" visibleFrom="sm">
-					// 		{items.map((item) => (
-					// 			<CheckboxListItem
-					// 				key={`${item.id}-${item.name}`}
-					// 				type={type}
-					// 				item={item}
-					// 				disabledItemsMap={disabledItemsMap}
-					// 				selectedSet={selectedSet}
-					// 				onChange={field.onChange}
-					// 			/>
-					// 		))}
-					// 	</Group>
-					// 	<Group align="start" gap="xs" hiddenFrom="sm">
-					// 		{items.map((item) => (
-					// 			<CheckboxListItemMobile
-					// 				key={`${item.id}-${item.name}-mobile`}
-					// 				type={type}
-					// 				item={item}
-					// 				disabledItemsMap={disabledItemsMap}
-					// 				selectedSet={selectedSet}
-					// 				onChange={field.onChange}
-					// 			/>
-					// 		))}
-					// 	</Group>
-					// </>
 				)}
 			/>
 		</ScrollArea>

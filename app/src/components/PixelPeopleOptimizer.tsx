@@ -1,4 +1,4 @@
-import { Accordion, Flex, Loader, Stack, Title } from "@mantine/core";
+import { Accordion, Center, Flex, Loader, Stack, Title } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { useIsFetching } from "@tanstack/react-query";
 import { Suspense } from "react";
@@ -26,9 +26,18 @@ const PixelPeopleOptimizer = () => {
 				</Accordion>
 			</Stack>
 			{isFetching ? (
-				<Loader />
+				<Center>
+					<Loader />
+				</Center>
 			) : (
-				<Suspense key="optimizer-suspense" fallback={<Loader />}>
+				<Suspense
+					key="optimizer-suspense"
+					fallback={
+						<Center>
+							<Loader />
+						</Center>
+					}
+				>
 					<PublicDataProvider>
 						<SavedData />
 						<Flex ref={targetRef}>

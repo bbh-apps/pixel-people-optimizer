@@ -20,7 +20,6 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient("/api/buildings/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				// enabled: token !== undefined,
 				staleTime: 1000 * 60 * 5,
 			},
 			{
@@ -29,7 +28,6 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient(`/api/professions/`, {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				// enabled: token !== undefined,
 				staleTime: 1000 * 60 * 5,
 			},
 			{
@@ -38,26 +36,14 @@ const PublicDataProvider = ({ children }: { children: React.ReactNode }) => {
 					await fetchClient("/api/missions/", {
 						headers: token ? { Authorization: `Bearer ${token}` } : {},
 					}),
-				// enabled: token !== undefined,
 				staleTime: 1000 * 60 * 5,
 			},
 		],
 	});
 
-	// const isLoading = results.some(
-	// 	(r) => r.isFetching || r.isLoading || r.data == null
-	// );
 	const buildings = results[0].data;
 	const professions = results[1].data;
 	const missions = results[2].data;
-
-	// if (isLoading) {
-	// 	return (
-	// 		<Center h="100%">
-	// 			<Loader size="lg" />
-	// 		</Center>
-	// 	);
-	// }
 
 	return (
 		<PublicDataContext.Provider
