@@ -30,6 +30,8 @@ def me(auth_user: User = Depends(get_current_user)):
     is_new_account = not existing_user.data
     if is_new_account:
         # Create new user record in your custom `users` table
-        supabase_admin.table("users").insert({"id": user_id, "email": email}).execute()
+        supabase_admin.table("users").upsert(
+            {"id": user_id, "email": email}, on_conflict="id"
+        ).execute()
 
     return {"email": email, "is_new_account": is_new_account}

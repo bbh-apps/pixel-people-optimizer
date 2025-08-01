@@ -25,31 +25,46 @@ const AuthModal = ({
 	};
 
 	const handleVerify = async () => {
-		const result = await supabase.auth.verifyOtp({
-			email,
-			token: code,
-			type: "email",
-		});
+		try {
+			const { data, error } = await supabase.auth.verifyOtp({
+				email,
+				token: code,
+				type: "email",
+			});
 
-		const { session } = result.data;
-
-		if (session?.access_token) {
-			verifyUser(
-				{ token: session?.access_token },
-				{
-					onSuccess: (res) => {
-						if (res.is_new_account) {
-							submitAllPendingSaves();
-						}
-						onClose();
-					},
-					onError: (err) => {
-						console.error(err);
-					},
-				}
-			);
+			if (error || !data?.session) {
+				console.error("OTP verification failed:", error);
+				return;
+			}
+		} catch (err) {
+			console.error("Unexpected error verifying OTP:", err);
 		}
 	};
+
+	useEffect(() => {
+		const { data: listener } = supabase.auth.onAuthStateChange(
+			async (event, session) => {
+				if (event === "SIGNED_IN" && session?.access_token) {
+					verifyUser(
+						{ token: session.access_token },
+						{
+							onSuccess: (res) => {
+								if (res.is_new_account) {
+									submitAllPendingSaves();
+								}
+								onClose();
+							},
+							onError: (err) => console.error(err),
+						}
+					);
+				}
+			}
+		);
+
+		return () => {
+			listener.subscription.unsubscribe();
+		};
+	}, []);
 
 	useEffect(() => {
 		if (clickedSignOut) {

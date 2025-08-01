@@ -49,5 +49,5 @@ def sync_user_buildings(
         link_field="building_id",
     )
 
-    saved_ids = queries.get_user_buildings(user_id=user_id, db=db)
-    return IDList(ids=[id_tuple[0] for id_tuple in saved_ids])
+    saved_buildings = queries.get_user_buildings(user_id=user_id, db=db)
+    return IDList(ids=[b.id for b in saved_buildings])
