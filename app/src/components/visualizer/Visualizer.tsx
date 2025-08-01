@@ -51,7 +51,7 @@ const Visualizer: React.FC<VisualizerProps> = ({ value, width }) => {
 
 			const { x, y } = layoutedNode.position;
 			setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
-				zoom: 0.5,
+				zoom: 0.7,
 				duration: 800,
 			});
 		},
