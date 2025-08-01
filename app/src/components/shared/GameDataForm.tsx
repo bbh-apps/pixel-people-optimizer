@@ -136,19 +136,19 @@ const GameDataForm = <
 	}, [token, handleSubmit, onSubmit]);
 
 	useEffect(() => {
-		if (!sortFn || !sortType) return;
+		let sorted = gameData;
+		if (typeof sortFn === "function" && sortType != null) {
+			sorted = sortFn(sortType, gameData);
+		}
 
-		// Step 1: sort first
-		const sorted = sortFn(sortType, gameData);
-
-		// Step 2: apply filter
 		const filtered = sorted.filter((item) =>
 			item.name.toLowerCase().includes(debounced.toLowerCase())
 		);
 
-		setSortedData(sorted); // optional: keep for other uses
+		setSortedData(sorted);
 		setFilteredData(filtered);
-	}, [gameData, debounced, sortType, sortFn]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [gameData, debounced, sortType]);
 
 	useEffect(() => {
 		const selectedCount = selectedSet.length;
