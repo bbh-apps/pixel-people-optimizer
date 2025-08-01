@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import useGetSavedMissions from "../../api/useGetSavedMissions";
 import useSaveMissions from "../../api/useSaveMissions";
 import { PublicDataContext } from "../../context/PublicDataContext";
 import { CheckboxListFormSkeleton, GameDataForm } from "../shared";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import MissionDetailContent from "./MissionDetailContent";
 
 const MissionsList = () => {
@@ -21,13 +23,19 @@ const MissionsList = () => {
 	return isFetching ? (
 		<CheckboxListFormSkeleton type="missions" />
 	) : (
-		<GameDataForm
-			type="missions"
-			gameData={missionsData ?? []}
-			savedData={userMissions}
-			defaultIds={[]}
-			saveMutation={saveMissionsMutation}
-		/>
+		<ErrorBoundary
+			fallbackRender={({ error }) => (
+				<ErrorBoundaryAlert message={error.message} />
+			)}
+		>
+			<GameDataForm
+				type="missions"
+				gameData={missionsData ?? []}
+				savedData={userMissions}
+				defaultIds={[]}
+				saveMutation={saveMissionsMutation}
+			/>
+		</ErrorBoundary>
 	);
 };
 

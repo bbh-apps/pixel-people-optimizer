@@ -8,6 +8,7 @@ import {
 	useMatches,
 } from "@mantine/core";
 import { range } from "@mantine/hooks";
+import pluralize from "pluralize";
 import React from "react";
 import type { GameDataType } from "./GameDataForm";
 
@@ -19,7 +20,7 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 	type,
 }) => {
 	const numItems = useMatches({
-		base: 4,
+		base: 5,
 		sm: 14,
 		md: 19,
 	});
@@ -31,13 +32,13 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 	};
 
 	return (
-		<Flex direction="column" gap="md" pt="xs" px="md">
-			<TextInput disabled />
+		<Flex direction="column" gap="md" px="md" w="100%">
+			<TextInput disabled placeholder={`Search ${pluralize(type, 2)}`} />
 			<Group gap="sm">
 				{range(0, numItems).map((idx) => (
 					<Group
 						w={{
-							base: "45%",
+							base: "100%",
 							sm: "30%",
 							md: "23%",
 						}}
@@ -49,9 +50,16 @@ const CheckboxListFormSkeleton: React.FC<CheckboxListFormSkeletonProps> = ({
 				))}
 			</Group>
 			<Flex justify="end">
-				<Button variant="filled" disabled>
-					Save
-				</Button>
+				<Group>
+					{(type === "buildings" || type === "professions") && (
+						<Button variant="filled" px="xs" disabled>
+							Sort order
+						</Button>
+					)}
+					<Button variant="filled" disabled>
+						Save
+					</Button>
+				</Group>
 			</Flex>
 		</Flex>
 	);

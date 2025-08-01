@@ -1,9 +1,11 @@
 import { useContext, useMemo, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import useGetSavedBuildings from "../../api/useGetSavedBuildings";
 import useSaveBuildings from "../../api/useSaveBuildings";
 import { PublicDataContext } from "../../context/PublicDataContext";
 import type { BuildingListWithDetailRes } from "../../types/models";
 import { CheckboxListFormSkeleton, GameDataForm } from "../shared";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import BuildingDetailContent from "./BuildingDetailContent";
 
 export type BuildingSortType =
@@ -86,18 +88,24 @@ const BuildingsList = () => {
 	return isFetching ? (
 		<CheckboxListFormSkeleton type="buildings" />
 	) : (
-		<GameDataForm
-			type="buildings"
-			gameData={buildingsData}
-			savedData={userBuildings}
-			defaultIds={DEFAULT_START_BLDG_IDS}
-			saveMutation={saveBuildingsMutation}
-			hasSort={true}
-			sortOptions={BUILDING_SORT_OPTIONS}
-			sortType={buildingSortType}
-			setSortType={setBuildingSortType}
-			sortFn={onSort}
-		/>
+		<ErrorBoundary
+			fallbackRender={({ error }) => (
+				<ErrorBoundaryAlert message={error.message} />
+			)}
+		>
+			<GameDataForm
+				type="buildings"
+				gameData={buildingsData}
+				savedData={userBuildings}
+				defaultIds={DEFAULT_START_BLDG_IDS}
+				saveMutation={saveBuildingsMutation}
+				hasSort={true}
+				sortOptions={BUILDING_SORT_OPTIONS}
+				sortType={buildingSortType}
+				setSortType={setBuildingSortType}
+				sortFn={onSort}
+			/>
+		</ErrorBoundary>
 	);
 };
 

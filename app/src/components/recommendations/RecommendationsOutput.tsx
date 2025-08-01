@@ -1,7 +1,9 @@
 import { Pagination, Stack } from "@mantine/core";
 import React, { useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useSortRecommendationData } from "../../hooks/useSortRecommendationData";
 import type { RecommendationRes } from "../../types/models";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import RecommendationCards from "./RecommendationCards";
 import RecommendationsTable from "./RecommendationsTable";
 
@@ -35,28 +37,46 @@ const RecommendationsOutput: React.FC<RecommendationsOutputProps> = ({
 
 	return (
 		<Stack align="center">
-			<RecommendationCards
-				recommendations={currentPageData}
-				sortBy={sortBy}
-				sortDirection={sortDirection}
-				onClickSorting={onClickSorting}
-				refetch={refetch}
-				onConsumeLandRemaining={onConsumeLandRemaining}
-			/>
-			<RecommendationsTable
-				recommendations={currentPageData}
-				sortBy={sortBy}
-				sortDirection={sortDirection}
-				onClickSorting={onClickSorting}
-				refetch={refetch}
-				onConsumeLandRemaining={onConsumeLandRemaining}
-			/>
-			<Pagination
-				total={pages.length}
-				value={activePage}
-				onChange={setPage}
-				my="sm"
-			/>
+			<ErrorBoundary
+				fallbackRender={({ error }) => (
+					<ErrorBoundaryAlert message={error.message} />
+				)}
+			>
+				<RecommendationCards
+					recommendations={currentPageData}
+					sortBy={sortBy}
+					sortDirection={sortDirection}
+					onClickSorting={onClickSorting}
+					refetch={refetch}
+					onConsumeLandRemaining={onConsumeLandRemaining}
+				/>
+			</ErrorBoundary>
+			<ErrorBoundary
+				fallbackRender={({ error }) => (
+					<ErrorBoundaryAlert message={error.message} />
+				)}
+			>
+				<RecommendationsTable
+					recommendations={currentPageData}
+					sortBy={sortBy}
+					sortDirection={sortDirection}
+					onClickSorting={onClickSorting}
+					refetch={refetch}
+					onConsumeLandRemaining={onConsumeLandRemaining}
+				/>
+			</ErrorBoundary>
+			<ErrorBoundary
+				fallbackRender={({ error }) => (
+					<ErrorBoundaryAlert message={error.message} />
+				)}
+			>
+				<Pagination
+					total={pages.length}
+					value={activePage}
+					onChange={setPage}
+					my="sm"
+				/>
+			</ErrorBoundary>
 		</Stack>
 	);
 };

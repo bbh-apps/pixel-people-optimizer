@@ -13,13 +13,16 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "../../api/useAuth";
 
+import { ErrorBoundary } from "react-error-boundary";
 import { useSelectedDataCount } from "../../hooks";
 import { usePendingSaveGameData } from "../../hooks/usePendingSaveGameData";
 import { useSaveGameDataForms } from "../../hooks/useSaveGameDataForms";
 import type { IDList } from "../../types/models";
 import AuthModal from "../AuthModal";
 import CheckboxList from "./CheckboxList";
+import CheckboxListFormSkeleton from "./CheckboxListFormSkeleton";
 import type { DisabledData, EntityDetail } from "./CheckboxListItem";
+import ErrorBoundaryAlert from "./ErrorBoundaryAlert";
 import { saveEntitySchema } from "./schema";
 import SortMenu, { type SortOptions } from "./SortMenu";
 
@@ -160,6 +163,10 @@ const GameDataForm = <
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [savedData, selectedSet]);
 
+	if (sortedData.length === 0) {
+		return <CheckboxListFormSkeleton type={type} />;
+	}
+
 	return (
 		<Flex w="100%">
 			<AuthModal opened={authOpen} onClose={() => setAuthOpen(false)} />
@@ -172,12 +179,19 @@ const GameDataForm = <
 						px="md"
 					/>
 					<Flex direction="column" gap="md" pt="xs">
-						<CheckboxList
-							type={type}
-							items={filteredData}
-							disabledItems={disabledData}
-						/>
-						{hasSort && (
+						<ErrorBoundary
+							fallbackRender={({ error }) => (
+								<ErrorBoundaryAlert message={error.message} />
+							)}
+						>
+							<CheckboxList
+								type={type}
+								items={filteredData}
+								disabledItems={disabledData}
+							/>
+						</ErrorBoundary>
+
+						{type === "professions" && (
 							<Text size="xs" hiddenFrom="sm" px="md">
 								* Note: Special genes listed at the end
 							</Text>
@@ -194,11 +208,17 @@ const GameDataForm = <
 							)}
 							<Flex gap="sm">
 								{hasSort && (
-									<SortMenu
-										sortOptions={sortOptions}
-										sortType={sortType as TSortType}
-										setSortType={setSortType}
-									/>
+									<ErrorBoundary
+										fallbackRender={({ error }) => (
+											<ErrorBoundaryAlert message={error.message} />
+										)}
+									>
+										<SortMenu
+											sortOptions={sortOptions}
+											sortType={sortType as TSortType}
+											setSortType={setSortType}
+										/>
+									</ErrorBoundary>
 								)}
 								<Button
 									variant="filled"
