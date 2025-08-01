@@ -1,7 +1,19 @@
 import { useComputedColorScheme } from "@mantine/core";
-import { Controls, MarkerType, ReactFlow, type Node } from "@xyflow/react";
+import {
+	Controls,
+	MarkerType,
+	ReactFlow,
+	useReactFlow,
+	type Node,
+} from "@xyflow/react";
 import { uniq } from "lodash";
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import useGetPathsByProfession from "../../api/useGetPathsByProfession";
 import { PublicDataContext } from "../../context/PublicDataContext";
 import type { BaseEntityRes } from "../../types/models";
@@ -20,15 +32,31 @@ const nodeTypes = {
 	textUpdater: GraphNode,
 };
 
+const nodeWidth = 160;
+const nodeHeight = 60;
+
 const Visualizer: React.FC<VisualizerProps> = ({ value, width }) => {
 	const colorScheme = useComputedColorScheme();
 	const { professions } = useContext(PublicDataContext);
 	const { data: pathsData } = useGetPathsByProfession({ id: value?.id });
 
+	const { getNode, setCenter, fitView, setViewport } = useReactFlow();
 	const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-	const handleNodeClick = useCallback((_: unknown, node: Node) => {
-		setSelectedNodeId(node.id);
-	}, []);
+	const handleNodeClick = useCallback(
+		(_: unknown, node: Node) => {
+			setSelectedNodeId(node.id);
+
+			const layoutedNode = getNode(node.id);
+			if (!layoutedNode) return;
+
+			const { x, y } = layoutedNode.position;
+			setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
+				zoom: 0.5,
+				duration: 800,
+			});
+		},
+		[getNode, setCenter]
+	);
 
 	const idToProfessionsMap = useMemo(() => {
 		if (!professions) return new Map();
@@ -79,13 +107,22 @@ const Visualizer: React.FC<VisualizerProps> = ({ value, width }) => {
 		});
 	}, [layoutedEdges, selectedNodeId]);
 
+	useEffect(() => {
+		if (layoutedNodes.length === 0) return;
+
+		setViewport({ x: 0, y: 0, zoom: 1 });
+
+		requestAnimationFrame(() => {
+			fitView({ padding: 0.5, duration: 800 });
+		});
+	}, [fitView, layoutedNodes, setViewport]);
+
 	return (
 		<ReactFlow
 			width={width}
 			nodes={layoutedNodes}
 			edges={styledEdges}
 			nodeTypes={nodeTypes}
-			fitView
 			attributionPosition="bottom-left"
 			minZoom={0.2}
 			colorMode={colorScheme}

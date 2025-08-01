@@ -1,6 +1,7 @@
 import { Accordion, Alert, Flex, Paper, Stack, Title } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { WarningIcon } from "@phosphor-icons/react";
+import { ReactFlowProvider } from "@xyflow/react";
 import { useContext, useMemo, useState } from "react";
 import { PublicDataContext } from "../../context/PublicDataContext";
 import { TOOL_USAGE_FAQ } from "../../lib/faq";
@@ -49,19 +50,21 @@ const VisualizerPage = () => {
 						placeholder="Search professions"
 					/>
 					{value && (
-						<Paper
-							ref={ref}
-							withBorder
-							style={{
-								height: "600px",
-								width: "100%",
-								maxWidth: 1000,
-								color: "black",
-								margin: "0 auto",
-							}}
-						>
-							<Visualizer value={value} width={width} />
-						</Paper>
+						<ReactFlowProvider>
+							<Paper
+								ref={ref}
+								withBorder
+								style={{
+									height: "600px",
+									width: "100%",
+									maxWidth: 1000,
+									color: "black",
+									margin: "0 auto",
+								}}
+							>
+								<Visualizer value={value} width={width} />
+							</Paper>
+						</ReactFlowProvider>
 					)}
 				</Stack>
 			</Stack>
