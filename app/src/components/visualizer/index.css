@@ -1,0 +1,9 @@
+.react-flow {
+  background: transparent;
+}
+
+.react-flow__edge {
+  --xy-edge-stroke-default: var(--mantine-color-blue-6);
+  --xy-edge-stroke-selected-default: var(--mantine-color-red-6);
+  --xy-edge-stroke-width-default: 2;
+}

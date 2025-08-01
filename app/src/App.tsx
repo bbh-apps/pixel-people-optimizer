@@ -1,11 +1,15 @@
 import { AppShell, Container } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router";
 import FaqPage from "./components/FaqPage";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
 import PixelPeopleOptimizer from "./components/PixelPeopleOptimizer";
+import ErrorBoundaryAlert from "./components/shared/ErrorBoundaryAlert";
+import VisualizerPage from "./components/visualizer/VisualizerPage";
+import PublicDataProvider from "./context/PublicDataProvider";
 
 export default function App() {
 	const [isNavBarOpen, navBar] = useDisclosure();
@@ -25,15 +29,24 @@ export default function App() {
 				<Header isNavBarOpen={isNavBarOpen} navBarToggle={navBar.toggle} />
 			</AppShell.Header>
 			<AppShell.Navbar p="md">
-				<NavBar />
+				<NavBar toggle={navBar.toggle} />
 			</AppShell.Navbar>
 			<AppShell.Main>
-				<Container size="md" py={spacing}>
-					<Routes>
-						<Route path="/" element={<PixelPeopleOptimizer />} />
-						<Route path="/faq" element={<FaqPage />} />
-					</Routes>
-				</Container>
+				<ErrorBoundary
+					fallbackRender={({ error }) => (
+						<ErrorBoundaryAlert message={error.message} />
+					)}
+				>
+					<PublicDataProvider>
+						<Container size="md" py={spacing} w="100%">
+							<Routes>
+								<Route path="/" element={<PixelPeopleOptimizer />} />
+								<Route path="/visualizer" element={<VisualizerPage />} />
+								<Route path="/faq" element={<FaqPage />} />
+							</Routes>
+						</Container>
+					</PublicDataProvider>
+				</ErrorBoundary>
 			</AppShell.Main>
 			<Footer />
 		</AppShell>

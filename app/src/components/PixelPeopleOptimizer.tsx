@@ -1,7 +1,6 @@
 import { Accordion, Flex, Stack, Title } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { ErrorBoundary } from "react-error-boundary";
-import PublicDataProvider from "../context/PublicDataProvider";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
 import { Recommendations } from "./recommendations";
 import { SavedData } from "./saved-data";
@@ -29,25 +28,23 @@ const PixelPeopleOptimizer = () => {
 					<ErrorBoundaryAlert message={error.message} />
 				)}
 			>
-				<PublicDataProvider>
+				<ErrorBoundary
+					fallbackRender={({ error }) => (
+						<ErrorBoundaryAlert message={error.message} />
+					)}
+				>
+					<SavedData />
+				</ErrorBoundary>
+
+				<Flex ref={targetRef}>
 					<ErrorBoundary
 						fallbackRender={({ error }) => (
 							<ErrorBoundaryAlert message={error.message} />
 						)}
 					>
-						<SavedData />
+						<Recommendations scrollIntoView={scrollIntoView} />
 					</ErrorBoundary>
-
-					<Flex ref={targetRef}>
-						<ErrorBoundary
-							fallbackRender={({ error }) => (
-								<ErrorBoundaryAlert message={error.message} />
-							)}
-						>
-							<Recommendations scrollIntoView={scrollIntoView} />
-						</ErrorBoundary>
-					</Flex>
-				</PublicDataProvider>
+				</Flex>
 			</ErrorBoundary>
 		</Flex>
 	);

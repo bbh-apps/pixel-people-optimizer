@@ -7,7 +7,6 @@ import {
 	Text,
 	useComputedColorScheme,
 	useMantineTheme,
-	VisuallyHidden,
 } from "@mantine/core";
 import {
 	GithubLogoIcon,
@@ -15,9 +14,14 @@ import {
 	MagicWandIcon,
 	QuestionIcon,
 } from "@phosphor-icons/react";
+import type React from "react";
 import { useLocation, useNavigate } from "react-router";
 
-const NavBar = () => {
+type NavBarProps = {
+	toggle: () => void;
+};
+
+const NavBar: React.FC<NavBarProps> = ({ toggle }) => {
 	const theme = useMantineTheme();
 	const colorScheme = useComputedColorScheme("light");
 	const navigate = useNavigate();
@@ -33,6 +37,11 @@ const NavBar = () => {
 		},
 	};
 
+	const onClick = (path: string) => {
+		toggle();
+		navigate({ pathname: path });
+	};
+
 	return (
 		<Stack>
 			<Text size="sm">
@@ -45,27 +54,27 @@ const NavBar = () => {
 					variant={isOptimizer ? "light" : "subtle"}
 					leftSection={<MagicWandIcon />}
 					justify="start"
-					onClick={() => navigate({ pathname: "/" })}
+					onClick={() => onClick("/")}
 					styles={isOptimizer ? {} : unselectedStyle}
 				>
 					Optimizer
 				</Button>
-				<VisuallyHidden>
-					<Button
-						variant={isVisualizer ? "light" : "subtle"}
-						leftSection={<GraphIcon />}
-						justify="start"
-						onClick={() => navigate({ pathname: "/visualizer" })}
-						styles={isVisualizer ? {} : unselectedStyle}
-					>
-						Visualizer
-					</Button>
-				</VisuallyHidden>
+
+				<Button
+					variant={isVisualizer ? "light" : "subtle"}
+					leftSection={<GraphIcon />}
+					justify="start"
+					onClick={() => onClick("/visualizer")}
+					styles={isVisualizer ? {} : unselectedStyle}
+				>
+					Visualizer
+				</Button>
+
 				<Button
 					variant={isFaq ? "light" : "subtle"}
 					leftSection={<QuestionIcon />}
 					justify="start"
-					onClick={() => navigate({ pathname: "/faq" })}
+					onClick={() => onClick("/faq")}
 					styles={isFaq ? {} : unselectedStyle}
 				>
 					FAQ
