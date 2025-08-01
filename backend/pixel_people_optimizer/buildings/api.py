@@ -1,32 +1,37 @@
 from typing import List
 
 from fastapi import APIRouter, Depends
-from pixel_people_optimizer.auth.service import get_current_user_id
+from pixel_people_optimizer.auth.service import (
+    get_current_user_id,
+    get_current_user_id_optional,
+)
+from pixel_people_optimizer.buildings import queries, service
 from pixel_people_optimizer.buildings.models import Building, MyBuilding
-from pixel_people_optimizer.buildings.schema import BuildingListRes
+from pixel_people_optimizer.buildings.schema import (
+    BuildingListRes,
+    BuildingListWithDetailRes,
+)
 from pixel_people_optimizer.db import get_db
 from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.schema import IDList
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 router = APIRouter(prefix="/buildings", tags=["buildings"])
 
 
-@router.get("/", response_model=List[BuildingListRes])
-def list_buildings(db: Session = Depends(get_db)):
-    return db.query(Building).all()
+@router.get("/", response_model=List[BuildingListWithDetailRes])
+def list_buildings(
+    user_id: int | None = Depends(get_current_user_id_optional),
+    db: Session = Depends(get_db),
+):
+    return service.get_all_buildings_with_user_data(user_id=user_id, db=db)
 
 
 @router.get("/me", response_model=List[BuildingListRes])
 def get_user_buildings(
     user_id: str = Depends(get_current_user_id), db: Session = Depends(get_db)
 ):
-    return (
-        db.query(Building)
-        .join(MyBuilding, Building.id == MyBuilding.building_id)
-        .filter(MyBuilding.user_id == user_id)
-        .all()
-    )
+    return queries.get_user_buildings(user_id, db)
 
 
 @router.post("/me", response_model=IDList)
@@ -44,10 +49,5 @@ def sync_user_buildings(
         link_field="building_id",
     )
 
-    saved_ids = (
-        db.query(MyBuilding.building_id)
-        .filter(MyBuilding.user_id == user_id)
-        .order_by(MyBuilding.building_id)
-        .all()
-    )
+    saved_ids = queries.get_user_buildings(user_id=user_id, db=db)
     return IDList(ids=[id_tuple[0] for id_tuple in saved_ids])

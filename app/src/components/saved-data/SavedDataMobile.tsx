@@ -10,8 +10,11 @@ import {
 	Text,
 	useCombobox,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useSelectedDataCount } from "../../hooks";
+import { CheckboxListFormSkeleton } from "../shared";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import type { GameDataType } from "../shared/GameDataForm";
 import BuildingsList from "./BuildingsList";
 import MissionsList from "./MissionsList";
@@ -112,7 +115,18 @@ const SavedDataMobile: React.FC<SavedDataMobileProps> = ({ items }) => {
 					key={`${item.value}-list`}
 					display={value === item.value ? "flex" : "none"}
 				>
-					{getListToRender(item.value)}
+					<ErrorBoundary
+						fallbackRender={({ error }) => (
+							<ErrorBoundaryAlert message={error.message} />
+						)}
+					>
+						<Suspense
+							key="saved-data-mobile-suspense"
+							fallback={<CheckboxListFormSkeleton type={item.value} />}
+						>
+							{getListToRender(item.value)}
+						</Suspense>
+					</ErrorBoundary>
 				</Paper>
 			))}
 		</Stack>

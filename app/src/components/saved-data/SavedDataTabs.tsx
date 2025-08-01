@@ -1,6 +1,8 @@
 import { Tabs } from "@mantine/core";
 import React, { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { CheckboxListFormSkeleton } from "../shared";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import type { GameDataType } from "../shared/GameDataForm";
 import BuildingsList from "./BuildingsList";
 import MissionsList from "./MissionsList";
@@ -60,12 +62,18 @@ const SavedDataTabs: React.FC<SavedDataTabsProps> = ({ items }) => {
 
 			{items.map((item) => (
 				<Tabs.Panel value={item.value} key={`${item.value}-tab-panel`}>
-					<Suspense
-						key="saved-data-tabs-suspense"
-						fallback={<CheckboxListFormSkeleton type={item.value} />}
+					<ErrorBoundary
+						fallbackRender={({ error }) => (
+							<ErrorBoundaryAlert message={error.message} />
+						)}
 					>
-						{getListToRender(item.value)}
-					</Suspense>
+						<Suspense
+							key="saved-data-tabs-suspense"
+							fallback={<CheckboxListFormSkeleton type={item.value} />}
+						>
+							{getListToRender(item.value)}
+						</Suspense>
+					</ErrorBoundary>
 				</Tabs.Panel>
 			))}
 		</Tabs>

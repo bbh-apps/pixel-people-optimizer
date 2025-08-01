@@ -1,9 +1,11 @@
 import { Accordion, Flex, Stack, Title } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
+import { ErrorBoundary } from "react-error-boundary";
 import PublicDataProvider from "../context/PublicDataProvider";
 import { TOOL_USAGE_FAQ } from "../lib/faq";
 import { Recommendations } from "./recommendations";
 import { SavedData } from "./saved-data";
+import ErrorBoundaryAlert from "./shared/ErrorBoundaryAlert";
 
 const PixelPeopleOptimizer = () => {
 	const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
@@ -22,12 +24,31 @@ const PixelPeopleOptimizer = () => {
 					</Accordion.Item>
 				</Accordion>
 			</Stack>
-			<PublicDataProvider>
-				<SavedData />
-				<Flex ref={targetRef}>
-					<Recommendations scrollIntoView={scrollIntoView} />
-				</Flex>
-			</PublicDataProvider>
+			<ErrorBoundary
+				fallbackRender={({ error }) => (
+					<ErrorBoundaryAlert message={error.message} />
+				)}
+			>
+				<PublicDataProvider>
+					<ErrorBoundary
+						fallbackRender={({ error }) => (
+							<ErrorBoundaryAlert message={error.message} />
+						)}
+					>
+						<SavedData />
+					</ErrorBoundary>
+
+					<Flex ref={targetRef}>
+						<ErrorBoundary
+							fallbackRender={({ error }) => (
+								<ErrorBoundaryAlert message={error.message} />
+							)}
+						>
+							<Recommendations scrollIntoView={scrollIntoView} />
+						</ErrorBoundary>
+					</Flex>
+				</PublicDataProvider>
+			</ErrorBoundary>
 		</Flex>
 	);
 };

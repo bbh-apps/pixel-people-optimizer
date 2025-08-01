@@ -11,7 +11,7 @@ from pixel_people_optimizer.missions.schema import (
     MissionListWithDetailRes,
 )
 from pixel_people_optimizer.schema import IDList
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload
 
 router = APIRouter(prefix="/missions", tags=["missions"])
 
@@ -20,7 +20,7 @@ router = APIRouter(prefix="/missions", tags=["missions"])
 def list_missions(db: Session = Depends(get_db)):
     return (
         db.query(SpecialMission)
-        .options(joinedload(SpecialMission.professions))
+        .options(selectinload(SpecialMission.professions))
         .order_by("name")
         .all()
     )

@@ -10,12 +10,12 @@ import { useDisclosure } from "@mantine/hooks";
 import { QuestionIcon } from "@phosphor-icons/react";
 import React from "react";
 import { useSelectedDataCount } from "../../hooks";
-import type { Data, DisabledData } from "./CheckboxListItem";
+import type { DisabledData, EntityDetail } from "./CheckboxListItem";
 import type { GameDataType } from "./GameDataForm";
 
 type CheckboxListItemMobileProps = {
 	type: GameDataType;
-	item: Data;
+	item: EntityDetail;
 	disabledItemsMap: Map<number, DisabledData>;
 	selectedSet: Set<number>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -5,20 +5,20 @@ import React from "react";
 import { useSelectedDataCount } from "../../hooks";
 import type { GameDataType } from "./GameDataForm";
 
-export interface Data {
+export interface EntityDetail {
 	id: number;
 	name: string;
 	popoverContent?: React.ReactNode;
 	isUnlocked?: boolean;
 }
 
-export interface DisabledData extends Data {
+export interface DisabledData extends EntityDetail {
 	popoverContent: React.ReactNode;
 }
 
 type CheckboxListItemProps = {
 	type: GameDataType;
-	item: Data;
+	item: EntityDetail;
 	disabledItemsMap: Map<number, DisabledData>;
 	selectedSet: Set<number>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

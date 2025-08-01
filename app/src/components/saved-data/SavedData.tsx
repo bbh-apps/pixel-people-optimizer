@@ -5,6 +5,8 @@ import {
 	PersonIcon,
 	RocketLaunchIcon,
 } from "@phosphor-icons/react";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import type { GameDataType } from "../shared/GameDataForm";
 import SavedDataMobile from "./SavedDataMobile";
 import SavedDataTabs from "./SavedDataTabs";
@@ -35,10 +37,18 @@ const SavedData = () => {
 		},
 	];
 
-	return isMobile ? (
-		<SavedDataMobile items={items} />
-	) : (
-		<SavedDataTabs items={items} />
+	return (
+		<ErrorBoundary
+			fallbackRender={({ error }) => (
+				<ErrorBoundaryAlert message={error.message} />
+			)}
+		>
+			{isMobile ? (
+				<SavedDataMobile items={items} />
+			) : (
+				<SavedDataTabs items={items} />
+			)}
+		</ErrorBoundary>
 	);
 };
 

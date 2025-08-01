@@ -3,6 +3,7 @@ import {
 	Group,
 	Modal,
 	Paper,
+	Stack,
 	Text,
 	useComputedColorScheme,
 	useMantineTheme,
@@ -78,13 +79,15 @@ const ViewBuildingProfessions: React.FC<ViewBuildingProfessionsProps> = ({
 					</Text>
 				}
 			>
-				<Text size="sm">
-					<Text span c="blue" inherit>
-						Blue
-					</Text>{" "}
-					represents professions you already unlocked.
-				</Text>
-				<Group mt="sm">{getProfessionsList()}</Group>
+				<Stack>
+					<Group>{getProfessionsList()}</Group>
+					<Text size="xs">
+						<Text span c="blue" fw={700} inherit>
+							Blue
+						</Text>{" "}
+						represents professions you already unlocked.
+					</Text>
+				</Stack>
 			</Modal>
 		</>
 	);

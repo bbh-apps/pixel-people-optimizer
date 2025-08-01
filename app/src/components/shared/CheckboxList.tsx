@@ -1,12 +1,12 @@
 import { Box, em, Group, ScrollArea, useMatches } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import React, { useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type z from "zod";
 import CheckboxListItem, {
-	type Data,
 	type DisabledData,
+	type EntityDetail,
 } from "./CheckboxListItem";
 import CheckboxListItemMobile from "./CheckboxListItemMobile";
 import type { GameDataType } from "./GameDataForm";
@@ -16,7 +16,7 @@ type SaveCheckboxGroupInput = z.infer<typeof saveEntitySchema>;
 
 type CheckboxListProps = {
 	type: GameDataType;
-	items: Data[];
+	items: EntityDetail[];
 	disabledItems: DisabledData[];
 };
 
@@ -57,6 +57,13 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 		overscan: 5,
 	});
 
+	const measure = useCallback(
+		(el: HTMLElement | null) => {
+			if (el) rowVirtualizer.measureElement(el);
+		},
+		[rowVirtualizer]
+	);
+
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
 	return (
@@ -83,7 +90,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({
 							return (
 								<Group
 									key={virtualRow.key}
-									ref={(el) => rowVirtualizer.measureElement(el)}
+									ref={measure}
 									data-index={virtualRow.index}
 									style={{
 										position: "absolute",

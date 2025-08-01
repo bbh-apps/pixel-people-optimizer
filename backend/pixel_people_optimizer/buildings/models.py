@@ -10,12 +10,15 @@ class Building(Base):
     __tablename__ = "buildings"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
-    land_size: Mapped[int]  # number of land tiles required to build
+    land_size: Mapped[int]
     coin_output: Mapped[int]
     multiplier: Mapped[float]
 
     professions: Mapped[list["Profession"]] = relationship(
         secondary=profession_building, back_populates="buildings"
+    )
+    unlock_professions: Mapped[list["Profession"]] = relationship(
+        back_populates="unlock_bldg"
     )
 
 

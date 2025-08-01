@@ -10,10 +10,12 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { MagicWandIcon } from "@phosphor-icons/react";
 import React, { useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useAuth } from "../../api/useAuth";
 import useGetRecommendations from "../../api/useGetRecommendations";
 import { useDelayedLoading } from "../../hooks";
 import { NumberInput } from "../shared";
+import ErrorBoundaryAlert from "../shared/ErrorBoundaryAlert";
 import LoadingRecommendations from "./LoadingRecommendations";
 import NoRecommendations from "./NoRecommendations";
 import RecommendationsOutput from "./RecommendationsOutput";
@@ -65,11 +67,17 @@ const Recommendations: React.FC<RecommendationsProps> = ({
 	} else if (hasClickedOptimize) {
 		if (recommendations && recommendations?.length > 0) {
 			content = (
-				<RecommendationsOutput
-					recommendations={recommendations}
-					refetch={refetch}
-					onConsumeLandRemaining={onConsumeLandRemaining}
-				/>
+				<ErrorBoundary
+					fallbackRender={({ error }) => (
+						<ErrorBoundaryAlert message={error.message} />
+					)}
+				>
+					<RecommendationsOutput
+						recommendations={recommendations}
+						refetch={refetch}
+						onConsumeLandRemaining={onConsumeLandRemaining}
+					/>
+				</ErrorBoundary>
 			);
 		} else {
 			content = <NoRecommendations />;
