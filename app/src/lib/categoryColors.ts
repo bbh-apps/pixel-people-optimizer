@@ -1,0 +1,27 @@
+export const categoryColorsMap = {
+	Academic: { bgColor: "#BF2CBF", textColor: "white" },
+	Administration: { bgColor: "#90B118", textColor: "black" },
+	Business: { bgColor: "#808017", textColor: "white" },
+	Creative: { bgColor: "#C49309", textColor: "black" },
+	Curious: {
+		bgColor:
+			"linear-gradient(90deg, hsl(0, 100%, 70%), hsl(45, 100%, 70%), hsl(90, 100%, 70%), hsl(135, 100%, 70%), hsl(180, 100%, 70%), hsl(225, 100%, 70%), hsl(270, 100%, 70%), hsl(315, 100%, 70%), hsl(360, 100%, 70%))",
+		textColor: "black",
+	},
+	Enchanted: { bgColor: "#6C1975", textColor: "white" },
+	Evil: { bgColor: "#2F0B8A", textColor: "white" },
+	Explorers: { bgColor: "#A8B60A", textColor: "black" },
+	Hospitality: { bgColor: "#08AC80", textColor: "black" },
+	Law: { bgColor: "#5151B7", textColor: "white" },
+	Media: { bgColor: "#AF3A3E", textColor: "white" },
+	Medical: { bgColor: "#7850B4", textColor: "white" },
+	Music: { bgColor: "#AD5836", textColor: "white" },
+	Performers: { bgColor: "#2ABD8A", textColor: "black" },
+	Production: { bgColor: "#8B7E17", textColor: "white" },
+	Resident: { bgColor: "#378A32", textColor: "white" },
+	Services: { bgColor: "#378A32", textColor: "white" },
+	Special: { bgColor: "#B31319", textColor: "white" },
+	Sports: { bgColor: "#5A2A74", textColor: "white" },
+	Technical: { bgColor: "#651932", textColor: "white" },
+	Transport: { bgColor: "#2B5921", textColor: "white" },
+};

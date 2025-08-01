@@ -3,6 +3,7 @@ import CheckboxList from "./CheckboxList";
 import CheckboxListFormSkeleton from "./CheckboxListFormSkeleton";
 import GameDataForm from "./GameDataForm";
 import NumberInput from "./NumberInput";
+import SearchableSelect from "./SearchableSelect";
 
 export {
 	AccordionCard,
@@ -10,4 +11,5 @@ export {
 	CheckboxListFormSkeleton,
 	GameDataForm,
 	NumberInput,
+	SearchableSelect,
 };
