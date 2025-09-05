@@ -20,7 +20,7 @@ const useSaveMissions = () => {
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["missions", "saved"] });
-			queryClient.invalidateQueries({ queryKey: ["professions", "saved"] });
+			queryClient.invalidateQueries({ queryKey: ["professions", "list"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		},
 	});
