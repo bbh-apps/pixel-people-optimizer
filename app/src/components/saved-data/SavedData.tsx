@@ -21,14 +21,14 @@ const SavedData = () => {
 	const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 	const items: SavedDataItem[] = [
 		{
-			title: "My Buildings",
-			icon: <BuildingOfficeIcon />,
-			value: "buildings",
-		},
-		{
 			title: "My Discovered Professions",
 			icon: <PersonIcon />,
 			value: "professions",
+		},
+		{
+			title: "My Buildings",
+			icon: <BuildingOfficeIcon />,
+			value: "buildings",
 		},
 		{
 			title: "My Completed Missions",

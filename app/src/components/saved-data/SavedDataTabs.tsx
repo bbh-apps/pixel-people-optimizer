@@ -15,7 +15,7 @@ type SavedDataTabsProps = {
 };
 
 const SavedDataTabs: React.FC<SavedDataTabsProps> = ({ items }) => {
-	const [tab, setTab] = useState<GameDataType | null>("buildings");
+	const [tab, setTab] = useState<GameDataType | null>("professions");
 
 	const getListToRender = (value: GameDataType) => {
 		switch (value) {

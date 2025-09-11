@@ -1,13 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { SaveProfessionsInput } from "../components/shared/schema";
 import { fetchClient } from "../lib/fetchClient";
-import type { IDList } from "../types/models";
+import type { SaveProfessionRes } from "../types/models";
 import { useAuth } from "./useAuth";
 
-const useSaveProfessions = () => {
+const useSaveProfessions = ({
+	includeBuildings = false,
+}: {
+	includeBuildings?: boolean;
+}) => {
 	const queryClient = useQueryClient();
 	const { token } = useAuth();
-	return useMutation<IDList, Error, SaveProfessionsInput>({
+	return useMutation<SaveProfessionRes, Error, SaveProfessionsInput>({
 		mutationKey: ["professions", "save"],
 		mutationFn: async (data: SaveProfessionsInput) =>
 			await fetchClient("/api/professions/me", {
@@ -16,10 +20,11 @@ const useSaveProfessions = () => {
 					"Content-Type": "application/json",
 					Authorization: token ? `Bearer ${token}` : "",
 				},
-				body: JSON.stringify(data),
+				body: JSON.stringify({ ...data, include_buildings: includeBuildings }),
 			}),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["professions", "saved"] });
+			queryClient.invalidateQueries({ queryKey: ["professions"] });
+			queryClient.invalidateQueries({ queryKey: ["buildings"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendations"] });
 		},
 	});

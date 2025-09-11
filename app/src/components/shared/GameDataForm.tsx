@@ -17,7 +17,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useSelectedDataCount } from "../../hooks";
 import { usePendingSaveGameData } from "../../hooks/usePendingSaveGameData";
 import { useSaveGameDataForms } from "../../hooks/useSaveGameDataForms";
-import type { IDList } from "../../types/models";
 import AuthModal from "../AuthModal";
 import CheckboxList from "./CheckboxList";
 import CheckboxListFormSkeleton from "./CheckboxListFormSkeleton";
@@ -38,7 +37,7 @@ type GameDataFormProps<
 	savedData: TUserData[] | undefined;
 	defaultIds: number[];
 	saveMutation: UseMutationResult<
-		IDList,
+		unknown,
 		Error,
 		{
 			ids: number[];

@@ -29,14 +29,20 @@ const ProfessionsList = () => {
 		useState<ProfessionSortType>("gallery");
 	const { professions } = useContext(PublicDataContext);
 	const { data: userProfessions, isFetching } = useGetSavedProfessions();
-	const saveProfessionsMutation = useSaveProfessions();
+	const saveProfessionsMutation = useSaveProfessions({
+		includeBuildings: true,
+	});
 
 	const professionsData = useMemo(
 		() =>
 			(professions ?? []).map((p) => ({
 				...p,
 				popoverContent: p.formula ? (
-					<ProfessionDetailContent name={p.name} formula={p.formula} />
+					<ProfessionDetailContent
+						name={p.name}
+						formula={p.formula}
+						unlock_bldg={p.unlock_bldg}
+					/>
 				) : null,
 			})),
 		[professions]

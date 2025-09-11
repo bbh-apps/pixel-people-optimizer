@@ -25,7 +25,7 @@ const SaveRecommendationButton: React.FC<SaveRecommendationButtonProps> = ({
 	const { mutate: saveBuildings, isPending: isSavingBuildings } =
 		useSaveBuildings();
 	const { mutate: saveProfessions, isPending: isSavingProfessions } =
-		useSaveProfessions();
+		useSaveProfessions({ includeBuildings: false });
 
 	const [opened, handlers] = useDisclosure();
 	const { profession, unlock_bldg, extra_land_needed } = recommendation;

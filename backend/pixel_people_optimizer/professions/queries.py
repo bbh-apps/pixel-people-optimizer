@@ -37,7 +37,7 @@ def get_all_professions(db: Session):
     return db.execute(stmt).scalars().all()
 
 
-def get_user_professions(user_id: int, db: Session) -> List[ProfessionListRes]:
+def get_user_professions(user_id: int, db: Session) -> List[Profession]:
     subquery = get_user_unlocked_professions(user_id, db)
     return db.query(Profession).filter(Profession.id.in_(subquery)).all()
 

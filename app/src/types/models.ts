@@ -54,6 +54,7 @@ export interface ProfessionListWithDetailRes {
   category: string;
   mission: SavedProfessionMissionRes | null;
   formula: SavedProfessionFormulaRes[] | null;
+  unlock_bldg: string | null;
 }
 export interface SavedProfessionMissionRes {
   name: string;
@@ -81,6 +82,18 @@ export interface UnlockBuildingRes {
   id: number;
   name: string;
   professions: ProfessionListRes[];
+}
+export interface SaveMissionRes {
+  missions: number[];
+  professions: number[];
+}
+export interface SaveProfessionReq {
+  ids: number[];
+  include_buildings?: boolean;
+}
+export interface SaveProfessionRes {
+  professions: number[];
+  buildings?: number[] | null;
 }
 export interface SavedProfessionListRes {
   id: number;

@@ -10,17 +10,19 @@ const PixelPeopleOptimizer = () => {
 	const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
 		offset: 70,
 	});
-	const howToUseFaq = TOOL_USAGE_FAQ[0];
+	const howToUseFaq = [TOOL_USAGE_FAQ[0], TOOL_USAGE_FAQ[2]];
 
 	return (
 		<Flex direction="column" gap="xl">
 			<Stack gap="sm">
 				<Title order={3}>Optimizer</Title>
 				<Accordion chevronPosition="left" variant="contained">
-					<Accordion.Item key={howToUseFaq.value} value={howToUseFaq.value}>
-						<Accordion.Control>{howToUseFaq.title}</Accordion.Control>
-						<Accordion.Panel>{howToUseFaq.description}</Accordion.Panel>
-					</Accordion.Item>
+					{howToUseFaq.map((item) => (
+						<Accordion.Item key={item.value} value={item.value}>
+							<Accordion.Control>{item.title}</Accordion.Control>
+							<Accordion.Panel>{item.description}</Accordion.Panel>
+						</Accordion.Item>
+					))}
 				</Accordion>
 			</Stack>
 			<ErrorBoundary

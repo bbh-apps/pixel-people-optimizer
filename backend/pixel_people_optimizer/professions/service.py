@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from pixel_people_optimizer.formulas.models import SpliceFormula
 from pixel_people_optimizer.missions import queries as mission_queries
@@ -23,7 +23,9 @@ def get_all_professions_with_user_data(
         else None
     )
     completed_missions_subq = (
-        mission_queries.get_user_completed_missions(user_id, db) if user_id else None
+        mission_queries.get_user_completed_missions_subq(user_id, db)
+        if user_id
+        else None
     )
     professions = profession_queries.get_all_professions(db)
 
@@ -75,6 +77,7 @@ def get_all_professions_with_user_data(
                 category=prof.category,
                 mission=mission,
                 formula=formula if formula else None,
+                unlock_bldg=prof.unlock_bldg.name if prof.unlock_bldg else None,
             )
         )
 

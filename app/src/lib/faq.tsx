@@ -8,6 +8,7 @@ export const TOOL_USAGE_FAQ = [
 		description: (
 			<List
 				type="ordered"
+				size="sm"
 				styles={{ root: { "--list-spacing": "0.5rem" } }}
 				pr="md"
 			>
@@ -17,13 +18,17 @@ export const TOOL_USAGE_FAQ = [
 					in. Clicking "Save" will prompt you to sign up/in.
 				</List.Item>
 				<List.Item>
-					You can also start by saving buildings, professions, and missions you
+					You can also start by saving professions, buildings, and missions you
 					have already unlocked. If this is your first time, it will prompt you
 					to create an account to save your game data.
 				</List.Item>
 				<List.Item>
 					After signing in, click the "Optimize" button to see which new
 					professions you can splice given the remaining land you have.
+				</List.Item>
+				<List.Item>
+					Saving professions from the optimizer list will also save the building
+					that profession unlocks.
 				</List.Item>
 			</List>
 		),
@@ -61,20 +66,23 @@ export const TOOL_USAGE_FAQ = [
 		),
 	},
 	{
-		title:
-			"Adding everything for the first time is a pain. What's the easiest way to do it?",
+		title: "What is the easiest way to enter my game data for the first time?",
 		value: "onboarding",
 		description: (
 			<Stack>
 				<Text size="sm">
-					For professions, I recommend sorting by gallery order. Then, open up
-					the gallery in your game. As you flip through the gallery, you can
-					check it off the list.
+					Professions: The list shown is sorted by gallery order. Open up the
+					gallery in your game. As you flip through the gallery, you can check
+					it off the list. Don't forget to check off special genes.
 				</Text>
 				<Text size="sm">
-					Unfortunately, for buildings, I don't think there's an easy list to
-					reference unless you have been tracking things with a spreadsheet.
-					I've added a search bar that should help speed things along.
+					Buildings: You do not need to check them off. As you click "Save" to
+					save professions, the building unlocked by each profession will
+					automatically be saved.
+				</Text>
+				<Text size="sm">
+					Missions: Saving one that unlocks a special gene will also save that
+					gene under your professions.
 				</Text>
 			</Stack>
 		),

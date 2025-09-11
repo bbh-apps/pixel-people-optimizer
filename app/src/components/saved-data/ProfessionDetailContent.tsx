@@ -12,11 +12,13 @@ import type { SavedProfessionFormulaRes } from "../../types/models";
 type ProfessionDetailContentProps = {
 	name: string;
 	formula: SavedProfessionFormulaRes[];
+	unlock_bldg: string | null;
 };
 
 const ProfessionDetailContent: React.FC<ProfessionDetailContentProps> = ({
 	name,
 	formula,
+	unlock_bldg,
 }) => {
 	const theme = useMantineTheme();
 	const colorScheme = useComputedColorScheme("light");
@@ -25,6 +27,14 @@ const ProfessionDetailContent: React.FC<ProfessionDetailContentProps> = ({
 
 	return (
 		<Stack>
+			{unlock_bldg && (
+				<Text size="sm">
+					<Text span fw={700} inherit>
+						{name}
+					</Text>{" "}
+					unlocks the building: {unlock_bldg}
+				</Text>
+			)}
 			<Text size="sm">
 				<Text span fw={700} inherit>
 					{name}

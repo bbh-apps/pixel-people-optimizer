@@ -52,7 +52,7 @@ const SavedDataMobile: React.FC<SavedDataMobileProps> = ({ items }) => {
 		onDropdownClose: () => combobox.resetSelectedOption(),
 	});
 
-	const [value, setValue] = useState<GameDataType>("buildings");
+	const [value, setValue] = useState<GameDataType>("professions");
 	const selectedOption = items.find((item) => item.value === value);
 
 	const options = items.map((item) => (

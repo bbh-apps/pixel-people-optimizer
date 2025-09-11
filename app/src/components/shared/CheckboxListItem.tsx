@@ -53,63 +53,63 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = ({
 	};
 
 	return (
-		<Popover
-			position="bottom"
-			withArrow
-			shadow="md"
-			opened={opened}
-			key={`${item.id}-${item.name}`}
-			disabled={
-				(item?.isUnlocked || item?.popoverContent == null) &&
-				!disabledItemsMap.has(item.id)
-			}
-			styles={{ dropdown: { maxWidth: "400px" } }}
+		<Group
+			w={{
+				base: "48%",
+				sm: "30%",
+				md: "23%",
+			}}
+			gap="md"
+			align="start"
 		>
-			<Popover.Target>
-				<Group
-					w={{
-						base: "48%",
-						sm: "30%",
-						md: "23%",
-					}}
-					gap="md"
-					onMouseEnter={open}
-					onMouseLeave={close}
-					align="start"
-				>
-					<Flex flex={1}>
-						<Checkbox
-							value={item.id.toString()}
-							label={item.name}
-							checked={selectedSet.has(item.id)}
-							onChange={() => handleCheckbox(selectedSet, item.id, onChange)}
-							disabled={disabledItemsMap.has(item.id)}
-							size="sm"
-							styles={{ label: { paddingInlineStart: "12px" } }}
-						/>
-					</Flex>
+			<Flex flex={1}>
+				<Checkbox
+					value={item.id.toString()}
+					label={item.name}
+					checked={selectedSet.has(item.id)}
+					onChange={() => handleCheckbox(selectedSet, item.id, onChange)}
+					disabled={disabledItemsMap.has(item.id)}
+					size="sm"
+					styles={{ label: { paddingInlineStart: "12px" } }}
+				/>
+			</Flex>
+			<Popover
+				position="bottom"
+				withArrow
+				shadow="md"
+				opened={opened}
+				key={`${item.id}-${item.name}`}
+				disabled={
+					(item?.isUnlocked || item?.popoverContent == null) &&
+					!disabledItemsMap.has(item.id)
+				}
+				styles={{ dropdown: { maxWidth: "400px" } }}
+			>
+				<Popover.Target>
+					<Group onMouseEnter={open} onMouseLeave={close}>
+						{!isDisabledItem &&
+							!item?.isUnlocked &&
+							item?.popoverContent != null && (
+								<Flex mt={2}>
+									<QuestionIcon color={theme.colors.dark[2]} />
+								</Flex>
+							)}
 
-					{!isDisabledItem &&
-						!item?.isUnlocked &&
-						item?.popoverContent != null && (
+						{isDisabledItem && (
 							<Flex mt={2}>
 								<QuestionIcon color={theme.colors.dark[2]} />
 							</Flex>
 						)}
+					</Group>
+				</Popover.Target>
 
-					{isDisabledItem && (
-						<Flex mt={2}>
-							<QuestionIcon color={theme.colors.dark[2]} />
-						</Flex>
-					)}
-				</Group>
-			</Popover.Target>
-			<Popover.Dropdown style={{ pointerEvents: "none" }}>
-				{isDisabledItem
-					? disabledItemsMap.get(item.id)?.popoverContent
-					: item?.popoverContent}
-			</Popover.Dropdown>
-		</Popover>
+				<Popover.Dropdown style={{ pointerEvents: "none" }}>
+					{isDisabledItem
+						? disabledItemsMap.get(item.id)?.popoverContent
+						: item?.popoverContent}
+				</Popover.Dropdown>
+			</Popover>
+		</Group>
 	);
 };
 

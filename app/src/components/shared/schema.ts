@@ -8,6 +8,10 @@ export type SaveBuildingsInput = z.infer<typeof saveEntitySchema>;
 export type SaveProfessionsInput = z.infer<typeof saveEntitySchema>;
 export type SaveMissionsInput = z.infer<typeof saveEntitySchema>;
 
+export interface SaveProfessionsInputReq extends SaveProfessionsInput {
+	include_buildings?: boolean;
+}
+
 export const recommendationsSchema = z.object({
 	remaining_land: z.number(),
 });

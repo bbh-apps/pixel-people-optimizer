@@ -9,7 +9,7 @@ def sync_user_items(
     *,
     user_id: str,
     db: Session,
-    payload: IDList,
+    payload: IDList,  # list[int]
     item_model: Type,
     link_model: Type,
     link_field: str,
