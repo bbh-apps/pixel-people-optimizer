@@ -56,4 +56,3 @@ def get_all_buildings_with_user_data(
         )
 
     return result
-    return result

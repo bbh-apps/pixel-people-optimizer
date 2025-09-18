@@ -51,4 +51,3 @@ def sync_user_buildings(
 
     saved_buildings = queries.get_user_buildings(user_id=user_id, db=db)
     return IDList(ids=[b.id for b in saved_buildings])
-    return IDList(ids=[b.id for b in saved_buildings])

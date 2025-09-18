@@ -188,9 +188,3 @@ def compute_shortest_paths_to_target(
 
     all_paths = dfs(target_profession_id, set())
     return deduplicate_path_list(all_paths)
-    return deduplicate_path_list(all_paths)
-    return deduplicate_path_list(all_paths)
-    return deduplicate_path_list(all_paths)
-    return deduplicate_path_list(all_paths)
-    return deduplicate_path_list(all_paths)
-    return deduplicate_path_list(all_paths)

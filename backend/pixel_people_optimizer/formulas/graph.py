@@ -69,4 +69,3 @@ def compute_shortest_paths_to_target(
         return paths
 
     return dfs(target_profession_id, set())
-    return dfs(target_profession_id, set())
