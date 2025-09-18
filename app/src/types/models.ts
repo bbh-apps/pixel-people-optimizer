@@ -52,13 +52,15 @@ export interface ProfessionListWithDetailRes {
   id: number;
   name: string;
   category: string;
-  mission: SavedProfessionMissionRes | null;
+  mission: SavedProfessionMissionRes[] | null;
   formula: SavedProfessionFormulaRes[] | null;
   unlock_bldg: string | null;
 }
 export interface SavedProfessionMissionRes {
   name: string;
   is_complete: boolean;
+  is_direct_unlock: boolean;
+  is_recipe_unlock: boolean;
 }
 export interface SavedProfessionFormulaRes {
   id: number;

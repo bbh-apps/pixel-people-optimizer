@@ -14,7 +14,7 @@ from pixel_people_optimizer.buildings.schema import (
 from pixel_people_optimizer.db import get_db
 from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.schema import IDList
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/buildings", tags=["buildings"])
 
@@ -50,4 +50,5 @@ def sync_user_buildings(
     )
 
     saved_buildings = queries.get_user_buildings(user_id=user_id, db=db)
+    return IDList(ids=[b.id for b in saved_buildings])
     return IDList(ids=[b.id for b in saved_buildings])

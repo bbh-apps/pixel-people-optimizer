@@ -13,26 +13,29 @@ class Profession(Base):
     name: Mapped[str] = mapped_column(String, unique=True)
     category: Mapped[str]
 
-    buildings: Mapped[list["Building"]] = relationship(
+    buildings: Mapped[list["Building"]] = relationship(  # noqa: F821
         secondary=profession_building, back_populates="professions"
     )
 
     unlock_mission_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("special_missions.id"), nullable=True
     )
-    unlock_mission: Mapped[Optional["SpecialMission"]] = relationship(
+    unlock_mission: Mapped[Optional["SpecialMission"]] = relationship(  # noqa: F821
         back_populates="professions"
     )
 
     unlock_bldg_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("buildings.id"), nullable=True
     )
-    unlock_bldg: Mapped[Optional["Building"]] = relationship(
+    unlock_bldg: Mapped[Optional["Building"]] = relationship(  # noqa: F821
         "Building", foreign_keys=[unlock_bldg_id]
     )
 
-    formula: Mapped[Optional["SpliceFormula"]] = relationship(
+    formula: Mapped[Optional["SpliceFormula"]] = relationship(  # noqa: F821
         back_populates="profession", foreign_keys="[SpliceFormula.id]"
+    )
+    mission_professions: Mapped[list["SpecialMissionProfession"]] = relationship(  # noqa: F821
+        back_populates="profession", cascade="all, delete-orphan"
     )
 
 

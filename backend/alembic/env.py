@@ -6,16 +6,16 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from logging.config import fileConfig
 
 from alembic import context
-from pixel_people_optimizer import models
+from pixel_people_optimizer import models  # noqa: F401
+from pixel_people_optimizer.buildings.models import Building  # noqa: F401
+from pixel_people_optimizer.buildings.models import MyBuilding  # noqa: F401
 from pixel_people_optimizer.db import Base
-from pixel_people_optimizer.models import (
-    Building,
-    MyBuilding,
+from pixel_people_optimizer.formulas.models import SpliceFormula  # noqa: F401
+from pixel_people_optimizer.professions.models import (  # noqa: F401
     MyProfession,
     Profession,
-    SpliceFormula,
-    User,
 )
+from pixel_people_optimizer.users.models import User  # noqa: F401
 from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
@@ -90,4 +90,10 @@ def run_migrations_online() -> None:
 if context.is_offline_mode():
     run_migrations_offline()
 else:
+    run_migrations_online()
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+    run_migrations_online()
     run_migrations_online()

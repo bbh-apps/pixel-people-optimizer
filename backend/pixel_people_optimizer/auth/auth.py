@@ -1,16 +1,6 @@
-import json
 import os
-from typing import Optional
 
-import jwt
-import requests
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from gotrue import User
-from jose import JWTError
-from jose import jwt as jose_jwt
-from jose.utils import base64url_decode
 from supabase import create_client
 
 load_dotenv()

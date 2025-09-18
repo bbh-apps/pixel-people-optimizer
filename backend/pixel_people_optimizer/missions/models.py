@@ -14,6 +14,9 @@ class SpecialMission(Base):
     )
     season: Mapped[str] = mapped_column(String, nullable=True)
     cost: Mapped[str] = mapped_column(String)
+    mission_professions: Mapped[list["SpecialMissionProfession"]] = relationship(  # noqa: F821
+        back_populates="mission", cascade="all, delete-orphan"
+    )
 
 
 class MySpecialMission(Base):

@@ -2,13 +2,12 @@ from collections import defaultdict
 from typing import List, Optional
 
 from pixel_people_optimizer.formulas.models import SpliceFormula
-from pixel_people_optimizer.missions import queries as mission_queries
+from pixel_people_optimizer.missions.models import SpecialMission
 from pixel_people_optimizer.professions.schema import (
     ProfessionListWithDetailRes,
     SavedProfessionFormulaRes,
     SavedProfessionMissionRes,
 )
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from . import queries as profession_queries
@@ -17,43 +16,36 @@ from . import queries as profession_queries
 def get_all_professions_with_user_data(
     user_id: int | None, db: Session
 ) -> List[ProfessionListWithDetailRes]:
-    unlocked_subq = (
-        profession_queries.get_user_unlocked_professions(user_id, db)
+    unlocked_ids = (
+        profession_queries.get_unlocked_profession_ids(user_id, db)
         if user_id
-        else None
+        else set()
     )
-    completed_missions_subq = (
-        mission_queries.get_user_completed_missions_subq(user_id, db)
-        if user_id
-        else None
+    completed_mission_ids = (
+        profession_queries.get_completed_mission_ids(user_id, db) if user_id else set()
     )
+    recipe_unlock_counts = profession_queries.get_recipe_unlock_counts(db)
+
     professions = profession_queries.get_all_professions(db)
 
-    unlocked_ids = set()
-    completed_mission_ids = set()
-
-    if unlocked_subq is not None:
-        unlocked_ids = {
-            row[0] for row in db.execute(select(unlocked_subq.c.profession_id))
-        }
-
-    if completed_missions_subq is not None:
-        completed_mission_ids = {
-            row[0] for row in db.execute(select(completed_missions_subq.c.id))
-        }
-
-    result = []
+    result: List[ProfessionListWithDetailRes] = []
     for prof in professions:
         mission = None
-        if prof.unlock_mission:
-            mission = SavedProfessionMissionRes(
-                name=prof.unlock_mission.name,
-                is_complete=(
-                    (prof.unlock_mission.id in completed_mission_ids)
-                    if user_id
-                    else False
-                ),
-            )
+        if prof.mission_professions:
+            mission = []
+            for smp in prof.mission_professions:
+                m: SpecialMission = smp.mission
+                is_recipe_unlock = recipe_unlock_counts.get(m.id, 0) > 1
+                mission.append(
+                    SavedProfessionMissionRes(
+                        name=m.name,
+                        is_complete=(
+                            (m.id in completed_mission_ids) if user_id else False
+                        ),
+                        is_direct_unlock=smp.is_direct,
+                        is_recipe_unlock=is_recipe_unlock,
+                    )
+                )
 
         formula = []
         if prof.formula:
@@ -91,7 +83,6 @@ def get_user_professions(
     professions = profession_queries.get_user_professions(user_id, db)
     results = []
     for prof in professions:
-
         (
             profession,
             mission,
@@ -196,4 +187,10 @@ def compute_shortest_paths_to_target(
         return paths
 
     all_paths = dfs(target_profession_id, set())
+    return deduplicate_path_list(all_paths)
+    return deduplicate_path_list(all_paths)
+    return deduplicate_path_list(all_paths)
+    return deduplicate_path_list(all_paths)
+    return deduplicate_path_list(all_paths)
+    return deduplicate_path_list(all_paths)
     return deduplicate_path_list(all_paths)

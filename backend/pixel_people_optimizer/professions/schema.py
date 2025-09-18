@@ -20,6 +20,8 @@ class SaveProfessionRes(BaseModel):
 class SavedProfessionMissionRes(BaseModel):
     name: str
     is_complete: bool
+    is_direct_unlock: bool
+    is_recipe_unlock: bool
 
 
 class SavedProfessionFormulaRes(ProfessionListRes):
@@ -28,7 +30,7 @@ class SavedProfessionFormulaRes(ProfessionListRes):
 
 class ProfessionListWithDetailRes(ProfessionListRes):
     category: str
-    mission: SavedProfessionMissionRes | None
+    mission: List[SavedProfessionMissionRes] | None
     formula: List[SavedProfessionFormulaRes] | None
     unlock_bldg: str | None
 
