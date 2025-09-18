@@ -16,6 +16,10 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["pixel_people_optimizer"]
 
+[tool.ruff]
+select = ["F", "E"]
+fix = true
+
 [project.scripts]
 pixel-scrape = "pixel_people_optimizer.scrape:main"
 pixel-add-profession = "pixel_people_optimizer.add_profession:main"

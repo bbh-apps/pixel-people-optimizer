@@ -51,13 +51,16 @@ const ViewUnlockedProfessions: React.FC<ViewUnlockedProfessionsProps> = ({
 							isPartialUnlock: detail.formula?.some(
 								(p) =>
 									p.is_unlocked === true &&
-									!(detail.mission != null && !detail.mission?.is_complete)
+									!(
+										detail.mission != null &&
+										!detail.mission.every((m) => m.is_complete === true)
+									)
 							),
 							isMissionNeeded: detail.formula?.some(
 								(p) =>
 									p.is_unlocked === true &&
 									detail.mission != null &&
-									!detail.mission?.is_complete
+									!detail.mission.every((m) => m.is_complete === true)
 							),
 						};
 					}

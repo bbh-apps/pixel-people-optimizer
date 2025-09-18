@@ -2,15 +2,10 @@ from typing import List
 
 from pixel_people_optimizer.buildings import queries
 from pixel_people_optimizer.buildings.schema import (
-    BuildingListRes,
     BuildingListWithDetailRes,
     BuildingProfessionRes,
 )
 from pixel_people_optimizer.professions import queries as profession_queries
-from pixel_people_optimizer.professions.schema import (
-    ProfessionListRes,
-    SavedProfessionFormulaRes,
-)
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -20,9 +15,7 @@ def get_all_buildings_with_user_data(
 ) -> List[BuildingListWithDetailRes]:
     buildings = queries.get_all_buildings(db=db)
     unlocked_subq = (
-        profession_queries.get_user_unlocked_professions(user_id, db)
-        if user_id
-        else None
+        profession_queries.get_user_unlocked_professions(user_id) if user_id else None
     )
 
     unlocked_ids = set()
@@ -34,7 +27,6 @@ def get_all_buildings_with_user_data(
 
     result = []
     for b in buildings:
-
         professions_res = []
         unlock_for_bldg_ids = {u.id for u in b.unlock_professions}
 

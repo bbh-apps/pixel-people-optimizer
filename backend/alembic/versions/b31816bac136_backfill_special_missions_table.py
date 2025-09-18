@@ -10,8 +10,8 @@ from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
-from pixel_people_optimizer.models import Profession
-from pixel_people_optimizer.scripts.scrape import scrape_missions
+from pixel_people_optimizer.professions.models import Profession
+from pixel_people_optimizer.scripts.private.scrape import scrape_missions
 from sqlalchemy.orm import Session
 
 # revision identifiers, used by Alembic.

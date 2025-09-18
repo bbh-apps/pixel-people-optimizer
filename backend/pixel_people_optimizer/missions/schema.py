@@ -18,6 +18,6 @@ class SaveMissionRes(BaseModel):
     professions: List[int]
 
 
-from pixel_people_optimizer.professions.schema import ProfessionListRes
+from pixel_people_optimizer.professions.schema import ProfessionListRes  # noqa: E402
 
 MissionListWithDetailRes.model_rebuild()

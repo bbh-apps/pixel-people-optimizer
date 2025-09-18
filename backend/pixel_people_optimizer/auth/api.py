@@ -2,7 +2,6 @@ import os
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends
-from fastapi.security import HTTPBearer
 from gotrue import User
 from pixel_people_optimizer.auth.service import get_current_user
 from pixel_people_optimizer.users.schema import VerifiedUserRes

@@ -38,11 +38,7 @@ const ProfessionsList = () => {
 			(professions ?? []).map((p) => ({
 				...p,
 				popoverContent: p.formula ? (
-					<ProfessionDetailContent
-						name={p.name}
-						formula={p.formula}
-						unlock_bldg={p.unlock_bldg}
-					/>
+					<ProfessionDetailContent profession={p} />
 				) : null,
 			})),
 		[professions]
@@ -51,12 +47,16 @@ const ProfessionsList = () => {
 	const disabledProfessions: DisabledData[] = useMemo(
 		() =>
 			(professions ?? [])
-				.filter((p) => p.mission != null && !p.mission.is_complete)
+				.filter(
+					(p) =>
+						p.mission != null && !p.mission.every((m) => m.is_complete === true)
+				)
 				.map((p) => ({
 					id: p.id,
 					name: p.name,
 					popoverContent: p.mission ? (
 						<UnlockMissionContent
+							name={p.name}
 							mission={p.mission}
 							formula={p.formula ?? []}
 						/>

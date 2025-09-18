@@ -15,8 +15,7 @@ from pixel_people_optimizer.missions.schema import (
 from pixel_people_optimizer.professions import queries as prof_queries
 from pixel_people_optimizer.professions.models import MyProfession, Profession
 from pixel_people_optimizer.schema import IDList
-from sqlalchemy import select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/missions", tags=["missions"])
 

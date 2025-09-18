@@ -14,7 +14,7 @@ from pixel_people_optimizer.buildings.schema import (
 from pixel_people_optimizer.db import get_db
 from pixel_people_optimizer.lib.sync_user_items import sync_user_items
 from pixel_people_optimizer.schema import IDList
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/buildings", tags=["buildings"])
 

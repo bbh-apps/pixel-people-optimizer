@@ -1,15 +1,9 @@
-from collections import defaultdict, deque
+from collections import defaultdict
 from typing import List, Optional
 
 from pixel_people_optimizer.formulas.models import SpliceFormula
-from pixel_people_optimizer.formulas.schema import (
-    ProfessionGraph,
-    ProfessionGraphEdge,
-    ProfessionGraphNode,
-)
-from pixel_people_optimizer.missions.schema import MissionListRes
-from pixel_people_optimizer.professions.models import Profession
-from sqlalchemy.orm import Session, selectinload
+from pixel_people_optimizer.formulas.schema import ProfessionGraph, ProfessionGraphEdge
+from sqlalchemy.orm import Session
 
 
 def build_graph_data(db: Session) -> ProfessionGraph:

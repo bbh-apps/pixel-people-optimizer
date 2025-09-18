@@ -12,13 +12,13 @@ class User(Base):
     email: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
 
     # Relationships to user's saved buildings and professions
-    my_buildings: Mapped[list["MyBuilding"]] = relationship(
+    my_buildings: Mapped[list["MyBuilding"]] = relationship(  # noqa: F821
         "MyBuilding", back_populates="user", cascade="all, delete-orphan"
     )
-    my_professions: Mapped[list["MyProfession"]] = relationship(
+    my_professions: Mapped[list["MyProfession"]] = relationship(  # noqa: F821
         "MyProfession", back_populates="user", cascade="all, delete-orphan"
     )
-    my_special_missions: Mapped[list["MySpecialMission"]] = relationship(
+    my_special_missions: Mapped[list["MySpecialMission"]] = relationship(  # noqa: F821
         "MySpecialMission", back_populates="user", cascade="all, delete-orphan"
     )
     created_at = Column(
